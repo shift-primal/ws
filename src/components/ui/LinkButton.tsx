@@ -1,7 +1,7 @@
 import { createLink } from "@tanstack/react-router";
 import type { VariantProps } from "class-variance-authority";
 import { forwardRef } from "react";
-import { buttonVariants } from "#/components/shadcn/button";
+import { buttonVariants } from "#/components/shadcn/ui/button";
 import { cn } from "#/lib/utils";
 
 type BasicLinkProps = React.ComponentPropsWithoutRef<"a"> &

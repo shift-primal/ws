@@ -51,8 +51,6 @@ function RouteComponent() {
 			.catch((e) => console.error("read err:", e));
 	};
 
-	const testReadUser = () => {};
-
 	return (
 		<div>
 			<div className="flex items-center gap-2">

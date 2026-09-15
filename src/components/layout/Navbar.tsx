@@ -15,7 +15,7 @@ import {
 	NavigationMenuList,
 	NavigationMenuTrigger,
 	navigationMenuTriggerStyle,
-} from "#/components/shadcn/navigation-menu";
+} from "#/components/shadcn/ui/navigation-menu";
 
 type NavLink = {
 	label: string;
@@ -101,7 +101,7 @@ export const Navbar = () => {
 					</NavigationMenuContent>
 				</NavigationMenuItem>
 				<NavigationMenuItem className="flex items-center justify-center">
-					<UserButton />
+					<p>placeholder for userbutton</p>
 				</NavigationMenuItem>
 			</NavigationMenuList>
 		</NavigationMenu>

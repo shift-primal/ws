@@ -11,7 +11,7 @@ import {
 	importSchema,
 	transactionQuerySchema,
 } from "#/lib/schemas/transactions";
-import { authMiddleware } from "#/server/auth/middleware";
+import { authMiddleware } from "#/server/middleware/auth";
 
 export const fetchTransactions = createServerFn({
 	method: "GET",
