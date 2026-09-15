@@ -14,7 +14,7 @@ import {
 	useUnlinkAccount,
 } from "@better-auth-ui/react";
 import type { Account } from "better-auth";
-import { Link2, Link2Off, Plug } from "lucide-react";
+import { LinkBreakIcon, LinkIcon, PlugIcon } from "@phosphor-icons/react";
 import { toast } from "sonner";
 
 import { Button } from "#/components/shadcn/ui/button.tsx";
@@ -100,7 +100,7 @@ export function LinkedAccount({
 		<>
 			<Item>
 				<ItemMedia variant="icon" className={cn(!account && "opacity-50")}>
-					{providerIcon ? providerIcon : <Plug />}
+					{providerIcon ? providerIcon : <PlugIcon />}
 				</ItemMedia>
 				<ItemContent>
 					<ItemTitle>{providerName}</ItemTitle>
@@ -134,7 +134,7 @@ export function LinkedAccount({
 								providerName,
 							)}
 						>
-							{unlinkAccount.isPending ? <Spinner /> : <Link2Off />}
+							{unlinkAccount.isPending ? <Spinner /> : <LinkBreakIcon />}
 							{localization.settings.unlinkProvider
 								.replace("{{provider}}", "")
 								.trim()}
@@ -155,7 +155,7 @@ export function LinkedAccount({
 								providerName,
 							)}
 						>
-							{isLinking ? <Spinner /> : <Link2 />}
+							{isLinking ? <Spinner /> : <LinkIcon />}
 							{localization.settings.link}
 						</Button>
 					)}

@@ -24,7 +24,8 @@ export const fetchCategoryStats = createServerFn({
 	method: "GET",
 })
 	.middleware([authMiddleware])
-	.handler(({ context }) => getCategoryStats(context.userId));
+	.validator(transactionQuerySchema)
+	.handler(({ data, context }) => getCategoryStats(context.userId, data));
 
 export const fetchMonthlyStats = createServerFn({
 	method: "GET",

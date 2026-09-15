@@ -1,7 +1,12 @@
 import { useAuth, useRevokeSession, useSession } from "@better-auth-ui/react";
 import type { Session } from "better-auth";
 import Bowser from "bowser";
-import { LogOut, Monitor, Smartphone, X } from "lucide-react";
+import {
+	DeviceMobileIcon,
+	MonitorIcon,
+	SignOutIcon,
+	XIcon,
+} from "@phosphor-icons/react";
 import { toast } from "sonner";
 
 import { Badge } from "#/components/shadcn/ui/badge.tsx";
@@ -73,7 +78,7 @@ export function ActiveSession({ activeSession }: ActiveSessionProps) {
 	return (
 		<Item>
 			<ItemMedia variant="icon">
-				{isMobile ? <Smartphone /> : <Monitor />}
+				{isMobile ? <DeviceMobileIcon /> : <MonitorIcon />}
 			</ItemMedia>
 			<ItemContent>
 				<ItemTitle>
@@ -110,7 +115,7 @@ export function ActiveSession({ activeSession }: ActiveSessionProps) {
 							: localization.settings.revokeSession
 					}
 				>
-					{isRevoking ? <Spinner /> : isCurrentSession ? <LogOut /> : <X />}
+					{isRevoking ? <Spinner /> : isCurrentSession ? <SignOutIcon /> : <XIcon />}
 
 					{isCurrentSession
 						? localization.auth.signOut

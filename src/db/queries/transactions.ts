@@ -23,6 +23,12 @@ import type {
 	TransactionQuery,
 } from "#/lib/schemas/transactions";
 
+const incomeAmount = sql`CASE WHEN ${transactions.amount}::numeric > 0 THEN ${transactions.amount}::numeric ELSE 0 END`;
+const expenseAmount = sql`CASE WHEN ${transactions.amount}::numeric < 0 THEN ${transactions.amount}::numeric ELSE 0 END`;
+const direction = sql<
+	"income" | "expense"
+>`CASE WHEN ${transactions.amount}::numeric > 0 THEN 'income' ELSE 'expense' END`;
+
 function buildConditions(userId: string, query?: TransactionQuery) {
 	const conditions: (SQL | undefined)[] = [eq(transactions.userId, userId)];
 
@@ -48,25 +54,26 @@ function buildConditions(userId: string, query?: TransactionQuery) {
 	return conditions;
 }
 
-export async function getCategoryStats(userId: string) {
-	const where = and(...buildConditions(userId));
+export async function getCategoryStats(
+	userId: string,
+	query?: TransactionQuery,
+) {
+	const where = and(...buildConditions(userId, query));
 
 	const data = db
 		.select({
 			category: transactions.category,
+			direction,
 			total: sum(transactions.amount),
 		})
 		.from(transactions)
 		.where(where)
-		.groupBy(transactions.category);
+		.groupBy(transactions.category, direction);
 
 	return data;
 }
 
-export async function getMonthlyStats(
-	userId: string,
-	query: TransactionQuery,
-) {
+export async function getMonthlyStats(userId: string, query: TransactionQuery) {
 	const where = and(...buildConditions(userId, query));
 
 	const month = sql<string>`to_char(${transactions.date}, 'YYYY-MM')`;
@@ -74,12 +81,8 @@ export async function getMonthlyStats(
 	const data = await db
 		.select({
 			month,
-			totalIn: sum(
-				sql`CASE WHEN ${transactions.amount}::numeric > 0 THEN ${transactions.amount}::numeric ELSE 0 END`,
-			),
-			totalOut: sum(
-				sql`CASE WHEN ${transactions.amount}::numeric < 0 THEN ${transactions.amount}::numeric ELSE 0 END`,
-			),
+			totalIn: sum(incomeAmount),
+			totalOut: sum(expenseAmount),
 		})
 		.from(transactions)
 		.where(where)
@@ -93,10 +96,7 @@ export async function getMonthlyStats(
 	}));
 }
 
-export async function getTransactions(
-	userId: string,
-	query: TransactionQuery,
-) {
+export async function getTransactions(userId: string, query: TransactionQuery) {
 	const where = and(...buildConditions(userId, query));
 
 	const sortColumns = {
@@ -132,12 +132,8 @@ export async function getTransactions(
 
 		db
 			.select({
-				totalIn: sum(
-					sql`CASE WHEN ${transactions.amount}::numeric > 0 THEN ${transactions.amount}::numeric ELSE 0 END`,
-				),
-				totalOut: sum(
-					sql`CASE WHEN ${transactions.amount}::numeric < 0 THEN ${transactions.amount}::numeric ELSE 0 END`,
-				),
+				totalIn: sum(incomeAmount),
+				totalOut: sum(expenseAmount),
 			})
 			.from(transactions)
 			.where(where),
@@ -196,9 +192,7 @@ export async function deleteTransactions(userId: string, ids: number[]) {
 	if (ids.length === 0) return [];
 	return db
 		.delete(transactions)
-		.where(
-			and(eq(transactions.userId, userId), inArray(transactions.id, ids)),
-		)
+		.where(and(eq(transactions.userId, userId), inArray(transactions.id, ids)))
 		.returning();
 }
 

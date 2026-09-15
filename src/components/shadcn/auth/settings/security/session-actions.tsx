@@ -3,7 +3,7 @@ import {
 	useRevokeOtherSessions,
 	useRevokeSessions,
 } from "@better-auth-ui/react";
-import { LogOut } from "lucide-react";
+import { SignOutIcon } from "@phosphor-icons/react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -74,7 +74,7 @@ export function SessionActions(props: { hasOtherSessions: boolean }) {
 				<AlertDialogContent>
 					<AlertDialogHeader>
 						<AlertDialogMedia className="bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive">
-							<LogOut />
+							<SignOutIcon />
 						</AlertDialogMedia>
 						<AlertDialogTitle>
 							{isEverywhere

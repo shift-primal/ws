@@ -1,7 +1,7 @@
 import type { UsernameAuthClient } from "@better-auth-ui/core/plugins/username";
 import { useAuth, useSession } from "@better-auth-ui/react";
 import type { User } from "better-auth";
-import { User2 } from "lucide-react";
+import { UserIcon } from "@phosphor-icons/react";
 import type { ReactNode } from "react";
 
 import {
@@ -73,7 +73,7 @@ export function UserAvatar({
 			/>
 
 			<AvatarFallback className="text-muted-foreground!">
-				{fallback || initials || <User2 className="size-4" />}
+				{fallback || initials || <UserIcon className="size-4" />}
 			</AvatarFallback>
 		</Avatar>
 	);

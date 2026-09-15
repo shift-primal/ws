@@ -2,7 +2,7 @@
 
 import { fileToAvatarDataUrl } from "@better-auth-ui/core";
 import { useAuth, useSession, useUpdateUser } from "@better-auth-ui/react";
-import { Trash2, Upload } from "lucide-react";
+import { TrashIcon, UploadIcon } from "@phosphor-icons/react";
 import { type ChangeEvent, useRef, useState } from "react";
 import { toast } from "sonner";
 import { UserAvatar } from "#/components/shadcn/auth/user/user-avatar.tsx";
@@ -123,7 +123,7 @@ export function ChangeAvatar({ className }: ChangeAvatarProps) {
 
 					<DropdownMenuContent className="min-w-fit">
 						<DropdownMenuItem onClick={() => fileInputRef.current?.click()}>
-							<Upload className="text-muted-foreground" />
+							<UploadIcon className="text-muted-foreground" />
 
 							{localization.settings.uploadAvatar}
 						</DropdownMenuItem>
@@ -133,7 +133,7 @@ export function ChangeAvatar({ className }: ChangeAvatarProps) {
 							disabled={!session?.user.image}
 							onClick={handleDelete}
 						>
-							<Trash2 />
+							<TrashIcon />
 
 							{localization.settings.deleteAvatar}
 						</DropdownMenuItem>

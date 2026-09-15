@@ -4,7 +4,7 @@ import {
 	parseAuthResult,
 } from "@better-auth-ui/core";
 import { useAuth } from "@better-auth-ui/react";
-import { CircleCheckIcon, CircleXIcon, TriangleAlertIcon } from "lucide-react";
+import { CheckCircleIcon, WarningIcon, XCircleIcon } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
 
 import { Button } from "#/components/shadcn/ui/button.tsx";
@@ -69,10 +69,10 @@ function AuthResultView({ className, fallbackIntent }: AuthResultProps) {
 	})();
 	const Icon =
 		result.intent === "success"
-			? CircleCheckIcon
+			? CheckCircleIcon
 			: result.intent === "warning"
-				? TriangleAlertIcon
-				: CircleXIcon;
+				? WarningIcon
+				: XCircleIcon;
 
 	return (
 		<Card className={cn("w-full max-w-sm", className)}>

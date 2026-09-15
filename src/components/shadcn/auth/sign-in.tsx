@@ -16,7 +16,7 @@ import {
 	useSignInEmail,
 } from "@better-auth-ui/react";
 import { useIsMutating } from "@tanstack/react-query";
-import { Eye, EyeOff } from "lucide-react";
+import { EyeIcon, EyeSlashIcon } from "@phosphor-icons/react";
 import { useState } from "react";
 
 import {
@@ -273,7 +273,7 @@ export function SignIn({
 																	setIsPasswordVisible((visible) => !visible);
 																}}
 															>
-																{isPasswordVisible ? <EyeOff /> : <Eye />}
+																{isPasswordVisible ? <EyeSlashIcon /> : <EyeIcon />}
 															</InputGroupButton>
 														</InputGroupAddon>
 													</InputGroup>

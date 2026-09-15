@@ -1,14 +1,63 @@
 import { faker } from "@faker-js/faker";
 import { eq } from "drizzle-orm";
-import { CATEGORIES, TRANSACTION_TYPES } from "txcategorizer";
+import { TRANSACTION_TYPES } from "txcategorizer";
+import type { Category, TransactionType } from "txcategorizer";
 import { db } from "#/db";
 import { insertTransactions } from "#/db/queries/transactions";
 import { user } from "#/db/schema";
 import type { NewTransactionInput } from "#/lib/schemas/transactions";
 
 const TRANSACTION_COUNT = 50;
-const INCOME_TYPES = new Set(["Lønn", "Overføring"]);
 const FOREIGN_CURRENCIES = ["USD", "EUR", "GBP", "SEK", "DKK"];
+
+// Which categories a given transaction type can plausibly land in — a card
+// purchase (Varekjøp) is never "Inntekt", a salary deposit (Lønn) is never
+// "Bolig", a bank fee (Omkostninger) is never "Underholdning", etc.
+const TYPE_CATEGORIES: Record<TransactionType, Category[]> = {
+	Varekjøp: [
+		"Dagligvare",
+		"Mat ute",
+		"Hjem",
+		"Underholdning",
+		"Gaming",
+		"Netthandel",
+		"Helse",
+		"Kosmetikk",
+		"Klær",
+		"Transport",
+		"Diverse",
+	],
+	Visa: [
+		"Mat ute",
+		"Underholdning",
+		"Gaming",
+		"Abonnement",
+		"Netthandel",
+		"Helse",
+		"Kosmetikk",
+		"Klær",
+		"Transport",
+		"Diverse",
+	],
+	Betaling: [
+		"Bolig",
+		"Boutgifter",
+		"Forsikring",
+		"Abonnement",
+		"Bil",
+		"Helse",
+		"Kreditt",
+		"Diverse",
+	],
+	Giro: ["Bolig", "Boutgifter", "Forsikring", "Bil", "Kreditt", "Diverse"],
+	Overføring: ["Overføring", "Sparing", "Inntekt", "Diverse"],
+	Lønn: ["Inntekt"],
+	Kontoregulering: ["Overføring", "Sparing"],
+	Nedbetaling: ["Bolig", "Bil", "Kreditt", "Sparing"],
+	Renter: ["Boutgifter", "Kreditt", "Bolig", "Bil"],
+	Omkostninger: ["Boutgifter", "Kreditt", "Diverse"],
+	Annet: ["Diverse", "Annet"],
+};
 
 async function resolveUserId(): Promise<string> {
 	const emailArg = process.argv[2];
@@ -39,8 +88,14 @@ async function resolveUserId(): Promise<string> {
 
 function randomTransaction(): NewTransactionInput {
 	const type = faker.helpers.arrayElement(TRANSACTION_TYPES);
-	const category = faker.helpers.arrayElement(CATEGORIES);
-	const isIncome = INCOME_TYPES.has(type) || category === "Inntekt";
+	const category = faker.helpers.arrayElement(TYPE_CATEGORIES[type]);
+
+	// A transfer or internal account move can go either direction; every
+	// other category/type pairing here is inherently one-directional.
+	const isIncome =
+		category === "Inntekt" ||
+		((type === "Overføring" || type === "Kontoregulering") &&
+			faker.datatype.boolean());
 
 	const amount = isIncome
 		? faker.number.float({ min: 5000, max: 45000, fractionDigits: 2 })

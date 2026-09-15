@@ -12,7 +12,7 @@ import {
 	useRequestPasswordReset,
 	useSession,
 } from "@better-auth-ui/react";
-import { Eye, EyeOff } from "lucide-react";
+import { EyeIcon, EyeSlashIcon } from "@phosphor-icons/react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "#/components/shadcn/ui/button.tsx";
@@ -280,7 +280,7 @@ function ChangePasswordForm({
 															);
 														}}
 													>
-														{isCurrentPasswordVisible ? <EyeOff /> : <Eye />}
+														{isCurrentPasswordVisible ? <EyeSlashIcon /> : <EyeIcon />}
 													</InputGroupButton>
 												</InputGroupAddon>
 											</InputGroup>
@@ -359,7 +359,7 @@ function ChangePasswordForm({
 																setIsNewPasswordVisible((visible) => !visible)
 															}
 														>
-															{isNewPasswordVisible ? <EyeOff /> : <Eye />}
+															{isNewPasswordVisible ? <EyeSlashIcon /> : <EyeIcon />}
 														</InputGroupButton>
 													</InputGroupAddon>
 												</InputGroup>
@@ -455,7 +455,7 @@ function ChangePasswordForm({
 																)
 															}
 														>
-															{isConfirmPasswordVisible ? <EyeOff /> : <Eye />}
+															{isConfirmPasswordVisible ? <EyeSlashIcon /> : <EyeIcon />}
 														</InputGroupButton>
 													</InputGroupAddon>
 												</InputGroup>

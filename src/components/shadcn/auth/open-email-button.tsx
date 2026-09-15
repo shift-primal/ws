@@ -4,7 +4,7 @@ import {
 } from "@better-auth-ui/core";
 import { useAuth } from "@better-auth-ui/react";
 import type { VariantProps } from "class-variance-authority";
-import { QrCode } from "lucide-react";
+import { QrCodeIcon } from "@phosphor-icons/react";
 import { useMemo } from "react";
 
 import { buttonVariants } from "#/components/shadcn/ui/button.tsx";
@@ -77,7 +77,7 @@ export function OpenEmailButton({
 						"{{provider}}",
 						provider.companyProvider,
 					)}
-					<QrCode data-icon="inline-end" />
+					<QrCodeIcon data-icon="inline-end" />
 				</TooltipTrigger>
 				<TooltipContent
 					sideOffset={8}

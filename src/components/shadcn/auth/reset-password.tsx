@@ -7,7 +7,7 @@ import {
 	validateStringLength,
 } from "@better-auth-ui/core";
 import { useAuth, useResetPassword } from "@better-auth-ui/react";
-import { Eye, EyeOff } from "lucide-react";
+import { EyeIcon, EyeSlashIcon } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -191,7 +191,7 @@ export function ResetPassword({ className }: ResetPasswordProps) {
 															setIsPasswordVisible((visible) => !visible);
 														}}
 													>
-														{isPasswordVisible ? <EyeOff /> : <Eye />}
+														{isPasswordVisible ? <EyeSlashIcon /> : <EyeIcon />}
 													</InputGroupButton>
 												</InputGroupAddon>
 											</InputGroup>
@@ -287,7 +287,7 @@ export function ResetPassword({ className }: ResetPasswordProps) {
 																);
 															}}
 														>
-															{isConfirmPasswordVisible ? <EyeOff /> : <Eye />}
+															{isConfirmPasswordVisible ? <EyeSlashIcon /> : <EyeIcon />}
 														</InputGroupButton>
 													</InputGroupAddon>
 												</InputGroup>

@@ -1,8 +1,8 @@
 import { CATEGORIES, TRANSACTION_TYPES } from "txcategorizer";
 import * as z from "zod";
 
-const twoYearsAgo = () => `${new Date().getFullYear() - 2}-01-01`;
-const today = () => new Date().toISOString().split("T")[0];
+export const twoYearsAgo = () => `${new Date().getFullYear() - 2}-01-01`;
+export const today = () => new Date().toISOString().split("T")[0];
 
 export const transactionQuerySchema = z.object({
 	category: z.array(z.enum(CATEGORIES)).optional(),
@@ -33,6 +33,18 @@ export const newTransactionSchema = z.object({
 });
 
 export type TransactionQuery = z.infer<typeof transactionQuerySchema>;
+
+/**
+ * Search schema for the dashboard route: same as `transactionQuerySchema`,
+ * but `from`/`to` have no default so an unset date range stays out of the
+ * URL entirely instead of always carrying today's date.
+ */
+export const dashboardSearchSchema = transactionQuerySchema.extend({
+	from: z.iso.date().optional(),
+	to: z.iso.date().optional(),
+});
+
+export type DashboardSearch = z.infer<typeof dashboardSearchSchema>;
 
 export type NewTransactionInput = z.infer<typeof newTransactionSchema>;
 export const importSchema = z.array(newTransactionSchema);

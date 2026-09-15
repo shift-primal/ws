@@ -4,12 +4,12 @@ import type { MultiSessionAuthClient } from "@better-auth-ui/core/plugins/multi-
 import { useAuth, useSession } from "@better-auth-ui/react";
 import { useSetActiveSession } from "@better-auth-ui/react/plugins/multi-session";
 import {
-	ChevronsUpDown,
-	LogIn,
-	LogOut,
-	Settings,
-	UserPlus2,
-} from "lucide-react";
+	CaretUpDownIcon,
+	GearIcon,
+	SignInIcon,
+	SignOutIcon,
+	UserPlusIcon,
+} from "@phosphor-icons/react";
 import { isValidElement, type ReactElement, type ReactNode } from "react";
 
 import { buttonVariants } from "#/components/shadcn/ui/button.tsx";
@@ -169,7 +169,7 @@ export function UserButton({
 							</>
 						)}
 
-						<ChevronsUpDown className="ml-auto size-4" />
+						<CaretUpDownIcon className="ml-auto size-4" />
 					</>
 				)}
 			</DropdownMenuTrigger>
@@ -204,7 +204,7 @@ export function UserButton({
 									})
 								}
 							>
-								<Settings className="text-muted-foreground" />
+								<GearIcon className="text-muted-foreground" />
 
 								{localization.settings.settings}
 							</DropdownMenuItem>
@@ -225,7 +225,7 @@ export function UserButton({
 								})
 							}
 						>
-							<LogOut className="text-muted-foreground" />
+							<SignOutIcon className="text-muted-foreground" />
 
 							{localization.auth.signOut}
 						</DropdownMenuItem>
@@ -241,7 +241,7 @@ export function UserButton({
 								})
 							}
 						>
-							<LogIn className="text-muted-foreground" />
+							<SignInIcon className="text-muted-foreground" />
 
 							{localization.auth.signIn}
 						</DropdownMenuItem>
@@ -253,7 +253,7 @@ export function UserButton({
 								})
 							}
 						>
-							<UserPlus2 className="text-muted-foreground" />
+							<UserPlusIcon className="text-muted-foreground" />
 
 							{localization.auth.signUp}
 						</DropdownMenuItem>
