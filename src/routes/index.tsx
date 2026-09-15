@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { PageContainer } from "#/components/layout/PageContainer";
-import { LinkButton } from "#/components/ui/LinkButton";
+import { PageContainer } from "#/components/layout/page-container";
+import { LinkButton } from "#/components/ui/link-button";
 
 const Home = () => {
 	return (

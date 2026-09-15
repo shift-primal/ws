@@ -1,6 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, stripSearchParams } from "@tanstack/react-router";
 import type { SortableColumn } from "#/components/dashboard/columns";
+import { StatCards } from "#/components/dashboard/stat-cards";
 import { TransactionsTable } from "#/components/dashboard/transactions-table";
 import { Button } from "#/components/shadcn/ui/button";
 import { transactionsQuery } from "#/lib/queries/transactions";
@@ -41,6 +42,12 @@ function Dashboard() {
 
 	return (
 		<div className="flex flex-col gap-4">
+			<StatCards
+				totalIn={data.totalIn}
+				totalOut={data.totalOut}
+				totalResults={data.totalResults}
+			/>
+
 			<TransactionsTable
 				data={data.data}
 				meta={{

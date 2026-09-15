@@ -4,8 +4,8 @@ import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
 import { createIsomorphicFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 import { Settings } from "#/components/shadcn/auth/settings/settings";
-import { authClient } from "#/lib/auth/auth-client";
 import { auth } from "#/lib/auth/auth";
+import { authClient } from "#/lib/auth/auth-client";
 
 const validSettingsPaths = [...Object.values(viewPaths.settings)];
 

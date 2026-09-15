@@ -1,5 +1,5 @@
-import { PageContainer } from "#/components/layout/PageContainer";
-import { LinkButton } from "#/components/ui/LinkButton";
+import { PageContainer } from "#/components/layout/page-container";
+import { LinkButton } from "#/components/ui/link-button";
 
 export const NotFound = () => {
 	return (

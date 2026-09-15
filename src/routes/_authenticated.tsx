@@ -3,7 +3,7 @@ import { ensureSessionServer } from "@better-auth-ui/core/server";
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { createIsomorphicFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
-import { PageContainer } from "#/components/layout/PageContainer";
+import { PageContainer } from "#/components/layout/page-container";
 import { auth } from "#/lib/auth/auth";
 import { authClient } from "#/lib/auth/auth-client";
 

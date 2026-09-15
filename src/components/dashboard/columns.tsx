@@ -2,6 +2,7 @@ import { createColumnHelper, tableFeatures } from "@tanstack/react-table";
 import { Badge } from "#/components/shadcn/ui/badge";
 import { Button } from "#/components/shadcn/ui/button";
 import type { DbTransaction } from "#/db/schema";
+import { formatCurrency } from "#/lib/currency";
 import type { TransactionQuery } from "#/lib/schemas/transactions";
 
 export type SortableColumn = NonNullable<TransactionQuery["sortBy"]>;
@@ -20,11 +21,6 @@ const columnHelper = createColumnHelper<
 	typeof tableFeatureSet,
 	DbTransaction
 >();
-
-const currencyFormatter = new Intl.NumberFormat("nb-NO", {
-	style: "currency",
-	currency: "NOK",
-});
 
 function SortableHeader({
 	label,
@@ -100,7 +96,7 @@ export const columns = columnHelper.columns([
 			const amount = Number(row.original.amount);
 			return (
 				<span className={amount < 0 ? "text-destructive" : "text-emerald-600"}>
-					{currencyFormatter.format(amount)}
+					{formatCurrency(amount)}
 				</span>
 			);
 		},

@@ -6,9 +6,9 @@ import {
 	Scripts,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
-import { Navbar } from "#/components/layout/Navbar";
-import { NotFound } from "#/components/layout/NotFound";
-import { Providers } from "#/components/layout/Providers";
+import { Navbar } from "#/components/layout/navbar";
+import { NotFound } from "#/components/layout/not-found";
+import { Providers } from "#/components/layout/providers";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import appCss from "../styles.css?url";
 
