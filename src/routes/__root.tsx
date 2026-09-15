@@ -6,6 +6,7 @@ import {
 	Scripts,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+import { Navbar } from "#/components/layout/Navbar";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import appCss from "../styles.css?url";
 
@@ -39,12 +40,15 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 
 function RootDocument({ children }: { children: React.ReactNode }) {
 	return (
-		<html lang="en">
+		<html lang="en" suppressHydrationWarning>
 			<head>
 				<HeadContent />
 			</head>
-			<body>
-				{children}
+			<body className="overflow-hidden">
+				<div className="fixed inset-0 flex flex-col">
+					<Navbar />
+					<main className="min-h-0 flex-1 overflow-y-auto">{children}</main>
+				</div>
 				<TanStackDevtools
 					config={{
 						position: "bottom-right",

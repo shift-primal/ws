@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { authClient } from "#/lib/auth/auth-client";
 import {
 	clearTransactions,
 	fetchTransactions,
@@ -10,6 +11,23 @@ export const Route = createFileRoute("/test")({
 });
 
 function RouteComponent() {
+	const fakeLogin = () => {
+		authClient.signIn
+			.email({ email: "test@test.com", password: "password123" })
+			.then((r) => {
+				if (r.error?.status === 401) {
+					return authClient.signUp.email({
+						email: "test@test.com",
+						password: "password123",
+						name: "Test User",
+					});
+				}
+				return r;
+			})
+			.then((r) => console.log("logged in:", r))
+			.catch((e) => console.error("login err:", e));
+	};
+
 	const runImport = () => {
 		importTransactions({
 			data: [
@@ -48,12 +66,15 @@ function RouteComponent() {
 	const testClearTransactions = () => {
 		clearTransactions()
 			.then((r) => console.log("cleared transactions: ", r))
-			.catch((e) => console.error("read err:", e));
+			.catch((e) => console.error("clear err:", e));
 	};
 
 	return (
 		<div>
 			<div className="flex items-center gap-2">
+				<button className="border bg-green-400" type="button" onClick={fakeLogin}>
+					Fake login
+				</button>
 				<button
 					className="border bg-blue-400"
 					type="button"

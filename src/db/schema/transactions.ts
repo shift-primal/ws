@@ -8,6 +8,7 @@ import {
 	text,
 } from "drizzle-orm/pg-core";
 import { CATEGORIES, TRANSACTION_TYPES } from "txcategorizer";
+import { user } from "#/db/schema/auth";
 
 export const categoryEnum = pgEnum("category", CATEGORIES);
 
@@ -19,8 +20,10 @@ export const transactionTypeEnum = pgEnum(
 export const transactions = pgTable(
 	"transactions",
 	{
+		ownerId: text("owner_id")
+			.notNull()
+			.references(() => user.id, { onDelete: "cascade" }),
 		id: serial().primaryKey(),
-		ownerId: text("owner_id").notNull(),
 		date: date().notNull(),
 		amount: numeric().notNull(),
 		merchant: text().notNull(),

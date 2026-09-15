@@ -1,7 +1,7 @@
 import { config } from "dotenv";
 import z from "zod";
 
-config({ path: [".env.local", ".env"] });
+config({ path: [".env", ".env.local"] });
 
 const envSchema = z.object({
 	DATABASE_URL: z.url(),

@@ -8,6 +8,13 @@
       "when": 1789456916940,
       "tag": "0000_cuddly_baron_strucker",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1789459269969,
+      "tag": "0001_warm_energizer",
+      "breakpoints": true
     }
   ]
 }
