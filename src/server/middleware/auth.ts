@@ -11,7 +11,7 @@ export const authMiddleware = createMiddleware({
 	if (!session?.user) throw new Error("Unauthorized");
 	return next({
 		context: {
-			ownerId: session.user.id,
+			userId: session.user.id,
 		},
 	});
 });

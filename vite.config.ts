@@ -7,6 +7,9 @@ import { nitro } from "nitro/vite";
 import { defineConfig } from "vite";
 
 const config = defineConfig({
+	server: {
+		allowedHosts: ["trapeze-header-daydream.ngrok-free.dev"],
+	},
 	resolve: { tsconfigPaths: true },
 	plugins: [
 		devtools(),

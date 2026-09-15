@@ -7,6 +7,8 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { Navbar } from "#/components/layout/Navbar";
+import { NotFound } from "#/components/layout/NotFound";
+import { Providers } from "#/components/layout/Providers";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import appCss from "../styles.css?url";
 
@@ -35,6 +37,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 			},
 		],
 	}),
+	notFoundComponent: NotFound,
 	shellComponent: RootDocument,
 });
 
@@ -44,10 +47,13 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 			<head>
 				<HeadContent />
 			</head>
+
 			<body className="overflow-hidden">
 				<div className="fixed inset-0 flex flex-col">
-					<Navbar />
-					<main className="min-h-0 flex-1 overflow-y-auto">{children}</main>
+					<Providers>
+						<Navbar />
+						<main className="min-h-0 flex-1 overflow-y-auto">{children}</main>
+					</Providers>
 				</div>
 				<TanStackDevtools
 					config={{

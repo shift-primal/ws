@@ -23,8 +23,8 @@ import type {
 	TransactionQuery,
 } from "#/lib/schemas/transactions";
 
-function buildConditions(ownerId: string, query?: TransactionQuery) {
-	const conditions: (SQL | undefined)[] = [eq(transactions.ownerId, ownerId)];
+function buildConditions(userId: string, query?: TransactionQuery) {
+	const conditions: (SQL | undefined)[] = [eq(transactions.userId, userId)];
 
 	if (query?.category?.length)
 		conditions.push(inArray(transactions.category, query?.category));
@@ -48,8 +48,8 @@ function buildConditions(ownerId: string, query?: TransactionQuery) {
 	return conditions;
 }
 
-export async function getCategoryStats(ownerId: string) {
-	const where = and(...buildConditions(ownerId));
+export async function getCategoryStats(userId: string) {
+	const where = and(...buildConditions(userId));
 
 	const data = db
 		.select({
@@ -64,10 +64,10 @@ export async function getCategoryStats(ownerId: string) {
 }
 
 export async function getMonthlyStats(
-	ownerId: string,
+	userId: string,
 	query: TransactionQuery,
 ) {
-	const where = and(...buildConditions(ownerId, query));
+	const where = and(...buildConditions(userId, query));
 
 	const month = sql<string>`to_char(${transactions.date}, 'YYYY-MM')`;
 
@@ -94,10 +94,10 @@ export async function getMonthlyStats(
 }
 
 export async function getTransactions(
-	ownerId: string,
+	userId: string,
 	query: TransactionQuery,
 ) {
-	const where = and(...buildConditions(ownerId, query));
+	const where = and(...buildConditions(userId, query));
 
 	const sortColumns = {
 		date: transactions.date,
@@ -147,7 +147,7 @@ export async function getTransactions(
 				unfilteredTotal: count(),
 			})
 			.from(transactions)
-			.where(eq(transactions.ownerId, ownerId)),
+			.where(eq(transactions.userId, userId)),
 	]);
 
 	return {
@@ -159,14 +159,14 @@ export async function getTransactions(
 	};
 }
 
-export async function getAmtBounds(ownerId: string) {
+export async function getAmtBounds(userId: string) {
 	const [row] = await db
 		.select({
 			minBound: min(transactions.amount),
 			maxBound: max(transactions.amount),
 		})
 		.from(transactions)
-		.where(eq(transactions.ownerId, ownerId));
+		.where(eq(transactions.userId, userId));
 
 	return {
 		minBound: parseFloat(row.minBound ?? "0"),
@@ -175,7 +175,7 @@ export async function getAmtBounds(ownerId: string) {
 }
 
 export async function insertTransactions(
-	ownerId: string,
+	userId: string,
 	rows: NewTransactionInput[],
 ) {
 	return db
@@ -183,7 +183,7 @@ export async function insertTransactions(
 		.values(
 			rows.map(({ valuta, ...rest }) => ({
 				...rest,
-				ownerId,
+				userId,
 				amount: rest.amount.toString(),
 				currency: valuta?.currency ?? null,
 				exchangeRate: valuta?.exchangeRate?.toString() ?? null,
@@ -192,19 +192,19 @@ export async function insertTransactions(
 		.returning();
 }
 
-export async function deleteTransactions(ownerId: string, ids: number[]) {
+export async function deleteTransactions(userId: string, ids: number[]) {
 	if (ids.length === 0) return [];
 	return db
 		.delete(transactions)
 		.where(
-			and(eq(transactions.ownerId, ownerId), inArray(transactions.id, ids)),
+			and(eq(transactions.userId, userId), inArray(transactions.id, ids)),
 		)
 		.returning();
 }
 
-export async function deleteAllTransactions(ownerId: string) {
+export async function deleteAllTransactions(userId: string) {
 	return db
 		.delete(transactions)
-		.where(eq(transactions.ownerId, ownerId))
+		.where(eq(transactions.userId, userId))
 		.returning();
 }

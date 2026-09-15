@@ -1,5 +1,5 @@
 {
-  "id": "bbc49bab-b953-487d-b06c-311bcf383df0",
+  "id": "6949930e-4c35-4127-8f1a-510bba68cdfb",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -359,20 +359,20 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.transactions": {
-      "name": "transactions",
+    "public.transaction": {
+      "name": "transaction",
       "schema": "",
       "columns": {
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
         "id": {
           "name": "id",
           "type": "serial",
           "primaryKey": true,
-          "notNull": true
-        },
-        "owner_id": {
-          "name": "owner_id",
-          "type": "text",
-          "primaryKey": false,
           "notNull": true
         },
         "date": {
@@ -427,11 +427,11 @@
         }
       },
       "indexes": {
-        "transactions_owner_idx": {
-          "name": "transactions_owner_idx",
+        "transaction_userId_idx": {
+          "name": "transaction_userId_idx",
           "columns": [
             {
-              "expression": "owner_id",
+              "expression": "user_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -443,7 +443,21 @@
           "with": {}
         }
       },
-      "foreignKeys": {},
+      "foreignKeys": {
+        "transaction_user_id_user_id_fk": {
+          "name": "transaction_user_id_user_id_fk",
+          "tableFrom": "transaction",
+          "tableTo": "user",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},

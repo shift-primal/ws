@@ -18,9 +18,9 @@ export const transactionTypeEnum = pgEnum(
 );
 
 export const transactions = pgTable(
-	"transactions",
+	"transaction",
 	{
-		ownerId: text("owner_id")
+		userId: text("user_id")
 			.notNull()
 			.references(() => user.id, { onDelete: "cascade" }),
 		id: serial().primaryKey(),
@@ -33,7 +33,7 @@ export const transactions = pgTable(
 		currency: text(),
 		exchangeRate: numeric("exchange_rate"),
 	},
-	(t) => [index("transactions_owner_idx").on(t.ownerId)],
+	(t) => [index("transaction_userId_idx").on(t.userId)],
 );
 
 export type DbTransaction = typeof transactions.$inferSelect;

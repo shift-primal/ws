@@ -12,7 +12,7 @@
   },
   "aliases": {
     "components": "#/components/shadcn",
-    "utils": "@/lib/utils",
+    "utils": "#/lib/utils",
     "ui": "#/components/shadcn/ui",
     "lib": "",
     "hooks": ""
@@ -21,5 +21,7 @@
   "rtl": false,
   "menuColor": "default",
   "menuAccent": "subtle",
-  "registries": {}
+  "registries": {
+    "@better-auth-ui": "https://better-auth-ui.com/r/{style}/{name}.json"
+  }
 }

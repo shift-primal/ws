@@ -7,6 +7,7 @@ import {
 	UploadIcon,
 } from "@phosphor-icons/react";
 import { Link, type LinkProps, linkOptions } from "@tanstack/react-router";
+import { UserButton } from "#/components/shadcn/auth/user/user-button";
 import {
 	NavigationMenu,
 	NavigationMenuContent,
@@ -101,7 +102,7 @@ export const Navbar = () => {
 					</NavigationMenuContent>
 				</NavigationMenuItem>
 				<NavigationMenuItem className="flex items-center justify-center">
-					<p>placeholder for userbutton</p>
+					<UserButton size="icon" />
 				</NavigationMenuItem>
 			</NavigationMenuList>
 		</NavigationMenu>

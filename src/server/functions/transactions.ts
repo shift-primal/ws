@@ -18,36 +18,36 @@ export const fetchTransactions = createServerFn({
 })
 	.middleware([authMiddleware])
 	.validator(transactionQuerySchema)
-	.handler(({ data, context }) => getTransactions(context.ownerId, data));
+	.handler(({ data, context }) => getTransactions(context.userId, data));
 
 export const fetchCategoryStats = createServerFn({
 	method: "GET",
 })
 	.middleware([authMiddleware])
-	.handler(({ context }) => getCategoryStats(context.ownerId));
+	.handler(({ context }) => getCategoryStats(context.userId));
 
 export const fetchMonthlyStats = createServerFn({
 	method: "GET",
 })
 	.middleware([authMiddleware])
 	.validator(transactionQuerySchema)
-	.handler(({ data, context }) => getMonthlyStats(context.ownerId, data));
+	.handler(({ data, context }) => getMonthlyStats(context.userId, data));
 
 export const fetchAmtBounds = createServerFn({
 	method: "GET",
 })
 	.middleware([authMiddleware])
-	.handler(({ context }) => getAmtBounds(context.ownerId));
+	.handler(({ context }) => getAmtBounds(context.userId));
 
 export const importTransactions = createServerFn({
 	method: "POST",
 })
 	.middleware([authMiddleware])
 	.validator(importSchema)
-	.handler(({ data, context }) => insertTransactions(context.ownerId, data));
+	.handler(({ data, context }) => insertTransactions(context.userId, data));
 
 export const clearTransactions = createServerFn({
 	method: "POST",
 })
 	.middleware([authMiddleware])
-	.handler(({ context }) => deleteAllTransactions(context.ownerId));
+	.handler(({ context }) => deleteAllTransactions(context.userId));
