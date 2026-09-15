@@ -22,7 +22,8 @@
     "db:studio": "drizzle-kit studio",
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
-    "docker:logs": "docker compose logs -f db"
+    "docker:logs": "docker compose logs -f db",
+    "seed:transactions": "tsx scripts/seed-transactions.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",

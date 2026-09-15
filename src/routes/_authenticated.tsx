@@ -4,8 +4,8 @@ import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { createIsomorphicFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 import { PageContainer } from "#/components/layout/PageContainer";
-import { authClient } from "#/lib/auth/auth-client";
 import { auth } from "#/lib/auth/auth";
+import { authClient } from "#/lib/auth/auth-client";
 
 export const Route = createFileRoute("/_authenticated")({
 	async beforeLoad({ context: { queryClient }, location }) {
