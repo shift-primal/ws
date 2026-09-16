@@ -12,7 +12,7 @@ import {
 } from "@tanstack/react-query";
 import type { BetterFetchError } from "better-auth/react";
 import { useEffect } from "react";
-import { toast } from "sonner";
+import { toast } from "#/components/shadcn/ui/toast";
 
 export function ErrorToaster() {
 	const queryClient = useQueryClient();
@@ -29,7 +29,8 @@ export function ErrorToaster() {
 
 			const err = error as BetterFetchError;
 			if (err?.error?.code === "EMAIL_NOT_VERIFIED") return;
-			if (err?.error) toast.error(err.error.message);
+			if (err?.error)
+				toast.add({ type: "error", description: err.error.message });
 		};
 
 		const mutationCache = queryClient.getMutationCache();
@@ -65,7 +66,10 @@ export function ErrorToaster() {
 			) {
 				return;
 			}
-			toast.error(err.error?.message || err.message);
+			toast.add({
+				type: "error",
+				description: err.error?.message || err.message,
+			});
 		};
 
 		return () => {

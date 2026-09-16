@@ -13,7 +13,7 @@ import {
 	CopyIcon,
 } from "@phosphor-icons/react";
 import { type ComponentType, useRef, useState } from "react";
-import { toast } from "sonner";
+import { toast } from "#/components/shadcn/ui/toast";
 
 import { buttonVariants } from "#/components/shadcn/ui/button.tsx";
 import { Calendar } from "#/components/shadcn/ui/calendar.tsx";
@@ -106,7 +106,10 @@ function CopyButton({
 	const { localization } = useAuth();
 	const { copied, copy } = useCopyToClipboard({
 		onError: (error) =>
-			toast.error(error instanceof Error ? error.message : String(error)),
+			toast.add({
+				type: "error",
+				description: error instanceof Error ? error.message : String(error),
+			}),
 	});
 
 	async function handleCopy() {

@@ -14,7 +14,7 @@ import {
 } from "@better-auth-ui/react";
 import { EyeIcon, EyeSlashIcon } from "@phosphor-icons/react";
 import { useState } from "react";
-import { toast } from "sonner";
+import { toast } from "#/components/shadcn/ui/toast";
 import { Button } from "#/components/shadcn/ui/button.tsx";
 import { Card, CardContent, CardFooter } from "#/components/shadcn/ui/card.tsx";
 import {
@@ -182,7 +182,10 @@ function ChangePasswordForm({
 			},
 			onSuccess: () => {
 				form.reset();
-				toast.success(localization.settings.changePasswordSuccess);
+				toast.add({
+					type: "success",
+					description: localization.settings.changePasswordSuccess,
+				});
 			},
 		},
 	);

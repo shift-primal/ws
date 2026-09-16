@@ -5,7 +5,7 @@ import {
 } from "@better-auth-ui/react";
 import { SignOutIcon } from "@phosphor-icons/react";
 import { useState } from "react";
-import { toast } from "sonner";
+import { toast } from "#/components/shadcn/ui/toast";
 
 import {
 	AlertDialog,
@@ -29,7 +29,10 @@ export function SessionActions(props: { hasOtherSessions: boolean }) {
 
 	const revokeOtherSessions = useRevokeOtherSessions(authClient, {
 		onSuccess: () => {
-			toast.success(localization.settings.signOutOtherDevicesSuccess);
+			toast.add({
+				type: "success",
+				description: localization.settings.signOutOtherDevicesSuccess,
+			});
 			setAction(null);
 		},
 	});

@@ -1,6 +1,6 @@
 import { useAuth, useSendVerificationEmail } from "@better-auth-ui/react";
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
+import { toast } from "#/components/shadcn/ui/toast";
 
 import { Button } from "#/components/shadcn/ui/button.tsx";
 import {
@@ -69,7 +69,10 @@ export function VerifyEmail({ className }: VerifyEmailProps) {
 		authClient,
 		{
 			onSuccess: () => {
-				toast.success(localization.auth.verificationEmailSent);
+				toast.add({
+					type: "success",
+					description: localization.auth.verificationEmailSent,
+				});
 				setCooldown(RESEND_COOLDOWN_SECONDS);
 			},
 		},

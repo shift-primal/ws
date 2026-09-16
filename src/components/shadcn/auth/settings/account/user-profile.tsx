@@ -7,7 +7,7 @@ import {
 import type { UsernameAuthClient } from "@better-auth-ui/core/plugins/username";
 import { useAuth, useSession, useUpdateUser } from "@better-auth-ui/react";
 import { useEffect, useMemo } from "react";
-import { toast } from "sonner";
+import { toast } from "#/components/shadcn/ui/toast";
 
 import { Card, CardContent, CardFooter } from "#/components/shadcn/ui/card.tsx";
 import { Field, FieldLabel } from "#/components/shadcn/ui/field.tsx";
@@ -37,7 +37,11 @@ export function UserProfile({ className }: UserProfileProps) {
 	const { data: session } = useSession(authClient);
 
 	const { mutateAsync: updateUser, isPending } = useUpdateUser(authClient, {
-		onSuccess: () => toast.success(localization.settings.profileUpdatedSuccess),
+		onSuccess: () =>
+			toast.add({
+				type: "success",
+				description: localization.settings.profileUpdatedSuccess,
+			}),
 	});
 
 	const profileFields = useMemo(

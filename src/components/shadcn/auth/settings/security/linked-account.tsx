@@ -15,7 +15,7 @@ import {
 } from "@better-auth-ui/react";
 import type { Account } from "better-auth";
 import { LinkBreakIcon, LinkIcon, PlugIcon } from "@phosphor-icons/react";
-import { toast } from "sonner";
+import { toast } from "#/components/shadcn/ui/toast";
 
 import { Button } from "#/components/shadcn/ui/button.tsx";
 import {
@@ -72,10 +72,17 @@ export function LinkedAccount({
 		meta: { errorPresentation: "inline" },
 		onError: (error) => {
 			if (!isReauthenticationRequiredError(error)) {
-				toast.error(error.error?.message ?? error.message);
+				toast.add({
+					type: "error",
+					description: error.error?.message ?? error.message,
+				});
 			}
 		},
-		onSuccess: () => toast.success(localization.settings.accountUnlinked),
+		onSuccess: () =>
+			toast.add({
+				type: "success",
+				description: localization.settings.accountUnlinked,
+			}),
 	});
 
 	const providerId = getProviderId(provider);

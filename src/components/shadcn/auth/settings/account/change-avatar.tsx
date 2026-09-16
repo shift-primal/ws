@@ -4,7 +4,7 @@ import { fileToAvatarDataUrl } from "@better-auth-ui/core";
 import { useAuth, useSession, useUpdateUser } from "@better-auth-ui/react";
 import { TrashIcon, UploadIcon } from "@phosphor-icons/react";
 import { type ChangeEvent, useRef, useState } from "react";
-import { toast } from "sonner";
+import { toast } from "#/components/shadcn/ui/toast";
 import { UserAvatar } from "#/components/shadcn/auth/user/user-avatar.tsx";
 import { Button, buttonVariants } from "#/components/shadcn/ui/button.tsx";
 import {
@@ -54,12 +54,15 @@ export function ChangeAvatar({ className }: ChangeAvatarProps) {
 				{ image },
 				{
 					onSuccess: () =>
-						toast.success(localization.settings.avatarChangedSuccess),
+						toast.add({
+							type: "success",
+							description: localization.settings.avatarChangedSuccess,
+						}),
 				},
 			);
 		} catch (error) {
 			if (error instanceof Error) {
-				toast.error(error.message);
+				toast.add({ type: "error", description: error.message });
 			}
 		}
 
@@ -82,7 +85,10 @@ export function ChangeAvatar({ className }: ChangeAvatarProps) {
 						}
 					}
 
-					toast.success(localization.settings.avatarDeletedSuccess);
+					toast.add({
+						type: "success",
+						description: localization.settings.avatarDeletedSuccess,
+					});
 				},
 			},
 		);

@@ -149,3 +149,8 @@ body {
 		@apply font-mono;
 	}
 }
+
+.no-transitions * {
+	transition-property: none !important;
+	transition-duration: 0s !important;
+}

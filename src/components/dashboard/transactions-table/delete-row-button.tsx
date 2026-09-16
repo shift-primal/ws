@@ -10,6 +10,7 @@ import {
 	PopoverTitle,
 	PopoverTrigger,
 } from "#/components/shadcn/ui/popover";
+import { toast } from "#/components/shadcn/ui/toast";
 import { removeTransactions } from "#/server/functions/transactions";
 
 export const DeleteRowButton = ({ id }: { id: number }) => {
@@ -19,6 +20,10 @@ export const DeleteRowButton = ({ id }: { id: number }) => {
 		mutationFn: () => removeTransactions({ data: [id] }),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["transactions"] });
+			toast.add({
+				type: "success",
+				title: "Success!",
+			});
 			setOpen(false);
 		},
 	});

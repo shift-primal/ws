@@ -7,7 +7,7 @@ import {
 	SignOutIcon,
 	XIcon,
 } from "@phosphor-icons/react";
-import { toast } from "sonner";
+import { toast } from "#/components/shadcn/ui/toast";
 
 import { Badge } from "#/components/shadcn/ui/badge.tsx";
 import { Button } from "#/components/shadcn/ui/button.tsx";
@@ -66,7 +66,10 @@ export function ActiveSession({ activeSession }: ActiveSessionProps) {
 		authClient,
 		{
 			onSuccess: () =>
-				toast.success(localization.settings.revokeSessionSuccess),
+				toast.add({
+					type: "success",
+					description: localization.settings.revokeSessionSuccess,
+				}),
 		},
 	);
 

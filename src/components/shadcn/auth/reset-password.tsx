@@ -9,7 +9,7 @@ import {
 import { useAuth, useResetPassword } from "@better-auth-ui/react";
 import { EyeIcon, EyeSlashIcon } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
+import { toast } from "#/components/shadcn/ui/toast";
 
 import {
 	Card,
@@ -72,7 +72,10 @@ export function ResetPassword({ className }: ResetPasswordProps) {
 				}
 			},
 			onSuccess: () => {
-				toast.success(localization.auth.passwordResetSuccess);
+				toast.add({
+					type: "success",
+					description: localization.auth.passwordResetSuccess,
+				});
 				navigate({ to: signInURL });
 			},
 		},
@@ -88,7 +91,10 @@ export function ResetPassword({ className }: ResetPasswordProps) {
 		const token = searchParams.get("token") as string;
 
 		if (!token) {
-			toast.error(localization.auth.invalidResetPasswordToken);
+			toast.add({
+				type: "error",
+				description: localization.auth.invalidResetPasswordToken,
+			});
 			navigate({ to: signInURL });
 		}
 	}, [localization.auth.invalidResetPasswordToken, navigate, signInURL]);
@@ -100,7 +106,10 @@ export function ResetPassword({ className }: ResetPasswordProps) {
 			const token = searchParams.get("token") as string;
 
 			if (!token) {
-				toast.error(localization.auth.invalidResetPasswordToken);
+				toast.add({
+					type: "error",
+					description: localization.auth.invalidResetPasswordToken,
+				});
 				navigate({ to: signInURL });
 				return;
 			}

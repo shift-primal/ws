@@ -3,7 +3,7 @@
 import { getViewURL, validateEmailAddress } from "@better-auth-ui/core";
 import { useAuth, useChangeEmail, useSession } from "@better-auth-ui/react";
 import { useEffect } from "react";
-import { toast } from "sonner";
+import { toast } from "#/components/shadcn/ui/toast";
 
 import { Card, CardContent, CardFooter } from "#/components/shadcn/ui/card.tsx";
 import { Field, FieldLabel } from "#/components/shadcn/ui/field.tsx";
@@ -30,7 +30,11 @@ export function ChangeEmail({ className }: ChangeEmailProps) {
 	const { data: session } = useSession(authClient);
 
 	const { mutateAsync: changeEmail, isPending } = useChangeEmail(authClient, {
-		onSuccess: () => toast.success(localization.settings.changeEmailSuccess),
+		onSuccess: () =>
+			toast.add({
+				type: "success",
+				description: localization.settings.changeEmailSuccess,
+			}),
 	});
 
 	const form = useAuthForm({

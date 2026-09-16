@@ -1,5 +1,11 @@
 import { useTable } from "@tanstack/react-table";
 import {
+	Card,
+	CardContent,
+	CardHeader,
+	CardTitle,
+} from "#/components/shadcn/ui/card";
+import {
 	Table,
 	TableBody,
 	TableCell,
@@ -25,38 +31,45 @@ export function TransactionsTable({
 	});
 
 	return (
-		<Table>
-			<TableHeader>
-				{table.getHeaderGroups().map((headerGroup) => (
-					<TableRow key={headerGroup.id}>
-						{headerGroup.headers.map((header) => (
-							<TableHead key={header.id}>
-								{header.isPlaceholder ? null : (
-									<table.FlexRender header={header} />
-								)}
-							</TableHead>
+		<Card>
+			<CardHeader>
+				<CardTitle>Transactions</CardTitle>
+			</CardHeader>
+			<CardContent>
+				<Table>
+					<TableHeader>
+						{table.getHeaderGroups().map((headerGroup) => (
+							<TableRow key={headerGroup.id}>
+								{headerGroup.headers.map((header) => (
+									<TableHead key={header.id}>
+										{header.isPlaceholder ? null : (
+											<table.FlexRender header={header} />
+										)}
+									</TableHead>
+								))}
+							</TableRow>
 						))}
-					</TableRow>
-				))}
-			</TableHeader>
-			<TableBody>
-				{table.getRowModel().rows.length === 0 && (
-					<TableRow>
-						<TableCell colSpan={columns.length} className="text-center">
-							No transactions.
-						</TableCell>
-					</TableRow>
-				)}
-				{table.getRowModel().rows.map((row) => (
-					<TableRow key={row.id}>
-						{row.getAllCells().map((cell) => (
-							<TableCell key={cell.id}>
-								<table.FlexRender cell={cell} />
-							</TableCell>
+					</TableHeader>
+					<TableBody>
+						{table.getRowModel().rows.length === 0 && (
+							<TableRow>
+								<TableCell colSpan={columns.length} className="text-center">
+									No transactions.
+								</TableCell>
+							</TableRow>
+						)}
+						{table.getRowModel().rows.map((row) => (
+							<TableRow key={row.id}>
+								{row.getAllCells().map((cell) => (
+									<TableCell key={cell.id}>
+										<table.FlexRender cell={cell} />
+									</TableCell>
+								))}
+							</TableRow>
 						))}
-					</TableRow>
-				))}
-			</TableBody>
-		</Table>
+					</TableBody>
+				</Table>
+			</CardContent>
+		</Card>
 	);
 }
