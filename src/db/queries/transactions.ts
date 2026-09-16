@@ -109,47 +109,36 @@ export async function getTransactions(userId: string, query: TransactionQuery) {
 	const col = sortColumns[query.sortBy ?? "date"];
 	const orderBy = query.sortDir === "asc" ? asc(col) : desc(col);
 
-	const [
-		data,
-		[{ totalResults }],
-		[{ totalIn, totalOut }],
-		[{ unfilteredTotal }],
-	] = await Promise.all([
-		db
-			.select()
-			.from(transactions)
-			.where(where)
-			.orderBy(orderBy, asc(transactions.id))
-			.limit(query.pageSize)
-			.offset((query.page - 1) * query.pageSize),
+	const [data, [{ totalResults }], [{ totalIn, totalOut }]] = await Promise.all(
+		[
+			db
+				.select()
+				.from(transactions)
+				.where(where)
+				.orderBy(orderBy, asc(transactions.id))
+				.limit(query.pageSize)
+				.offset((query.page - 1) * query.pageSize),
 
-		db
-			.select({
-				totalResults: count(),
-			})
-			.from(transactions)
-			.where(where),
+			db
+				.select({
+					totalResults: count(),
+				})
+				.from(transactions)
+				.where(where),
 
-		db
-			.select({
-				totalIn: sum(incomeAmount),
-				totalOut: sum(expenseAmount),
-			})
-			.from(transactions)
-			.where(where),
-
-		db
-			.select({
-				unfilteredTotal: count(),
-			})
-			.from(transactions)
-			.where(eq(transactions.userId, userId)),
-	]);
+			db
+				.select({
+					totalIn: sum(incomeAmount),
+					totalOut: sum(expenseAmount),
+				})
+				.from(transactions)
+				.where(where),
+		],
+	);
 
 	return {
 		data,
 		totalResults,
-		unfilteredTotal,
 		totalIn: parseFloat(totalIn ?? "0"),
 		totalOut: parseFloat(totalOut ?? "0"),
 	};

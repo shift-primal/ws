@@ -2,8 +2,9 @@ import { createColumnHelper, tableFeatures } from "@tanstack/react-table";
 import { Badge } from "#/components/shadcn/ui/badge";
 import { Button } from "#/components/shadcn/ui/button";
 import type { DbTransaction } from "#/db/schema";
-import { formatCurrency } from "#/lib/currency";
+import { fmtCurrency } from "#/lib/fmt";
 import type { TransactionQuery } from "#/lib/schemas/transactions";
+import { colorClasses, signColor } from "#/lib/utils";
 
 export type SortableColumn = NonNullable<TransactionQuery["sortBy"]>;
 
@@ -83,7 +84,10 @@ export const columns = columnHelper.columns([
 			<Badge variant="secondary">{row.original.category}</Badge>
 		),
 	}),
-	columnHelper.accessor("type", { header: "Type" }),
+	columnHelper.accessor("type", {
+		header: "Type",
+		cell: ({ row }) => <Badge variant="secondary">{row.original.type}</Badge>,
+	}),
 	columnHelper.accessor("amount", {
 		header: ({ table }) => (
 			<SortableHeader
@@ -95,8 +99,8 @@ export const columns = columnHelper.columns([
 		cell: ({ row }) => {
 			const amount = Number(row.original.amount);
 			return (
-				<span className={amount < 0 ? "text-destructive" : "text-emerald-600"}>
-					{formatCurrency(amount)}
+				<span className={colorClasses[signColor(amount)]}>
+					{fmtCurrency(amount)}
 				</span>
 			);
 		},

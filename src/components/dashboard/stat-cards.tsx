@@ -1,10 +1,13 @@
-import {
-	Card,
-	CardContent,
-	CardHeader,
-	CardTitle,
-} from "#/components/shadcn/ui/card";
-import { formatCurrency } from "#/lib/currency";
+import { StatCard } from "#/components/dashboard/stat-cards/stat-card";
+import { fmtCurrency } from "#/lib/fmt";
+import { signColor } from "#/lib/utils";
+
+export type StatCardProps = {
+	title: string;
+	description: string;
+	content: string;
+	color?: "success" | "destructive";
+};
 
 export function StatCards({
 	totalIn,
@@ -17,57 +20,43 @@ export function StatCards({
 }) {
 	const net = totalIn + totalOut;
 
+	const STAT_CARDS_CONTENT: StatCardProps[] = [
+		{
+			title: "Net",
+			description: "Total net (income - expenses)",
+			content: fmtCurrency(net),
+			color: signColor(net),
+		},
+		{
+			title: "Income",
+			description: "Total income",
+			content: fmtCurrency(totalIn),
+			color: "success",
+		},
+		{
+			title: "Expenses",
+			description: "Total expenses",
+			content: fmtCurrency(totalOut),
+			color: "destructive",
+		},
+		{
+			title: "Transactions",
+			description: "Total number of transactions",
+			content: totalResults.toString(),
+		},
+	];
+
 	return (
 		<div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-			<Card>
-				<CardHeader>
-					<CardTitle className="text-muted-foreground text-sm font-normal">
-						Income
-					</CardTitle>
-				</CardHeader>
-				<CardContent className="text-2xl font-semibold text-emerald-600">
-					{formatCurrency(totalIn)}
-				</CardContent>
-			</Card>
-
-			<Card>
-				<CardHeader>
-					<CardTitle className="text-muted-foreground text-sm font-normal">
-						Expenses
-					</CardTitle>
-				</CardHeader>
-				<CardContent className="text-2xl font-semibold text-destructive">
-					{formatCurrency(totalOut)}
-				</CardContent>
-			</Card>
-
-			<Card>
-				<CardHeader>
-					<CardTitle className="text-muted-foreground text-sm font-normal">
-						Net
-					</CardTitle>
-				</CardHeader>
-				<CardContent
-					className={
-						net < 0
-							? "text-2xl font-semibold text-destructive"
-							: "text-2xl font-semibold text-emerald-600"
-					}
-				>
-					{formatCurrency(net)}
-				</CardContent>
-			</Card>
-
-			<Card>
-				<CardHeader>
-					<CardTitle className="text-muted-foreground text-sm font-normal">
-						Transactions
-					</CardTitle>
-				</CardHeader>
-				<CardContent className="text-2xl font-semibold">
-					{totalResults}
-				</CardContent>
-			</Card>
+			{STAT_CARDS_CONTENT.map((c) => (
+				<StatCard
+					key={c.title}
+					title={c.title}
+					description={c.description}
+					content={c.content}
+					color={c.color}
+				/>
+			))}
 		</div>
 	);
 }

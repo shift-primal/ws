@@ -13,17 +13,10 @@ import {
 	ChartTooltip,
 	ChartTooltipContent,
 } from "#/components/shadcn/ui/chart";
-import { formatCurrency } from "#/lib/currency";
+import { fmtCurrency } from "#/lib/fmt";
+import { chartOtherColor, chartPalette } from "#/lib/utils";
 
-const SLICE_COLORS = [
-	"var(--color-chart-1)",
-	"var(--color-chart-2)",
-	"var(--color-chart-3)",
-	"var(--color-chart-4)",
-	"var(--color-chart-5)",
-];
-const OTHER_COLOR = "var(--color-ring)";
-const MAX_SLICES = SLICE_COLORS.length;
+const MAX_SLICES = chartPalette.length;
 
 export function CategoryChart({
 	data,
@@ -57,8 +50,8 @@ export function CategoryChart({
 		const chartData = slices.map((slice, index) => {
 			const color =
 				slice.category === "Other"
-					? OTHER_COLOR
-					: SLICE_COLORS[index % SLICE_COLORS.length];
+					? chartOtherColor
+					: chartPalette[index % chartPalette.length];
 			config[slice.category] = { label: slice.category, color };
 			return { ...slice, fill: color };
 		});
@@ -83,7 +76,7 @@ export function CategoryChart({
 					<>
 						<ChartContainer
 							config={chartConfig}
-							className="mx-auto aspect-square max-h-56"
+							className="mx-auto aspect-square max-h-48"
 						>
 							<PieChart>
 								<ChartTooltip
@@ -95,7 +88,7 @@ export function CategoryChart({
 												<div className="flex w-full justify-between gap-4">
 													<span className="text-muted-foreground">{name}</span>
 													<span className="font-mono font-medium text-foreground tabular-nums">
-														{formatCurrency(value as number)}
+														{fmtCurrency(value as number)}
 													</span>
 												</div>
 											)}
@@ -108,7 +101,7 @@ export function CategoryChart({
 									nameKey="category"
 									innerRadius={72}
 									outerRadius={96}
-									strokeWidth={4}
+									paddingAngle={-0.5}
 								>
 									<Label
 										content={({ viewBox }) => {
@@ -117,8 +110,6 @@ export function CategoryChart({
 
 											return (
 												<text
-													x={viewBox.cx}
-													y={viewBox.cy}
 													textAnchor="middle"
 													dominantBaseline="middle"
 													pointerEvents="none"
@@ -128,7 +119,7 @@ export function CategoryChart({
 														y={viewBox.cy}
 														className="fill-foreground text-base font-bold"
 													>
-														{formatCurrency(total)}
+														{fmtCurrency(total)}
 													</tspan>
 													<tspan
 														x={viewBox.cx}
