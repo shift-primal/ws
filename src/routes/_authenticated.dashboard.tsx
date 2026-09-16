@@ -29,25 +29,7 @@ function withDateDefaults(search: DashboardSearch): TransactionQuery {
 	};
 }
 
-export const Route = createFileRoute("/_authenticated/dashboard")({
-	validateSearch: dashboardSearchSchema,
-	search: {
-		middlewares: [stripSearchParams({ page: 1, pageSize: 25 })],
-	},
-	loaderDeps: ({ search }) => search,
-	loader: ({ context: { queryClient }, deps }) => {
-		const query = withDateDefaults(deps);
-		return Promise.all([
-			queryClient.query({ ...transactionsQuery(query), staleTime: "static" }),
-			queryClient.query({ ...amtBoundsQuery, staleTime: "static" }),
-			queryClient.query({ ...categoryStatsQuery(query), staleTime: "static" }),
-			queryClient.query({ ...monthlyStatsQuery(query), staleTime: "static" }),
-		]);
-	},
-	component: Dashboard,
-});
-
-function Dashboard() {
+const Dashboard = () => {
 	const search = Route.useSearch();
 	const navigate = Route.useNavigate();
 	const query = withDateDefaults(search);
@@ -147,4 +129,22 @@ function Dashboard() {
 			</div>
 		</div>
 	);
-}
+};
+
+export const Route = createFileRoute("/_authenticated/dashboard")({
+	validateSearch: dashboardSearchSchema,
+	search: {
+		middlewares: [stripSearchParams({ page: 1, pageSize: 25 })],
+	},
+	loaderDeps: ({ search }) => search,
+	loader: ({ context: { queryClient }, deps }) => {
+		const query = withDateDefaults(deps);
+		return Promise.all([
+			queryClient.query({ ...transactionsQuery(query), staleTime: "static" }),
+			queryClient.query({ ...amtBoundsQuery, staleTime: "static" }),
+			queryClient.query({ ...categoryStatsQuery(query), staleTime: "static" }),
+			queryClient.query({ ...monthlyStatsQuery(query), staleTime: "static" }),
+		]);
+	},
+	component: Dashboard,
+});

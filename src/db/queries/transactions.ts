@@ -159,14 +159,79 @@ export async function getAmtBounds(userId: string) {
 	};
 }
 
+function duplicateKey(tx: {
+	date: string;
+	amount: number;
+	merchant: string;
+	type: string;
+	counterparty?: string | null;
+}) {
+	return [
+		tx.date,
+		tx.amount.toFixed(2),
+		tx.merchant,
+		tx.type,
+		tx.counterparty ?? "",
+	].join("|");
+}
+
+/** Existing transaction keys for the user, restricted to the incoming rows' date range. */
+async function getExistingKeys(userId: string, rows: NewTransactionInput[]) {
+	const dates = rows.map((row) => row.date);
+	const from = dates.reduce((a, b) => (b < a ? b : a));
+	const to = dates.reduce((a, b) => (b > a ? b : a));
+
+	const existing = await db
+		.select({
+			date: transactions.date,
+			amount: transactions.amount,
+			merchant: transactions.merchant,
+			type: transactions.type,
+			counterparty: transactions.counterparty,
+		})
+		.from(transactions)
+		.where(
+			and(
+				eq(transactions.userId, userId),
+				between(transactions.date, from, to),
+			),
+		);
+
+	return new Set(
+		existing.map((tx) =>
+			duplicateKey({ ...tx, amount: parseFloat(tx.amount) }),
+		),
+	);
+}
+
+/**
+ * Inserts rows, silently skipping any that duplicate an already-imported
+ * transaction (same date, amount, merchant, type and counterparty) or a
+ * duplicate within the incoming batch itself.
+ */
 export async function insertTransactions(
 	userId: string,
 	rows: NewTransactionInput[],
 ) {
-	return db
+	if (rows.length === 0) return { inserted: [], skipped: 0 };
+
+	const seenKeys = await getExistingKeys(userId, rows);
+	const toInsert: NewTransactionInput[] = [];
+
+	for (const row of rows) {
+		const key = duplicateKey(row);
+		if (seenKeys.has(key)) continue;
+		seenKeys.add(key);
+		toInsert.push(row);
+	}
+
+	const skipped = rows.length - toInsert.length;
+	if (toInsert.length === 0) return { inserted: [], skipped };
+
+	const inserted = await db
 		.insert(transactions)
 		.values(
-			rows.map(({ valuta, ...rest }) => ({
+			toInsert.map(({ valuta, ...rest }) => ({
 				...rest,
 				userId,
 				amount: rest.amount.toString(),
@@ -175,6 +240,8 @@ export async function insertTransactions(
 			})),
 		)
 		.returning();
+
+	return { inserted, skipped };
 }
 
 export async function deleteTransactions(userId: string, ids: number[]) {

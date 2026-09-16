@@ -56,8 +56,12 @@ beforeEach(async () => {
 
 describe("insertTransactions", () => {
 	it("inserts rows and returns them", async () => {
-		const inserted = await insertTransactions(testUserId, sampleTransactions);
+		const { inserted, skipped } = await insertTransactions(
+			testUserId,
+			sampleTransactions,
+		);
 
+		expect(skipped).toBe(0);
 		expect(inserted).toHaveLength(2);
 		expect(inserted[0]).toMatchObject({
 			userId: testUserId,
@@ -70,6 +74,28 @@ describe("insertTransactions", () => {
 			currency: "USD",
 			exchangeRate: "10.85",
 		});
+	});
+
+	it("skips rows that duplicate an already-imported transaction", async () => {
+		await insertTransactions(testUserId, sampleTransactions);
+
+		const result = await insertTransactions(testUserId, sampleTransactions);
+
+		expect(result.inserted).toHaveLength(0);
+		expect(result.skipped).toBe(2);
+
+		const all = await getTransactions(testUserId, defaultQuery());
+		expect(all.totalResults).toBe(2);
+	});
+
+	it("skips duplicates within the same batch", async () => {
+		const result = await insertTransactions(testUserId, [
+			sampleTransactions[0],
+			sampleTransactions[0],
+		] as NewTransactionInput[]);
+
+		expect(result.inserted).toHaveLength(1);
+		expect(result.skipped).toBe(1);
 	});
 });
 

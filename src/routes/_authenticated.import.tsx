@@ -1,7 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { UploadForm } from "#/components/import/upload-form";
 
 const Import = () => {
-	return <div>Hello "/_authenticated/import"!</div>;
+	return (
+		<div>
+			<UploadForm />
+		</div>
+	);
 };
 
 export const Route = createFileRoute("/_authenticated/import")({

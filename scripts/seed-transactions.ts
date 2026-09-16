@@ -132,9 +132,11 @@ async function main() {
 	const userId = await resolveUserId();
 	const rows = Array.from({ length: TRANSACTION_COUNT }, randomTransaction);
 
-	const inserted = await insertTransactions(userId, rows);
+	const { inserted, skipped } = await insertTransactions(userId, rows);
 
-	console.log(`Inserted ${inserted.length} transactions for user ${userId}`);
+	console.log(
+		`Inserted ${inserted.length} transactions for user ${userId}${skipped > 0 ? ` (skipped ${skipped} duplicates)` : ""}`,
+	);
 }
 
 main()
