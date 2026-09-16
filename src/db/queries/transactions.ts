@@ -205,6 +205,32 @@ async function getExistingKeys(userId: string, rows: NewTransactionInput[]) {
 }
 
 /**
+ * Flags each row as a duplicate of an already-imported transaction (same
+ * date, amount, merchant, type and counterparty) or of an earlier row in
+ * the same batch. Returned in the same order as `rows`.
+ */
+async function markDuplicates(userId: string, rows: NewTransactionInput[]) {
+	if (rows.length === 0) return [] as boolean[];
+
+	const seenKeys = await getExistingKeys(userId, rows);
+
+	return rows.map((row) => {
+		const key = duplicateKey(row);
+		if (seenKeys.has(key)) return true;
+		seenKeys.add(key);
+		return false;
+	});
+}
+
+/** Preview which rows would be skipped as duplicates without inserting anything. */
+export async function findDuplicateTransactions(
+	userId: string,
+	rows: NewTransactionInput[],
+) {
+	return markDuplicates(userId, rows);
+}
+
+/**
  * Inserts rows, silently skipping any that duplicate an already-imported
  * transaction (same date, amount, merchant, type and counterparty) or a
  * duplicate within the incoming batch itself.
@@ -215,15 +241,8 @@ export async function insertTransactions(
 ) {
 	if (rows.length === 0) return { inserted: [], skipped: 0 };
 
-	const seenKeys = await getExistingKeys(userId, rows);
-	const toInsert: NewTransactionInput[] = [];
-
-	for (const row of rows) {
-		const key = duplicateKey(row);
-		if (seenKeys.has(key)) continue;
-		seenKeys.add(key);
-		toInsert.push(row);
-	}
+	const isDuplicate = await markDuplicates(userId, rows);
+	const toInsert = rows.filter((_, i) => !isDuplicate[i]);
 
 	const skipped = rows.length - toInsert.length;
 	if (toInsert.length === 0) return { inserted: [], skipped };

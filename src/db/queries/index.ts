@@ -1,6 +1,7 @@
 export {
 	deleteAllTransactions,
 	deleteTransactions,
+	findDuplicateTransactions,
 	getAmtBounds,
 	getCategoryStats,
 	getMonthlyStats,

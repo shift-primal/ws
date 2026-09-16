@@ -25,14 +25,32 @@ export type DropzoneProps = {
 	files: File[];
 	onFilesChange: (files: File[]) => void;
 	accept?: string;
+	onFilesRejected?: (files: File[]) => void;
 	multiple?: boolean;
 	className?: string;
 };
+
+function matchesAccept(file: File, accept?: string) {
+	if (!accept) return true;
+	const name = file.name.toLowerCase();
+	const type = file.type.toLowerCase();
+
+	return accept
+		.split(",")
+		.map((pattern) => pattern.trim().toLowerCase())
+		.filter(Boolean)
+		.some((pattern) => {
+			if (pattern.startsWith(".")) return name.endsWith(pattern);
+			if (pattern.endsWith("/*")) return type.startsWith(pattern.slice(0, -1));
+			return type === pattern;
+		});
+}
 
 export const Dropzone = ({
 	files,
 	onFilesChange,
 	accept,
+	onFilesRejected,
 	multiple = false,
 	className,
 }: DropzoneProps) => {
@@ -43,7 +61,13 @@ export const Dropzone = ({
 	const addFiles = (fileList: FileList | null) => {
 		if (!fileList?.length) return;
 		const incoming = Array.from(fileList);
-		onFilesChange(multiple ? [...files, ...incoming] : incoming.slice(0, 1));
+		const accepted = incoming.filter((file) => matchesAccept(file, accept));
+		const rejected = incoming.filter((file) => !matchesAccept(file, accept));
+
+		if (rejected.length > 0) onFilesRejected?.(rejected);
+		if (accepted.length === 0) return;
+
+		onFilesChange(multiple ? [...files, ...accepted] : accepted.slice(0, 1));
 	};
 
 	const handleDrop = (e: DragEvent<HTMLButtonElement>) => {

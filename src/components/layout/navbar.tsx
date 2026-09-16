@@ -5,6 +5,7 @@ import {
 	HouseIcon,
 	type Icon,
 	UploadIcon,
+	WrenchIcon,
 } from "@phosphor-icons/react";
 import { Link, type LinkProps, linkOptions } from "@tanstack/react-router";
 import { ThemeSwitcher } from "#/components/layout/theme-switcher";
@@ -51,6 +52,13 @@ const navLinks: NavLink[] = [
 		icon: UploadIcon,
 		options: linkOptions({
 			to: "/import",
+		}),
+	},
+	{
+		label: "Dev",
+		icon: WrenchIcon,
+		options: linkOptions({
+			to: "/dev",
 		}),
 	},
 ];

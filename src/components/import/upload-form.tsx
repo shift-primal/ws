@@ -9,6 +9,7 @@ import {
 	type Transaction,
 } from "txcategorizer";
 import { Dropzone } from "#/components/import/dropzone";
+import { Badge } from "#/components/shadcn/ui/badge";
 import { Button } from "#/components/shadcn/ui/button";
 import {
 	Combobox,
@@ -44,7 +45,10 @@ import {
 } from "#/components/shadcn/ui/table";
 import { toast } from "#/components/shadcn/ui/toast";
 import { fmtCurrency } from "#/lib/fmt";
-import { importTransactions } from "#/server/functions/transactions";
+import {
+	checkDuplicateTransactions,
+	importTransactions,
+} from "#/server/functions/transactions";
 
 const bankLabels: Record<Bank, string> = {
 	dnb: "DNB",
@@ -56,6 +60,7 @@ const PREVIEW_ROW_LIMIT = 50;
 export const UploadForm = () => {
 	const queryClient = useQueryClient();
 	const [preview, setPreview] = useState<Transaction[] | null>(null);
+	const [duplicateFlags, setDuplicateFlags] = useState<boolean[]>([]);
 
 	const { mutateAsync: runImport, isPending } = useMutation({
 		mutationFn: importTransactions,
@@ -77,6 +82,10 @@ export const UploadForm = () => {
 		},
 	});
 
+	const { mutateAsync: checkDuplicates } = useMutation({
+		mutationFn: checkDuplicateTransactions,
+	});
+
 	const form = useForm({
 		defaultValues: {
 			file: undefined as File | undefined,
@@ -85,7 +94,21 @@ export const UploadForm = () => {
 		onSubmit: async ({ value }) => {
 			if (!value.file || !value.bank) return;
 			const buffer = await value.file.arrayBuffer();
-			setPreview(processTransactions(buffer, value.bank));
+			const parsed = processTransactions(buffer, value.bank);
+
+			if (parsed.length === 0) {
+				toast.add({
+					type: "error",
+					title: "No transactions found",
+					description:
+						"Couldn't find any transactions in this file. Check that it's a valid export from the selected bank.",
+				});
+				return;
+			}
+
+			const flags = await checkDuplicates({ data: parsed });
+			setDuplicateFlags(flags);
+			setPreview(parsed);
 		},
 	});
 
@@ -101,15 +124,17 @@ export const UploadForm = () => {
 			0,
 		);
 		const dates = preview.map((tx) => tx.date).sort();
+		const duplicates = duplicateFlags.filter(Boolean).length;
 
 		return {
 			count: preview.length,
 			totalIn,
 			totalOut,
+			duplicates,
 			from: dates[0],
 			to: dates.at(-1),
 		};
-	}, [preview]);
+	}, [preview, duplicateFlags]);
 
 	return (
 		<form
@@ -138,7 +163,14 @@ export const UploadForm = () => {
 									<Dropzone
 										files={field.state.value ? [field.state.value] : []}
 										onFilesChange={(files) => field.handleChange(files[0])}
-										accept=".csv,.txt"
+										accept=".csv,.txt,text/csv,text/plain"
+										onFilesRejected={() =>
+											toast.add({
+												type: "error",
+												title: "Unsupported file",
+												description: "Only .csv and .txt files are accepted.",
+											})
+										}
 									/>
 									<FieldDescription>
 										Accepts .csv and .txt files
@@ -189,9 +221,13 @@ export const UploadForm = () => {
 							)}
 						</form.Field>
 
-						<Button type="submit" disabled={isPending}>
-							Preview import
-						</Button>
+						<form.Subscribe selector={(state) => state.isSubmitting}>
+							{(isSubmitting) => (
+								<Button type="submit" disabled={isSubmitting || isPending}>
+									{isSubmitting ? "Checking…" : "Preview import"}
+								</Button>
+							)}
+						</form.Subscribe>
 					</FieldGroup>
 				</FieldSet>
 			</Field>
@@ -216,37 +252,58 @@ export const UploadForm = () => {
 									)}
 									: {fmtCurrency(summary.totalIn)} in,{" "}
 									{fmtCurrency(summary.totalOut)} out.
+									{summary.duplicates > 0 && (
+										<>
+											{" "}
+											{summary.duplicates} already imported and will be skipped.
+										</>
+									)}
 								</>
 							)}
 						</DialogDescription>
 					</DialogHeader>
 
-					<Table>
-						<TableHeader>
-							<TableRow>
-								<TableHead>Date</TableHead>
-								<TableHead>Merchant</TableHead>
-								<TableHead>Category</TableHead>
-								<TableHead className="text-right">Amount</TableHead>
-							</TableRow>
-						</TableHeader>
-						<TableBody>
-							{preview?.slice(0, PREVIEW_ROW_LIMIT).map((tx) => (
-								<TableRow
-									key={`${tx.date}-${tx.merchant}-${tx.amount}-${tx.category}`}
-								>
-									<TableCell>
-										{format(parseISO(tx.date), "LLL dd, y")}
-									</TableCell>
-									<TableCell>{tx.merchant}</TableCell>
-									<TableCell>{tx.category}</TableCell>
-									<TableCell className="text-right">
-										{fmtCurrency(tx.amount)}
-									</TableCell>
+					<div className="max-h-[50vh] overflow-y-auto">
+						<Table>
+							<TableHeader className="sticky top-0 z-10 bg-popover">
+								<TableRow>
+									<TableHead>Date</TableHead>
+									<TableHead>Merchant</TableHead>
+									<TableHead>Category</TableHead>
+									<TableHead className="text-right">Amount</TableHead>
+									<TableHead />
 								</TableRow>
-							))}
-						</TableBody>
-					</Table>
+							</TableHeader>
+							<TableBody>
+								{preview?.slice(0, PREVIEW_ROW_LIMIT).map((tx, i) => {
+									const isDuplicate = duplicateFlags[i] ?? false;
+									return (
+										<TableRow
+											// biome-ignore lint/suspicious/noArrayIndexKey: rows can be genuine duplicates (identical date/merchant/amount/category), so the index disambiguates a static, non-reorderable list
+											key={`${i}-${tx.date}-${tx.merchant}-${tx.amount}-${tx.category}`}
+											className={
+												isDuplicate ? "text-muted-foreground" : undefined
+											}
+										>
+											<TableCell>
+												{format(parseISO(tx.date), "LLL dd, y")}
+											</TableCell>
+											<TableCell>{tx.merchant}</TableCell>
+											<TableCell>{tx.category}</TableCell>
+											<TableCell className="text-right">
+												{fmtCurrency(tx.amount)}
+											</TableCell>
+											<TableCell>
+												{isDuplicate && (
+													<Badge variant="outline">Duplicate</Badge>
+												)}
+											</TableCell>
+										</TableRow>
+									);
+								})}
+							</TableBody>
+						</Table>
+					</div>
 					{preview && preview.length > PREVIEW_ROW_LIMIT && (
 						<FieldDescription>
 							and {preview.length - PREVIEW_ROW_LIMIT} more…

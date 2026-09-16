@@ -3,6 +3,7 @@ import * as z from "zod";
 import {
 	deleteAllTransactions,
 	deleteTransactions,
+	findDuplicateTransactions,
 	getAmtBounds,
 	getCategoryStats,
 	getMonthlyStats,
@@ -48,6 +49,15 @@ export const importTransactions = createServerFn({
 	.middleware([authMiddleware])
 	.validator(importSchema)
 	.handler(({ data, context }) => insertTransactions(context.userId, data));
+
+export const checkDuplicateTransactions = createServerFn({
+	method: "POST",
+})
+	.middleware([authMiddleware])
+	.validator(importSchema)
+	.handler(({ data, context }) =>
+		findDuplicateTransactions(context.userId, data),
+	);
 
 export const clearTransactions = createServerFn({
 	method: "POST",
