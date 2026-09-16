@@ -1,3 +1,5 @@
+/** biome-ignore-all lint/complexity/noImportantStyles: <needed for theme transition "hack" - Make sure theme switches instantly> */
+
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
