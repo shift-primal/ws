@@ -32,10 +32,16 @@ export function MonthlyChart({
 }: {
 	data: { month: string; totalIn: number; totalOut: number }[];
 }) {
-	const chartData = useMemo(
-		() => data.map((row) => ({ ...row, totalOut: Math.abs(row.totalOut) })),
-		[data],
-	);
+	const chartData = useMemo(() => {
+		const mapped = data.map((row) => ({
+			...row,
+			totalOut: Math.abs(row.totalOut),
+		}));
+
+		// A single point has no line to draw, so recharts renders just a dot.
+		// Padding it with a duplicate gives the area chart a flat line instead.
+		return mapped.length === 1 ? [mapped[0], mapped[0]] : mapped;
+	}, [data]);
 
 	return (
 		<Card>
@@ -59,7 +65,11 @@ export function MonthlyChart({
 								dataKey="month"
 								tickLine={false}
 								tickMargin={8}
-								tickFormatter={(value: string) => monthLabel(value, "MMM yy")}
+								tickFormatter={(value: string, index: number) =>
+									chartData[index]?.month === chartData[index - 1]?.month
+										? ""
+										: monthLabel(value, "MMM yy")
+								}
 							/>
 							<YAxis />
 							<ChartTooltip

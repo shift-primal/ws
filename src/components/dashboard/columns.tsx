@@ -1,4 +1,5 @@
 import { createColumnHelper, tableFeatures } from "@tanstack/react-table";
+import { DeleteRowButton } from "#/components/dashboard/transactions-table/delete-row-button";
 import { Badge } from "#/components/shadcn/ui/badge";
 import { Button } from "#/components/shadcn/ui/button";
 import type { DbTransaction } from "#/db/schema";
@@ -53,6 +54,7 @@ export const columns = columnHelper.columns([
 			<SortableHeader label="Date" column="date" meta={table.options.meta} />
 		),
 	}),
+
 	columnHelper.accessor("merchant", {
 		header: ({ table }) => (
 			<SortableHeader
@@ -72,6 +74,7 @@ export const columns = columnHelper.columns([
 			</div>
 		),
 	}),
+
 	columnHelper.accessor("category", {
 		header: ({ table }) => (
 			<SortableHeader
@@ -84,10 +87,12 @@ export const columns = columnHelper.columns([
 			<Badge variant="secondary">{row.original.category}</Badge>
 		),
 	}),
+
 	columnHelper.accessor("type", {
 		header: "Type",
 		cell: ({ row }) => <Badge variant="secondary">{row.original.type}</Badge>,
 	}),
+
 	columnHelper.accessor("amount", {
 		header: ({ table }) => (
 			<SortableHeader
@@ -104,5 +109,11 @@ export const columns = columnHelper.columns([
 				</span>
 			);
 		},
+	}),
+
+	columnHelper.display({
+		id: "delete",
+		header: () => <span className="sr-only">Delete row</span>,
+		cell: ({ row }) => <DeleteRowButton id={row.original.id} />,
 	}),
 ]);

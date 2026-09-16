@@ -141,6 +141,10 @@ body {
 	body {
 		@apply bg-background text-foreground;
 	}
+	button:not(:disabled):not([data-disabled]),
+	[role="button"]:not(:disabled):not([data-disabled]) {
+		cursor: pointer;
+	}
 	html {
 		@apply font-mono;
 	}

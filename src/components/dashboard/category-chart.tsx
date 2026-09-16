@@ -65,7 +65,9 @@ export function CategoryChart({
 		<Card>
 			<CardHeader>
 				<CardTitle>By category</CardTitle>
-				<CardDescription>Share of spending</CardDescription>
+				<CardDescription>
+					Share of spending, will only show expenses
+				</CardDescription>
 			</CardHeader>
 			<CardContent>
 				{chartData.length === 0 ? (

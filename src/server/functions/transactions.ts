@@ -1,6 +1,8 @@
 import { createServerFn } from "@tanstack/react-start";
+import * as z from "zod";
 import {
 	deleteAllTransactions,
+	deleteTransactions,
 	getAmtBounds,
 	getCategoryStats,
 	getMonthlyStats,
@@ -52,3 +54,10 @@ export const clearTransactions = createServerFn({
 })
 	.middleware([authMiddleware])
 	.handler(({ context }) => deleteAllTransactions(context.userId));
+
+export const removeTransactions = createServerFn({
+	method: "POST",
+})
+	.middleware([authMiddleware])
+	.validator(z.array(z.number()))
+	.handler(({ data, context }) => deleteTransactions(context.userId, data));
