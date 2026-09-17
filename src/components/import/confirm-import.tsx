@@ -1,6 +1,7 @@
 import { format, parseISO } from "date-fns";
 import { useMemo } from "react";
 import type { Transaction } from "txcategorizer";
+import { Badge } from "#/components/shadcn/ui/badge";
 import { Button } from "#/components/shadcn/ui/button";
 import {
 	Dialog,
@@ -11,6 +12,7 @@ import {
 	DialogTitle,
 } from "#/components/shadcn/ui/dialog";
 import { fmtCurrency } from "#/lib/fmt";
+import { cn, colorClasses } from "#/lib/utils";
 import { PreviewTable } from "./preview-table";
 
 type ConfirmImportProps = {
@@ -52,33 +54,40 @@ export const ConfirmImport = ({
 		};
 	}, [preview, duplicateFlags]);
 
+	const dateRange =
+		summary?.from && summary.to
+			? `${format(parseISO(summary.from), "LLL dd, y")} – ${format(parseISO(summary.to), "LLL dd, y")}`
+			: null;
+
 	return (
 		<Dialog open={!!preview} onOpenChange={(open) => !open && setPreview(null)}>
 			<DialogContent className="sm:max-w-2xl">
 				<DialogHeader>
 					<DialogTitle>Confirm import</DialogTitle>
-					<DialogDescription>
-						{summary && (
-							<>
-								{summary.count} transaction{summary.count === 1 ? "" : "s"}
-								{summary.from && summary.to && (
-									<>
-										from {format(parseISO(summary.from), "LLL dd, y")} to{" "}
-										{format(parseISO(summary.to), "LLL dd, y")}
-									</>
-								)}
-								: {fmtCurrency(summary.totalIn)} in,{" "}
-								{fmtCurrency(summary.totalOut)} out.
-								{summary.duplicates > 0 && (
-									<>
-										{" "}
-										{summary.duplicates} already imported and will be skipped.
-									</>
-								)}
-							</>
-						)}
-					</DialogDescription>
+					{summary && (
+						<DialogDescription>
+							{summary.count} transaction{summary.count === 1 ? "" : "s"}
+							{dateRange && ` · ${dateRange}`}
+						</DialogDescription>
+					)}
 				</DialogHeader>
+
+				{summary && (
+					<div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
+						<span className={cn("font-medium", colorClasses.success)}>
+							{fmtCurrency(summary.totalIn)} in
+						</span>
+						<span className={cn("font-medium", colorClasses.destructive)}>
+							{fmtCurrency(summary.totalOut)} out
+						</span>
+						{summary.duplicates > 0 && (
+							<Badge variant="outline">
+								{summary.duplicates} duplicate
+								{summary.duplicates === 1 ? "" : "s"} skipped
+							</Badge>
+						)}
+					</div>
+				)}
 
 				{preview && (
 					<PreviewTable preview={preview} duplicateFlags={duplicateFlags} />

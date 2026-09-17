@@ -186,7 +186,11 @@ export const UploadForm = () => {
 
 						<form.Subscribe selector={(state) => state.isSubmitting}>
 							{(isSubmitting) => (
-								<Button type="submit" disabled={isSubmitting || isPending}>
+								<Button
+									variant="outline"
+									type="submit"
+									disabled={isSubmitting || isPending}
+								>
 									{isSubmitting ? "Checking…" : "Preview import"}
 								</Button>
 							)}
