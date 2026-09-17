@@ -18,6 +18,7 @@ import {
 	ItemMedia,
 	ItemTitle,
 } from "#/components/shadcn/ui/item";
+import { DROPZONE_CONTENT } from "#/content";
 import { fmtFileSize } from "#/lib/fmt";
 import { cn } from "#/lib/utils";
 
@@ -83,10 +84,8 @@ export const Dropzone = ({
 	return (
 		<Card className={className}>
 			<CardHeader>
-				<CardTitle>Upload files</CardTitle>
-				<CardDescription>
-					Drag and drop files or click to browse
-				</CardDescription>
+				<CardTitle>{DROPZONE_CONTENT.title}</CardTitle>
+				<CardDescription>{DROPZONE_CONTENT.description}</CardDescription>
 			</CardHeader>
 
 			<CardContent>
@@ -106,9 +105,11 @@ export const Dropzone = ({
 					)}
 				>
 					<CloudArrowUpIcon className="size-8 text-muted-foreground" />
-					<span className="text-sm font-medium">Drop files here</span>
+					<span className="text-sm font-medium">
+						{DROPZONE_CONTENT.dropText}
+					</span>
 					<span className="text-xs text-muted-foreground">
-						or click to browse from your device
+						{DROPZONE_CONTENT.browseText}
 					</span>
 				</button>
 
@@ -128,7 +129,7 @@ export const Dropzone = ({
 			<CardFooter className="flex-col items-stretch gap-2">
 				{files.length === 0 ? (
 					<p className="py-1 text-center text-xs text-muted-foreground">
-						No files uploaded yet
+						{DROPZONE_CONTENT.emptyText}
 					</p>
 				) : (
 					<ItemGroup>

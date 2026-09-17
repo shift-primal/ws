@@ -13,16 +13,17 @@ import {
 	ChartTooltip,
 	ChartTooltipContent,
 } from "#/components/shadcn/ui/chart";
+import { MONTHLY_CHART_CONTENT } from "#/content";
 import { fmtCurrency, monthLabel } from "#/lib/fmt";
 import { cn, colorVars } from "#/lib/utils";
 
 const chartConfig = {
 	totalIn: {
-		label: "Income",
+		label: MONTHLY_CHART_CONTENT.incomeLabel,
 		color: colorVars.success,
 	},
 	totalOut: {
-		label: "Expenses",
+		label: MONTHLY_CHART_CONTENT.expensesLabel,
 		color: colorVars.destructive,
 	},
 } satisfies ChartConfig;
@@ -46,13 +47,13 @@ export function MonthlyChart({
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle>Monthly trend</CardTitle>
-				<CardDescription>Income vs. expenses over time</CardDescription>
+				<CardTitle>{MONTHLY_CHART_CONTENT.title}</CardTitle>
+				<CardDescription>{MONTHLY_CHART_CONTENT.description}</CardDescription>
 			</CardHeader>
 			<CardContent>
 				{chartData.length === 0 ? (
 					<p className="text-muted-foreground text-sm">
-						No data for the current filters.
+						{MONTHLY_CHART_CONTENT.emptyText}
 					</p>
 				) : (
 					<ChartContainer

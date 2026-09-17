@@ -11,6 +11,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "#/components/shadcn/ui/dialog";
+import { CONFIRM_IMPORT_CONTENT } from "#/content";
 import { fmtCurrency } from "#/lib/fmt";
 import { cn, colorClasses } from "#/lib/utils";
 import { PreviewTable } from "./preview-table";
@@ -63,10 +64,10 @@ export const ConfirmImport = ({
 		<Dialog open={!!preview} onOpenChange={(open) => !open && setPreview(null)}>
 			<DialogContent className="sm:max-w-2xl">
 				<DialogHeader>
-					<DialogTitle>Confirm import</DialogTitle>
+					<DialogTitle>{CONFIRM_IMPORT_CONTENT.title}</DialogTitle>
 					{summary && (
 						<DialogDescription>
-							{summary.count} transaction{summary.count === 1 ? "" : "s"}
+							{CONFIRM_IMPORT_CONTENT.transactionCount(summary.count)}
 							{dateRange && ` · ${dateRange}`}
 						</DialogDescription>
 					)}
@@ -82,8 +83,7 @@ export const ConfirmImport = ({
 						</span>
 						{summary.duplicates > 0 && (
 							<Badge variant="outline">
-								{summary.duplicates} duplicate
-								{summary.duplicates === 1 ? "" : "s"} skipped
+								{CONFIRM_IMPORT_CONTENT.duplicatesSkipped(summary.duplicates)}
 							</Badge>
 						)}
 					</div>
@@ -99,14 +99,14 @@ export const ConfirmImport = ({
 						variant="outline"
 						onClick={() => setPreview(null)}
 					>
-						Cancel
+						{CONFIRM_IMPORT_CONTENT.cancelButton}
 					</Button>
 					<Button
 						type="button"
 						disabled={isPending}
 						onClick={() => preview && runImport({ data: preview })}
 					>
-						Confirm import
+						{CONFIRM_IMPORT_CONTENT.confirmButton}
 					</Button>
 				</DialogFooter>
 			</DialogContent>

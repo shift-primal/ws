@@ -3,6 +3,7 @@ import { AmountRangeFilter } from "#/components/dashboard/filters-bar/amount-ran
 import { CategoryFilter } from "#/components/dashboard/filters-bar/category-filter";
 import { DateRangeFilter } from "#/components/dashboard/filters-bar/date-range-filter";
 import { MerchantFilter } from "#/components/dashboard/filters-bar/merchant-filter";
+import { TypeFilter } from "#/components/dashboard/filters-bar/type-filter";
 import { Button } from "#/components/shadcn/ui/button";
 import { Card, CardContent } from "#/components/shadcn/ui/card";
 import type { AmountBounds } from "#/lib/amount-range";
@@ -21,6 +22,7 @@ export function FiltersBar({
 		search.from !== undefined ||
 		search.to !== undefined ||
 		search.category !== undefined ||
+		search.type !== undefined ||
 		search.merchant !== undefined ||
 		search.minAmt !== undefined ||
 		search.maxAmt !== undefined;
@@ -30,6 +32,7 @@ export function FiltersBar({
 			from: undefined,
 			to: undefined,
 			category: undefined,
+			type: undefined,
 			merchant: undefined,
 			minAmt: undefined,
 			maxAmt: undefined,
@@ -50,27 +53,33 @@ export function FiltersBar({
 					onChange={(category) => onChange({ category })}
 				/>
 
+				<TypeFilter
+					value={search.type}
+					onChange={(type) => onChange({ type })}
+				/>
+
 				<MerchantFilter
 					value={search.merchant}
 					onChange={(merchant) => onChange({ merchant })}
 				/>
 
-				<AmountRangeFilter
-					minAmt={search.minAmt}
-					maxAmt={search.maxAmt}
-					bounds={bounds}
-					onChange={onChange}
-				/>
+				<div className="flex grow items-end gap-4">
+					<AmountRangeFilter
+						minAmt={search.minAmt}
+						maxAmt={search.maxAmt}
+						bounds={bounds}
+						onChange={onChange}
+					/>
 
-				<Button
-					variant="ghost"
-					size="icon-lg"
-					disabled={!hasActiveFilters}
-					onClick={handleReset}
-					className="ml-auto"
-				>
-					<ArrowCounterClockwiseIcon />
-				</Button>
+					<Button
+						variant="ghost"
+						size="icon-lg"
+						disabled={!hasActiveFilters}
+						onClick={handleReset}
+					>
+						<ArrowCounterClockwiseIcon />
+					</Button>
+				</div>
 			</CardContent>
 		</Card>
 	);

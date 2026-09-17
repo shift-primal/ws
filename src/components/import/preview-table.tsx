@@ -10,6 +10,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "#/components/shadcn/ui/table";
+import { PREVIEW_TABLE_CONTENT, TRANSACTIONS_COLUMN_LABELS } from "#/content";
 import { fmtCurrency } from "#/lib/fmt";
 
 const PREVIEW_ROW_LIMIT = 50;
@@ -29,10 +30,12 @@ export const PreviewTable = ({
 				<Table>
 					<TableHeader className="sticky top-0 z-10 bg-popover">
 						<TableRow>
-							<TableHead>Date</TableHead>
-							<TableHead>Merchant</TableHead>
-							<TableHead>Category</TableHead>
-							<TableHead className="text-right">Amount</TableHead>
+							<TableHead>{TRANSACTIONS_COLUMN_LABELS.date}</TableHead>
+							<TableHead>{TRANSACTIONS_COLUMN_LABELS.merchant}</TableHead>
+							<TableHead>{TRANSACTIONS_COLUMN_LABELS.category}</TableHead>
+							<TableHead className="text-right">
+								{TRANSACTIONS_COLUMN_LABELS.amount}
+							</TableHead>
 							<TableHead />
 						</TableRow>
 					</TableHeader>
@@ -54,7 +57,11 @@ export const PreviewTable = ({
 										{fmtCurrency(tx.amount)}
 									</TableCell>
 									<TableCell>
-										{isDuplicate && <Badge variant="outline">Duplicate</Badge>}
+										{isDuplicate && (
+											<Badge variant="outline">
+												{PREVIEW_TABLE_CONTENT.duplicateBadge}
+											</Badge>
+										)}
 									</TableCell>
 								</TableRow>
 							);
@@ -64,7 +71,7 @@ export const PreviewTable = ({
 			</div>
 			{preview.length > PREVIEW_ROW_LIMIT && (
 				<FieldDescription>
-					and {preview.length - PREVIEW_ROW_LIMIT} more…
+					{PREVIEW_TABLE_CONTENT.moreRows(preview.length - PREVIEW_ROW_LIMIT)}
 				</FieldDescription>
 			)}
 		</>

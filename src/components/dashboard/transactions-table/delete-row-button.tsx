@@ -11,6 +11,7 @@ import {
 	PopoverTrigger,
 } from "#/components/shadcn/ui/popover";
 import { toast } from "#/components/shadcn/ui/toast";
+import { DELETE_ROW_BUTTON_CONTENT } from "#/content";
 import { removeTransactions } from "#/server/functions/transactions";
 
 export const DeleteRowButton = ({ id }: { id: number }) => {
@@ -22,7 +23,7 @@ export const DeleteRowButton = ({ id }: { id: number }) => {
 			queryClient.invalidateQueries({ queryKey: ["transactions"] });
 			toast.add({
 				type: "success",
-				title: "Success!",
+				title: DELETE_ROW_BUTTON_CONTENT.successToastTitle,
 			});
 			setOpen(false);
 		},
@@ -35,9 +36,9 @@ export const DeleteRowButton = ({ id }: { id: number }) => {
 			</PopoverTrigger>
 			<PopoverContent>
 				<PopoverHeader>
-					<PopoverTitle>Are you sure you wish to delete this row?</PopoverTitle>
+					<PopoverTitle>{DELETE_ROW_BUTTON_CONTENT.confirmTitle}</PopoverTitle>
 					<PopoverDescription>
-						<span>This action can not be undone!</span>
+						<span>{DELETE_ROW_BUTTON_CONTENT.confirmDescription}</span>
 					</PopoverDescription>
 				</PopoverHeader>
 				<Button
@@ -45,7 +46,7 @@ export const DeleteRowButton = ({ id }: { id: number }) => {
 					disabled={isPending}
 					onClick={() => mutate()}
 				>
-					Delete
+					{DELETE_ROW_BUTTON_CONTENT.confirmButton}
 				</Button>
 			</PopoverContent>
 		</Popover>

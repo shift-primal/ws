@@ -1,4 +1,3 @@
-import type { StatCardProps } from "#/components/dashboard/stat-cards";
 import {
 	Card,
 	CardContent,
@@ -6,6 +5,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "#/components/shadcn/ui/card";
+import type { StatCardProps } from "#/content";
 import { cn, colorClasses } from "#/lib/utils";
 
 export const StatCard = ({

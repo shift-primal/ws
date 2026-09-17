@@ -10,7 +10,13 @@ import {
 import { ConfirmImport } from "#/components/import/confirm-import";
 import { Dropzone } from "#/components/import/dropzone";
 import { Button } from "#/components/shadcn/ui/button";
-import { Card, CardContent } from "#/components/shadcn/ui/card";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from "#/components/shadcn/ui/card";
 import {
 	Combobox,
 	ComboboxContent,
@@ -24,19 +30,14 @@ import {
 	FieldError,
 	FieldGroup,
 	FieldLabel,
-	FieldLegend,
 	FieldSet,
 } from "#/components/shadcn/ui/field";
 import { toast } from "#/components/shadcn/ui/toast";
+import { BANK_LABELS, UPLOAD_FORM_CONTENT } from "#/content";
 import {
 	checkDuplicateTransactions,
 	importTransactions,
 } from "#/server/functions/transactions";
-
-const bankLabels: Record<Bank, string> = {
-	dnb: "DNB",
-	valle: "Valle",
-};
 
 export const UploadForm = () => {
 	const queryClient = useQueryClient();
@@ -49,24 +50,30 @@ export const UploadForm = () => {
 			queryClient.invalidateQueries({ queryKey: ["transactions"] });
 			toast.add({
 				type: "success",
-				title: "Import complete",
-				description:
-					skipped > 0
-						? `Imported ${inserted.length}, skipped ${skipped} duplicate${skipped === 1 ? "" : "s"}.`
-						: `Imported ${inserted.length} transaction${inserted.length === 1 ? "" : "s"}.`,
+				title: UPLOAD_FORM_CONTENT.importCompleteTitle,
+				description: UPLOAD_FORM_CONTENT.importedSummary(
+					inserted.length,
+					skipped,
+				),
 			});
 			setPreview(null);
 			form.reset();
 		},
 		onError: () => {
-			toast.add({ type: "error", title: "Import failed" });
+			toast.add({
+				type: "error",
+				title: UPLOAD_FORM_CONTENT.importFailedTitle,
+			});
 		},
 	});
 
 	const { mutateAsync: checkDuplicates } = useMutation({
 		mutationFn: checkDuplicateTransactions,
 		onError: () => {
-			toast.add({ type: "error", title: "Couldn't check for duplicates" });
+			toast.add({
+				type: "error",
+				title: UPLOAD_FORM_CONTENT.duplicateCheckFailedTitle,
+			});
 		},
 	});
 
@@ -83,9 +90,8 @@ export const UploadForm = () => {
 			if (parsed.length === 0) {
 				toast.add({
 					type: "error",
-					title: "No transactions found",
-					description:
-						"Couldn't find any transactions in this file. Check that it's a valid export from the selected bank.",
+					title: UPLOAD_FORM_CONTENT.noTransactionsTitle,
+					description: UPLOAD_FORM_CONTENT.noTransactionsDescription,
 				});
 				return;
 			}
@@ -109,19 +115,19 @@ export const UploadForm = () => {
 			}}
 		>
 			<Card>
-				<CardContent>
+				<CardHeader>
+					<CardTitle>{UPLOAD_FORM_CONTENT.legend}</CardTitle>
+					<CardDescription>{UPLOAD_FORM_CONTENT.description}</CardDescription>
+				</CardHeader>
+				<CardContent className="p-4">
 					<Field>
 						<FieldSet>
-							<FieldLegend>Import transactions</FieldLegend>
-							<FieldDescription>
-								Import your transactions from a file
-							</FieldDescription>
 							<FieldGroup>
 								<form.Field
 									name="file"
 									validators={{
 										onSubmit: ({ value }) =>
-											value ? undefined : "Select a file to import",
+											value ? undefined : UPLOAD_FORM_CONTENT.fileRequiredError,
 									}}
 								>
 									{(field) => (
@@ -133,14 +139,14 @@ export const UploadForm = () => {
 												onFilesRejected={() =>
 													toast.add({
 														type: "error",
-														title: "Unsupported file",
+														title: UPLOAD_FORM_CONTENT.unsupportedFileTitle,
 														description:
-															"Only .csv and .txt files are accepted.",
+															UPLOAD_FORM_CONTENT.unsupportedFileDescription,
 													})
 												}
 											/>
 											<FieldDescription>
-												Accepts .csv and .txt files
+												{UPLOAD_FORM_CONTENT.fileAccept}
 											</FieldDescription>
 											<FieldError
 												errors={field.state.meta.errors.map((message) => ({
@@ -155,15 +161,17 @@ export const UploadForm = () => {
 									name="bank"
 									validators={{
 										onSubmit: ({ value }) =>
-											value ? undefined : "Select a bank",
+											value ? undefined : UPLOAD_FORM_CONTENT.bankRequiredError,
 									}}
 								>
 									{(field) => (
 										<Field data-invalid={!field.state.meta.isValid}>
-											<FieldLabel htmlFor="bank">Bank</FieldLabel>
+											<FieldLabel htmlFor="bank">
+												{UPLOAD_FORM_CONTENT.bankLabel}
+											</FieldLabel>
 											<Combobox
 												items={BANKS}
-												itemToStringLabel={(bank) => bankLabels[bank]}
+												itemToStringLabel={(bank) => BANK_LABELS[bank]}
 												value={field.state.value ?? null}
 												onValueChange={(value) =>
 													field.handleChange(value ?? undefined)
@@ -171,13 +179,13 @@ export const UploadForm = () => {
 											>
 												<ComboboxInput
 													id="bank"
-													placeholder="Select your bank"
+													placeholder={UPLOAD_FORM_CONTENT.bankPlaceholder}
 												/>
 												<ComboboxContent>
 													<ComboboxList>
 														{(item: Bank) => (
 															<ComboboxItem key={item} value={item}>
-																{bankLabels[item]}
+																{BANK_LABELS[item]}
 															</ComboboxItem>
 														)}
 													</ComboboxList>
@@ -199,7 +207,9 @@ export const UploadForm = () => {
 											type="submit"
 											disabled={isSubmitting || isPending}
 										>
-											{isSubmitting ? "Checking…" : "Preview import"}
+											{isSubmitting
+												? UPLOAD_FORM_CONTENT.checking
+												: UPLOAD_FORM_CONTENT.submit}
 										</Button>
 									)}
 								</form.Subscribe>

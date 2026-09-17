@@ -1,13 +1,4 @@
-import {
-	ChartBarIcon,
-	EnvelopeIcon,
-	GithubLogoIcon,
-	HouseIcon,
-	type Icon,
-	UploadIcon,
-	WrenchIcon,
-} from "@phosphor-icons/react";
-import { Link, type LinkProps, linkOptions } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { ThemeSwitcher } from "#/components/layout/theme-switcher";
 import { UserButton } from "#/components/shadcn/auth/user/user-button";
 import {
@@ -19,68 +10,13 @@ import {
 	NavigationMenuTrigger,
 	navigationMenuTriggerStyle,
 } from "#/components/shadcn/ui/navigation-menu";
-
-type NavLink = {
-	label: string;
-	icon: Icon;
-	options: LinkProps;
-};
-
-type ExternalLink = {
-	label: string;
-	icon: Icon;
-	href: string;
-};
-
-const navLinks: NavLink[] = [
-	{
-		label: "Home",
-		icon: HouseIcon,
-		options: linkOptions({
-			to: "/",
-		}),
-	},
-	{
-		label: "Dashboard",
-		icon: ChartBarIcon,
-		options: linkOptions({
-			to: "/dashboard",
-		}),
-	},
-	{
-		label: "Import",
-		icon: UploadIcon,
-		options: linkOptions({
-			to: "/import",
-		}),
-	},
-	{
-		label: "Dev",
-		icon: WrenchIcon,
-		options: linkOptions({
-			to: "/dev",
-		}),
-	},
-];
-
-const contactLinks: ExternalLink[] = [
-	{
-		label: "GitHub",
-		icon: GithubLogoIcon,
-		href: "https://github.com/shift-primal",
-	},
-	{
-		label: "Email",
-		icon: EnvelopeIcon,
-		href: "mailto:kasper@haugestol.com",
-	},
-];
+import { CONTACT_LINKS, NAV_LINKS } from "#/content";
 
 export const Navbar = () => {
 	return (
 		<NavigationMenu className="flex-none shrink-0 w-full max-w-full border-b-2 py-2 px-4">
 			<NavigationMenuList className="gap-2">
-				{navLinks.map(({ label, icon: LinkIcon, options }) => (
+				{NAV_LINKS.map(({ label, icon: LinkIcon, options }) => (
 					<NavigationMenuItem key={label}>
 						<NavigationMenuLink
 							className={navigationMenuTriggerStyle()}
@@ -97,7 +33,7 @@ export const Navbar = () => {
 				<NavigationMenuItem className="ml-auto">
 					<NavigationMenuTrigger>Kontakt</NavigationMenuTrigger>
 					<NavigationMenuContent className="flex gap-2">
-						{contactLinks.map(({ label, icon: LinkIcon, href }) => (
+						{CONTACT_LINKS.map(({ label, icon: LinkIcon, href }) => (
 							<NavigationMenuLink
 								key={label}
 								aria-label={label}

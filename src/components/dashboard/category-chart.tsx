@@ -13,6 +13,7 @@ import {
 	ChartTooltip,
 	ChartTooltipContent,
 } from "#/components/shadcn/ui/chart";
+import { CATEGORY_CHART_CONTENT } from "#/content";
 import { fmtCurrency } from "#/lib/fmt";
 import { chartOtherColor, chartPalette } from "#/lib/utils";
 
@@ -43,13 +44,19 @@ export function CategoryChart({
 
 		const slices =
 			otherAmount > 0
-				? [...top, { category: "Other", amount: otherAmount }]
+				? [
+						...top,
+						{
+							category: CATEGORY_CHART_CONTENT.otherLabel,
+							amount: otherAmount,
+						},
+					]
 				: top;
 
 		const config: ChartConfig = {};
 		const chartData = slices.map((slice, index) => {
 			const color =
-				slice.category === "Other"
+				slice.category === CATEGORY_CHART_CONTENT.otherLabel
 					? chartOtherColor
 					: chartPalette[index % chartPalette.length];
 			config[slice.category] = { label: slice.category, color };
@@ -64,15 +71,13 @@ export function CategoryChart({
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle>By category</CardTitle>
-				<CardDescription>
-					Share of spending, will only show expenses
-				</CardDescription>
+				<CardTitle>{CATEGORY_CHART_CONTENT.title}</CardTitle>
+				<CardDescription>{CATEGORY_CHART_CONTENT.description}</CardDescription>
 			</CardHeader>
 			<CardContent>
 				{chartData.length === 0 ? (
 					<p className="text-muted-foreground text-sm">
-						No data for the current filters.
+						{CATEGORY_CHART_CONTENT.emptyText}
 					</p>
 				) : (
 					<>
@@ -129,7 +134,7 @@ export function CategoryChart({
 														y={(viewBox.cy ?? 0) + 22}
 														className="fill-muted-foreground text-xs"
 													>
-														Total
+														{CATEGORY_CHART_CONTENT.totalLabel}
 													</tspan>
 												</text>
 											);

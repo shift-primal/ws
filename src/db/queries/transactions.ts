@@ -35,6 +35,9 @@ function buildConditions(userId: string, query?: TransactionQuery) {
 	if (query?.category?.length)
 		conditions.push(inArray(transactions.category, query?.category));
 
+	if (query?.type?.length)
+		conditions.push(inArray(transactions.type, query?.type));
+
 	if (query?.minAmt !== undefined)
 		conditions.push(gte(transactions.amount, query?.minAmt.toString()));
 	if (query?.maxAmt !== undefined)
@@ -104,6 +107,7 @@ export async function getTransactions(userId: string, query: TransactionQuery) {
 		amount: transactions.amount,
 		merchant: transactions.merchant,
 		category: transactions.category,
+		type: transactions.type,
 	};
 
 	const col = sortColumns[query.sortBy ?? "date"];

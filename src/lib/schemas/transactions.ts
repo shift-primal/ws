@@ -6,12 +6,13 @@ export const today = () => new Date().toISOString().split("T")[0];
 
 export const transactionQuerySchema = z.object({
 	category: z.array(z.enum(CATEGORIES)).optional(),
+	type: z.array(z.enum(TRANSACTION_TYPES)).optional(),
 	minAmt: z.number().optional(),
 	maxAmt: z.number().optional(),
 	merchant: z.string().optional(),
 	from: z.iso.date().default(() => twoYearsAgo()),
 	to: z.iso.date().default(() => today()),
-	sortBy: z.enum(["date", "amount", "merchant", "category"]).optional(),
+	sortBy: z.enum(["date", "amount", "merchant", "category", "type"]).optional(),
 	sortDir: z.enum(["asc", "desc"]).optional(),
 	page: z.number().int().min(1).default(1),
 	pageSize: z.number().int().min(1).max(100).default(25),

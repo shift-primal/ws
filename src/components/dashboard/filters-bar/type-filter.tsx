@@ -1,5 +1,5 @@
 import { CaretDownIcon } from "@phosphor-icons/react";
-import { CATEGORIES, type Category } from "txcategorizer";
+import { TRANSACTION_TYPES, type TransactionType } from "txcategorizer";
 import { Button } from "#/components/shadcn/ui/button";
 import {
 	DropdownMenu,
@@ -8,40 +8,38 @@ import {
 	DropdownMenuTrigger,
 } from "#/components/shadcn/ui/dropdown-menu";
 import { Field, FieldLabel } from "#/components/shadcn/ui/field";
-import { CATEGORY_FILTER_CONTENT } from "#/content";
+import { TYPE_FILTER_CONTENT } from "#/content";
 
-export function CategoryFilter({
+export function TypeFilter({
 	value,
 	onChange,
 }: {
-	value: Category[] | undefined;
-	onChange: (categories: Category[] | undefined) => void;
+	value: TransactionType[] | undefined;
+	onChange: (types: TransactionType[] | undefined) => void;
 }) {
-	function handleToggle(category: Category, checked: boolean) {
+	function handleToggle(type: TransactionType, checked: boolean) {
 		const next = checked
-			? [...(value ?? []), category]
-			: (value ?? []).filter((c) => c !== category);
+			? [...(value ?? []), type]
+			: (value ?? []).filter((t) => t !== type);
 		onChange(next.length ? next : undefined);
 	}
 
 	const label =
 		!value || value.length === 0
-			? CATEGORY_FILTER_CONTENT.anyLabel
+			? TYPE_FILTER_CONTENT.anyLabel
 			: value.length === 1
 				? value[0]
-				: CATEGORY_FILTER_CONTENT.countLabel(value.length);
+				: TYPE_FILTER_CONTENT.countLabel(value.length);
 
 	return (
 		<Field className="w-56">
-			<FieldLabel htmlFor="category-filter">
-				{CATEGORY_FILTER_CONTENT.label}
-			</FieldLabel>
+			<FieldLabel htmlFor="type-filter">{TYPE_FILTER_CONTENT.label}</FieldLabel>
 			<DropdownMenu>
 				<DropdownMenuTrigger
 					render={
 						<Button
 							variant="outline"
-							id="category-filter"
+							id="type-filter"
 							className="justify-between px-2.5 font-normal"
 						/>
 					}
@@ -50,14 +48,14 @@ export function CategoryFilter({
 					<CaretDownIcon data-icon="inline-end" />
 				</DropdownMenuTrigger>
 				<DropdownMenuContent className="min-w-56">
-					{CATEGORIES.map((category) => (
+					{TRANSACTION_TYPES.map((type) => (
 						<DropdownMenuCheckboxItem
-							key={category}
-							checked={value?.includes(category) ?? false}
-							onCheckedChange={(checked) => handleToggle(category, checked)}
+							key={type}
+							checked={value?.includes(type) ?? false}
+							onCheckedChange={(checked) => handleToggle(type, checked)}
 							closeOnClick={false}
 						>
-							{category}
+							{type}
 						</DropdownMenuCheckboxItem>
 					))}
 				</DropdownMenuContent>

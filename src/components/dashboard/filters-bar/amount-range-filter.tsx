@@ -1,5 +1,6 @@
 import { Field, FieldLabel } from "#/components/shadcn/ui/field";
 import { Slider } from "#/components/shadcn/ui/slider";
+import { AMOUNT_RANGE_FILTER_CONTENT } from "#/content";
 import {
 	type AmountBounds,
 	amountToPosition,
@@ -31,7 +32,8 @@ export function AmountRangeFilter({
 	return (
 		<Field className="w-xs grow">
 			<FieldLabel>
-				Amount: {fmtCurrency(amountRange[0])} – {fmtCurrency(amountRange[1])}
+				{AMOUNT_RANGE_FILTER_CONTENT.label}: {fmtCurrency(amountRange[0])} –{" "}
+				{fmtCurrency(amountRange[1])}
 			</FieldLabel>
 			<div className="flex h-8 items-center">
 				<Slider
