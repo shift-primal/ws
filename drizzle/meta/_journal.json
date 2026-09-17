@@ -22,6 +22,13 @@
       "when": 1789648267159,
       "tag": "0002_brave_lester",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1789651000758,
+      "tag": "0003_thin_william_stryker",
+      "breakpoints": true
     }
   ]
 }

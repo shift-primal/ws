@@ -37,7 +37,9 @@ export const CategoryCell = ({
 	return (
 		<Select
 			value={category}
-			onValueChange={(value) => mutate(value as Category)}
+			onValueChange={(value) => {
+				if (value !== category) mutate(value as Category);
+			}}
 		>
 			<SelectTrigger size="sm" className="rounded-full">
 				<SelectValue>

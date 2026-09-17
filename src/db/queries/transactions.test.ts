@@ -102,7 +102,7 @@ describe("insertTransactions", () => {
 	});
 
 	it("applies a saved category rule instead of the incoming category", async () => {
-		await upsertCategoryRule(testUserId, "KIWI", "Mat ute");
+		await upsertCategoryRule(testUserId, "KIWI", undefined, "Mat ute");
 
 		const { inserted } = await insertTransactions(testUserId, [
 			sampleTransactions[0],
@@ -112,13 +112,46 @@ describe("insertTransactions", () => {
 	});
 
 	it("leaves the incoming category alone when no rule matches", async () => {
-		await upsertCategoryRule(testUserId, "some other merchant", "Mat ute");
+		await upsertCategoryRule(
+			testUserId,
+			"some other merchant",
+			undefined,
+			"Mat ute",
+		);
 
 		const { inserted } = await insertTransactions(testUserId, [
 			sampleTransactions[0],
 		] as NewTransactionInput[]);
 
 		expect(inserted[0]?.category).toBe("Dagligvare");
+	});
+
+	it("only applies a pass-through merchant's rule to the matching counterparty", async () => {
+		await upsertCategoryRule(testUserId, "Paypal", "Steam", "Gaming");
+
+		const { inserted } = await insertTransactions(testUserId, [
+			{
+				date: "2026-06-10",
+				amount: -50,
+				merchant: "Paypal",
+				counterparty: "Steam",
+				type: "Visa",
+				category: "Annet",
+			},
+			{
+				date: "2026-06-10",
+				amount: -80,
+				merchant: "Paypal",
+				counterparty: "Netflix",
+				type: "Visa",
+				category: "Annet",
+			},
+		]);
+
+		const steam = inserted.find((tx) => tx.counterparty === "Steam");
+		const netflix = inserted.find((tx) => tx.counterparty === "Netflix");
+		expect(steam?.category).toBe("Gaming");
+		expect(netflix?.category).toBe("Annet");
 	});
 });
 
@@ -131,7 +164,72 @@ describe("updateTransactionCategory", () => {
 
 		const updated = await updateTransactionCategory(testUserId, id, "Annet");
 
-		expect(updated?.category).toBe("Annet");
+		expect(updated?.map((tx) => tx.category)).toEqual(["Annet"]);
+	});
+
+	it("re-indexes every other transaction that shares the same merchant", async () => {
+		const { inserted } = await insertTransactions(testUserId, [
+			{ ...sampleTransactions[0], date: "2026-06-10" },
+			{ ...sampleTransactions[0], date: "2026-06-11" },
+			{ ...sampleTransactions[0], date: "2026-06-12" },
+		] as NewTransactionInput[]);
+		const id = inserted[0]?.id as number;
+
+		const updated = await updateTransactionCategory(testUserId, id, "Annet");
+
+		expect(updated).toHaveLength(3);
+		expect(updated?.every((tx) => tx.category === "Annet")).toBe(true);
+
+		const all = await getTransactions(testUserId, defaultQuery());
+		expect(all.data.every((tx) => tx.category === "Annet")).toBe(true);
+	});
+
+	it("does not re-index a different counterparty sharing the same pass-through merchant", async () => {
+		const { inserted } = await insertTransactions(testUserId, [
+			{
+				date: "2026-06-10",
+				amount: -50,
+				merchant: "Paypal",
+				counterparty: "Steam",
+				type: "Visa",
+				category: "Annet",
+			},
+			{
+				date: "2026-06-11",
+				amount: -80,
+				merchant: "Paypal",
+				counterparty: "Netflix",
+				type: "Visa",
+				category: "Annet",
+			},
+		]);
+		const steamId = inserted.find((tx) => tx.counterparty === "Steam")
+			?.id as number;
+
+		const updated = await updateTransactionCategory(
+			testUserId,
+			steamId,
+			"Gaming",
+		);
+
+		expect(updated).toHaveLength(1);
+		expect(updated?.[0]?.category).toBe("Gaming");
+
+		const all = await getTransactions(testUserId, defaultQuery());
+		const netflix = all.data.find((tx) => tx.counterparty === "Netflix");
+		expect(netflix?.category).toBe("Annet");
+
+		const { inserted: reimported } = await insertTransactions(testUserId, [
+			{
+				date: "2026-07-01",
+				amount: -80,
+				merchant: "Paypal",
+				counterparty: "Netflix",
+				type: "Visa",
+				category: "Annet",
+			},
+		]);
+		expect(reimported[0]?.category).toBe("Annet");
 	});
 
 	it("does not update another user's transaction", async () => {

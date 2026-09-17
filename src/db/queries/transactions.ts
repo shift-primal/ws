@@ -8,6 +8,7 @@ import {
 	gte,
 	ilike,
 	inArray,
+	isNull,
 	lte,
 	max,
 	min,
@@ -19,6 +20,7 @@ import {
 import type { Category } from "txcategorizer";
 import { db } from "#/db";
 import {
+	categoryRuleKey,
 	getCategoryRulesMap,
 	upsertCategoryRule,
 } from "#/db/queries/category-rules";
@@ -246,7 +248,9 @@ export async function insertTransactions(
 			rows.map(({ valuta, ...rest }) => ({
 				...rest,
 				userId,
-				category: rules.get(rest.merchant) ?? rest.category,
+				category:
+					rules.get(categoryRuleKey(rest.merchant, rest.counterparty)) ??
+					rest.category,
 				amount: rest.amount.toString(),
 				currency: valuta?.currency ?? null,
 				exchangeRate: valuta?.exchangeRate?.toString() ?? null,
@@ -263,15 +267,36 @@ export async function updateTransactionCategory(
 	id: number,
 	category: Category,
 ) {
-	const [updated] = await db
+	const [target] = await db
+		.select({
+			merchant: transactions.merchant,
+			counterparty: transactions.counterparty,
+		})
+		.from(transactions)
+		.where(and(eq(transactions.userId, userId), eq(transactions.id, id)));
+
+	if (!target) return undefined;
+
+	const updated = await db
 		.update(transactions)
 		.set({ category })
-		.where(and(eq(transactions.userId, userId), eq(transactions.id, id)))
+		.where(
+			and(
+				eq(transactions.userId, userId),
+				eq(transactions.merchant, target.merchant),
+				target.counterparty === null
+					? isNull(transactions.counterparty)
+					: eq(transactions.counterparty, target.counterparty),
+			),
+		)
 		.returning();
 
-	if (!updated) return undefined;
-
-	await upsertCategoryRule(userId, updated.merchant, category);
+	await upsertCategoryRule(
+		userId,
+		target.merchant,
+		target.counterparty,
+		category,
+	);
 
 	return updated;
 }
