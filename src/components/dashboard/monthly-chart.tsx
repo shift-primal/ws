@@ -100,6 +100,7 @@ export function MonthlyChart({
 								fill="var(--color-totalIn)"
 								fillOpacity={0.25}
 								stroke="var(--color-totalIn)"
+								isAnimationActive={false}
 							/>
 							<Area
 								dataKey="totalOut"
@@ -107,6 +108,7 @@ export function MonthlyChart({
 								fill="var(--color-totalOut)"
 								fillOpacity={0.25}
 								stroke="var(--color-totalOut)"
+								isAnimationActive={false}
 							/>
 						</AreaChart>
 					</ChartContainer>

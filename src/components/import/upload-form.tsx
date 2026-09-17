@@ -10,6 +10,7 @@ import {
 import { ConfirmImport } from "#/components/import/confirm-import";
 import { Dropzone } from "#/components/import/dropzone";
 import { Button } from "#/components/shadcn/ui/button";
+import { Card, CardContent } from "#/components/shadcn/ui/card";
 import {
 	Combobox,
 	ComboboxContent,
@@ -107,97 +108,106 @@ export const UploadForm = () => {
 				form.handleSubmit();
 			}}
 		>
-			<Field>
-				<FieldSet>
-					<FieldLegend>Import transactions</FieldLegend>
-					<FieldDescription>
-						Import your transactions from a file
-					</FieldDescription>
-					<FieldGroup>
-						<form.Field
-							name="file"
-							validators={{
-								onSubmit: ({ value }) =>
-									value ? undefined : "Select a file to import",
-							}}
-						>
-							{(field) => (
-								<Field data-invalid={!field.state.meta.isValid}>
-									<Dropzone
-										files={field.state.value ? [field.state.value] : []}
-										onFilesChange={(files) => field.handleChange(files[0])}
-										accept=".csv,.txt,text/csv,text/plain"
-										onFilesRejected={() =>
-											toast.add({
-												type: "error",
-												title: "Unsupported file",
-												description: "Only .csv and .txt files are accepted.",
-											})
-										}
-									/>
-									<FieldDescription>
-										Accepts .csv and .txt files
-									</FieldDescription>
-									<FieldError
-										errors={field.state.meta.errors.map((message) => ({
-											message: message as string,
-										}))}
-									/>
-								</Field>
-							)}
-						</form.Field>
-
-						<form.Field
-							name="bank"
-							validators={{
-								onSubmit: ({ value }) => (value ? undefined : "Select a bank"),
-							}}
-						>
-							{(field) => (
-								<Field data-invalid={!field.state.meta.isValid}>
-									<FieldLabel htmlFor="bank">Bank</FieldLabel>
-									<Combobox
-										items={BANKS}
-										itemToStringLabel={(bank) => bankLabels[bank]}
-										value={field.state.value ?? null}
-										onValueChange={(value) =>
-											field.handleChange(value ?? undefined)
-										}
-									>
-										<ComboboxInput id="bank" placeholder="Select your bank" />
-										<ComboboxContent>
-											<ComboboxList>
-												{(item: Bank) => (
-													<ComboboxItem key={item} value={item}>
-														{bankLabels[item]}
-													</ComboboxItem>
-												)}
-											</ComboboxList>
-										</ComboboxContent>
-									</Combobox>
-									<FieldError
-										errors={field.state.meta.errors.map((message) => ({
-											message: message as string,
-										}))}
-									/>
-								</Field>
-							)}
-						</form.Field>
-
-						<form.Subscribe selector={(state) => state.isSubmitting}>
-							{(isSubmitting) => (
-								<Button
-									variant="outline"
-									type="submit"
-									disabled={isSubmitting || isPending}
+			<Card>
+				<CardContent>
+					<Field>
+						<FieldSet>
+							<FieldLegend>Import transactions</FieldLegend>
+							<FieldDescription>
+								Import your transactions from a file
+							</FieldDescription>
+							<FieldGroup>
+								<form.Field
+									name="file"
+									validators={{
+										onSubmit: ({ value }) =>
+											value ? undefined : "Select a file to import",
+									}}
 								>
-									{isSubmitting ? "Checking…" : "Preview import"}
-								</Button>
-							)}
-						</form.Subscribe>
-					</FieldGroup>
-				</FieldSet>
-			</Field>
+									{(field) => (
+										<Field data-invalid={!field.state.meta.isValid}>
+											<Dropzone
+												files={field.state.value ? [field.state.value] : []}
+												onFilesChange={(files) => field.handleChange(files[0])}
+												accept=".csv,.txt,text/csv,text/plain"
+												onFilesRejected={() =>
+													toast.add({
+														type: "error",
+														title: "Unsupported file",
+														description:
+															"Only .csv and .txt files are accepted.",
+													})
+												}
+											/>
+											<FieldDescription>
+												Accepts .csv and .txt files
+											</FieldDescription>
+											<FieldError
+												errors={field.state.meta.errors.map((message) => ({
+													message: message as string,
+												}))}
+											/>
+										</Field>
+									)}
+								</form.Field>
+
+								<form.Field
+									name="bank"
+									validators={{
+										onSubmit: ({ value }) =>
+											value ? undefined : "Select a bank",
+									}}
+								>
+									{(field) => (
+										<Field data-invalid={!field.state.meta.isValid}>
+											<FieldLabel htmlFor="bank">Bank</FieldLabel>
+											<Combobox
+												items={BANKS}
+												itemToStringLabel={(bank) => bankLabels[bank]}
+												value={field.state.value ?? null}
+												onValueChange={(value) =>
+													field.handleChange(value ?? undefined)
+												}
+											>
+												<ComboboxInput
+													id="bank"
+													placeholder="Select your bank"
+												/>
+												<ComboboxContent>
+													<ComboboxList>
+														{(item: Bank) => (
+															<ComboboxItem key={item} value={item}>
+																{bankLabels[item]}
+															</ComboboxItem>
+														)}
+													</ComboboxList>
+												</ComboboxContent>
+											</Combobox>
+											<FieldError
+												errors={field.state.meta.errors.map((message) => ({
+													message: message as string,
+												}))}
+											/>
+										</Field>
+									)}
+								</form.Field>
+
+								<form.Subscribe selector={(state) => state.isSubmitting}>
+									{(isSubmitting) => (
+										<Button
+											variant="outline"
+											type="submit"
+											disabled={isSubmitting || isPending}
+										>
+											{isSubmitting ? "Checking…" : "Preview import"}
+										</Button>
+									)}
+								</form.Subscribe>
+							</FieldGroup>
+						</FieldSet>
+					</Field>
+				</CardContent>
+			</Card>
 			<ConfirmImport
 				preview={preview}
 				setPreview={setPreview}

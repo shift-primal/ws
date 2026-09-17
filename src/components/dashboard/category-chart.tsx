@@ -104,6 +104,7 @@ export function CategoryChart({
 									innerRadius={72}
 									outerRadius={96}
 									paddingAngle={-0.5}
+									isAnimationActive={false}
 								>
 									<Label
 										content={({ viewBox }) => {

@@ -4,6 +4,7 @@ import { Badge } from "#/components/shadcn/ui/badge";
 import { Button } from "#/components/shadcn/ui/button";
 import type { DbTransaction } from "#/db/schema";
 import { fmtCurrency } from "#/lib/fmt";
+import { CATEGORY_ICONS, TYPE_ICONS } from "#/lib/icons";
 import type { TransactionQuery } from "#/lib/schemas/transactions";
 import { colorClasses, signColor } from "#/lib/utils";
 
@@ -66,11 +67,9 @@ export const columns = columnHelper.columns([
 		cell: ({ row }) => (
 			<div className="flex flex-col">
 				<span>{row.original.merchant}</span>
-				{row.original.counterparty && (
-					<span className="text-muted-foreground text-xs">
-						{row.original.counterparty}
-					</span>
-				)}
+				<span className="text-muted-foreground text-xs">
+					{row.original.counterparty || " "}
+				</span>
 			</div>
 		),
 	}),
@@ -83,14 +82,27 @@ export const columns = columnHelper.columns([
 				meta={table.options.meta}
 			/>
 		),
-		cell: ({ row }) => (
-			<Badge variant="secondary">{row.original.category}</Badge>
-		),
+		cell: ({ row }) => {
+			const CategoryIcon = CATEGORY_ICONS[row.original.category];
+			return (
+				<Badge variant="secondary">
+					<CategoryIcon />
+					{row.original.category}
+				</Badge>
+			);
+		},
 	}),
 
 	columnHelper.accessor("type", {
 		header: "Type",
-		cell: ({ row }) => <Badge variant="secondary">{row.original.type}</Badge>,
+		cell: ({ row }) => {
+			const TypeIcon = TYPE_ICONS[row.original.type];
+			return (
+				<Badge variant="secondary">
+					<TypeIcon /> {row.original.type}
+				</Badge>
+			);
+		},
 	}),
 
 	columnHelper.accessor("amount", {

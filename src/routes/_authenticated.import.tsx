@@ -3,7 +3,7 @@ import { UploadForm } from "#/components/import/upload-form";
 
 const Import = () => {
 	return (
-		<div>
+		<div className="mx-auto max-w-xl">
 			<UploadForm />
 		</div>
 	);

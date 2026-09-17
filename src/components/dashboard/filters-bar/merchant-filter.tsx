@@ -23,7 +23,7 @@ export function MerchantFilter({
 	}, [merchant, value, onChange]);
 
 	return (
-		<Field className="w-48">
+		<Field className="w-xs">
 			<FieldLabel htmlFor="merchant-filter">Merchant</FieldLabel>
 			<Input
 				id="merchant-filter"

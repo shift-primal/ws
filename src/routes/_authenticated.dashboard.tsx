@@ -1,12 +1,11 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, stripSearchParams } from "@tanstack/react-router";
 import { CategoryChart } from "#/components/dashboard/category-chart";
-import type { SortableColumn } from "#/components/dashboard/columns";
 import { FiltersBar } from "#/components/dashboard/filters-bar";
 import { MonthlyChart } from "#/components/dashboard/monthly-chart";
 import { StatCards } from "#/components/dashboard/stat-cards";
 import { TransactionsTable } from "#/components/dashboard/transactions-table";
-import { Button } from "#/components/shadcn/ui/button";
+import type { SortableColumn } from "#/components/dashboard/transactions-table/columns";
 import {
 	amtBoundsQuery,
 	categoryStatsQuery,
@@ -64,7 +63,7 @@ const Dashboard = () => {
 	}
 
 	return (
-		<div className="flex flex-col gap-4">
+		<div className="flex h-full min-h-0 flex-col gap-4">
 			<FiltersBar
 				search={search}
 				bounds={bounds}
@@ -91,42 +90,28 @@ const Dashboard = () => {
 					sortDir: search.sortDir,
 					onSort: handleSort,
 				}}
+				pagination={{
+					page: search.page,
+					pageSize: search.pageSize,
+					totalPages,
+					totalResults: data.totalResults,
+					onPrevious: () =>
+						navigate({
+							search: (prev) => ({ ...prev, page: prev.page - 1 }),
+							replace: true,
+						}),
+					onNext: () =>
+						navigate({
+							search: (prev) => ({ ...prev, page: prev.page + 1 }),
+							replace: true,
+						}),
+					onPageSizeChange: (pageSize) =>
+						navigate({
+							search: (prev) => ({ ...prev, pageSize, page: 1 }),
+							replace: true,
+						}),
+				}}
 			/>
-
-			<div className="flex items-center justify-between">
-				<span className="text-muted-foreground text-sm">
-					Page {search.page} of {totalPages} · {data.totalResults} total
-				</span>
-
-				<div className="flex gap-2">
-					<Button
-						variant="outline"
-						size="sm"
-						disabled={search.page <= 1}
-						onClick={() =>
-							navigate({
-								search: (prev) => ({ ...prev, page: prev.page - 1 }),
-								replace: true,
-							})
-						}
-					>
-						Previous
-					</Button>
-					<Button
-						variant="outline"
-						size="sm"
-						disabled={search.page >= totalPages}
-						onClick={() =>
-							navigate({
-								search: (prev) => ({ ...prev, page: prev.page + 1 }),
-								replace: true,
-							})
-						}
-					>
-						Next
-					</Button>
-				</div>
-			</div>
 		</div>
 	);
 };

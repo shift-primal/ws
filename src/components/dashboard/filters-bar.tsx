@@ -1,8 +1,10 @@
+import { ArrowCounterClockwiseIcon } from "@phosphor-icons/react";
 import { AmountRangeFilter } from "#/components/dashboard/filters-bar/amount-range-filter";
 import { CategoryFilter } from "#/components/dashboard/filters-bar/category-filter";
 import { DateRangeFilter } from "#/components/dashboard/filters-bar/date-range-filter";
 import { MerchantFilter } from "#/components/dashboard/filters-bar/merchant-filter";
 import { Button } from "#/components/shadcn/ui/button";
+import { Card, CardContent } from "#/components/shadcn/ui/card";
 import type { AmountBounds } from "#/lib/amount-range";
 import type { DashboardSearch } from "#/lib/schemas/transactions";
 
@@ -35,34 +37,41 @@ export function FiltersBar({
 	}
 
 	return (
-		<div className="flex flex-wrap items-end gap-4">
-			<DateRangeFilter from={search.from} to={search.to} onChange={onChange} />
+		<Card size="sm">
+			<CardContent className="flex flex-wrap items-end gap-4 py-2">
+				<DateRangeFilter
+					from={search.from}
+					to={search.to}
+					onChange={onChange}
+				/>
 
-			<CategoryFilter
-				value={search.category}
-				onChange={(category) => onChange({ category })}
-			/>
+				<CategoryFilter
+					value={search.category}
+					onChange={(category) => onChange({ category })}
+				/>
 
-			<MerchantFilter
-				value={search.merchant}
-				onChange={(merchant) => onChange({ merchant })}
-			/>
+				<MerchantFilter
+					value={search.merchant}
+					onChange={(merchant) => onChange({ merchant })}
+				/>
 
-			<AmountRangeFilter
-				minAmt={search.minAmt}
-				maxAmt={search.maxAmt}
-				bounds={bounds}
-				onChange={onChange}
-			/>
+				<AmountRangeFilter
+					minAmt={search.minAmt}
+					maxAmt={search.maxAmt}
+					bounds={bounds}
+					onChange={onChange}
+				/>
 
-			<Button
-				variant="ghost"
-				size="sm"
-				disabled={!hasActiveFilters}
-				onClick={handleReset}
-			>
-				Reset filters
-			</Button>
-		</div>
+				<Button
+					variant="ghost"
+					size="icon-lg"
+					disabled={!hasActiveFilters}
+					onClick={handleReset}
+					className="ml-auto"
+				>
+					<ArrowCounterClockwiseIcon />
+				</Button>
+			</CardContent>
+		</Card>
 	);
 }
