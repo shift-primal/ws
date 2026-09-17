@@ -1,15 +1,14 @@
 import { useForm } from "@tanstack/react-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { format, parseISO } from "date-fns";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import {
 	BANKS,
 	type Bank,
 	processTransactions,
 	type Transaction,
 } from "txcategorizer";
+import { ConfirmImport } from "#/components/import/confirm-import";
 import { Dropzone } from "#/components/import/dropzone";
-import { Badge } from "#/components/shadcn/ui/badge";
 import { Button } from "#/components/shadcn/ui/button";
 import {
 	Combobox,
@@ -19,14 +18,6 @@ import {
 	ComboboxList,
 } from "#/components/shadcn/ui/combobox";
 import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-} from "#/components/shadcn/ui/dialog";
-import {
 	Field,
 	FieldDescription,
 	FieldError,
@@ -35,16 +26,7 @@ import {
 	FieldLegend,
 	FieldSet,
 } from "#/components/shadcn/ui/field";
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from "#/components/shadcn/ui/table";
 import { toast } from "#/components/shadcn/ui/toast";
-import { fmtCurrency } from "#/lib/fmt";
 import {
 	checkDuplicateTransactions,
 	importTransactions,
@@ -54,8 +36,6 @@ const bankLabels: Record<Bank, string> = {
 	dnb: "DNB",
 	valle: "Valle",
 };
-
-const PREVIEW_ROW_LIMIT = 50;
 
 export const UploadForm = () => {
 	const queryClient = useQueryClient();
@@ -84,6 +64,9 @@ export const UploadForm = () => {
 
 	const { mutateAsync: checkDuplicates } = useMutation({
 		mutationFn: checkDuplicateTransactions,
+		onError: () => {
+			toast.add({ type: "error", title: "Couldn't check for duplicates" });
+		},
 	});
 
 	const form = useForm({
@@ -106,35 +89,15 @@ export const UploadForm = () => {
 				return;
 			}
 
-			const flags = await checkDuplicates({ data: parsed });
-			setDuplicateFlags(flags);
-			setPreview(parsed);
+			try {
+				const flags = await checkDuplicates({ data: parsed });
+				setDuplicateFlags(flags);
+				setPreview(parsed);
+			} catch {
+				// onError above already surfaced a toast
+			}
 		},
 	});
-
-	const summary = useMemo(() => {
-		if (!preview) return null;
-
-		const totalIn = preview.reduce(
-			(sum, tx) => (tx.amount > 0 ? sum + tx.amount : sum),
-			0,
-		);
-		const totalOut = preview.reduce(
-			(sum, tx) => (tx.amount < 0 ? sum + tx.amount : sum),
-			0,
-		);
-		const dates = preview.map((tx) => tx.date).sort();
-		const duplicates = duplicateFlags.filter(Boolean).length;
-
-		return {
-			count: preview.length,
-			totalIn,
-			totalOut,
-			duplicates,
-			from: dates[0],
-			to: dates.at(-1),
-		};
-	}, [preview, duplicateFlags]);
 
 	return (
 		<form
@@ -231,103 +194,13 @@ export const UploadForm = () => {
 					</FieldGroup>
 				</FieldSet>
 			</Field>
-
-			<Dialog
-				open={!!preview}
-				onOpenChange={(open) => !open && setPreview(null)}
-			>
-				<DialogContent className="sm:max-w-2xl">
-					<DialogHeader>
-						<DialogTitle>Confirm import</DialogTitle>
-						<DialogDescription>
-							{summary && (
-								<>
-									{summary.count} transaction{summary.count === 1 ? "" : "s"}
-									{summary.from && summary.to && (
-										<>
-											{" "}
-											from {format(parseISO(summary.from), "LLL dd, y")} to{" "}
-											{format(parseISO(summary.to), "LLL dd, y")}
-										</>
-									)}
-									: {fmtCurrency(summary.totalIn)} in,{" "}
-									{fmtCurrency(summary.totalOut)} out.
-									{summary.duplicates > 0 && (
-										<>
-											{" "}
-											{summary.duplicates} already imported and will be skipped.
-										</>
-									)}
-								</>
-							)}
-						</DialogDescription>
-					</DialogHeader>
-
-					<div className="max-h-[50vh] overflow-y-auto">
-						<Table>
-							<TableHeader className="sticky top-0 z-10 bg-popover">
-								<TableRow>
-									<TableHead>Date</TableHead>
-									<TableHead>Merchant</TableHead>
-									<TableHead>Category</TableHead>
-									<TableHead className="text-right">Amount</TableHead>
-									<TableHead />
-								</TableRow>
-							</TableHeader>
-							<TableBody>
-								{preview?.slice(0, PREVIEW_ROW_LIMIT).map((tx, i) => {
-									const isDuplicate = duplicateFlags[i] ?? false;
-									return (
-										<TableRow
-											// biome-ignore lint/suspicious/noArrayIndexKey: rows can be genuine duplicates (identical date/merchant/amount/category), so the index disambiguates a static, non-reorderable list
-											key={`${i}-${tx.date}-${tx.merchant}-${tx.amount}-${tx.category}`}
-											className={
-												isDuplicate ? "text-muted-foreground" : undefined
-											}
-										>
-											<TableCell>
-												{format(parseISO(tx.date), "LLL dd, y")}
-											</TableCell>
-											<TableCell>{tx.merchant}</TableCell>
-											<TableCell>{tx.category}</TableCell>
-											<TableCell className="text-right">
-												{fmtCurrency(tx.amount)}
-											</TableCell>
-											<TableCell>
-												{isDuplicate && (
-													<Badge variant="outline">Duplicate</Badge>
-												)}
-											</TableCell>
-										</TableRow>
-									);
-								})}
-							</TableBody>
-						</Table>
-					</div>
-					{preview && preview.length > PREVIEW_ROW_LIMIT && (
-						<FieldDescription>
-							and {preview.length - PREVIEW_ROW_LIMIT} more…
-						</FieldDescription>
-					)}
-
-					<DialogFooter>
-						<Button
-							type="button"
-							variant="outline"
-							onClick={() => setPreview(null)}
-						>
-							Cancel
-						</Button>
-						<Button
-							type="button"
-							disabled={isPending}
-							onClick={() => preview && runImport({ data: preview })}
-						>
-							Confirm import
-						</Button>
-					</DialogFooter>
-				</DialogContent>
-			</Dialog>
+			<ConfirmImport
+				preview={preview}
+				setPreview={setPreview}
+				duplicateFlags={duplicateFlags}
+				runImport={runImport}
+				isPending={isPending}
+			/>
 		</form>
 	);
 };

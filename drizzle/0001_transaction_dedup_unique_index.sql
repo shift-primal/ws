@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX "transaction_dedup_idx" ON "transaction" USING btree ("user_id","date","amount","merchant","type",COALESCE("counterparty", ''));

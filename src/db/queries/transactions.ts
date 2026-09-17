@@ -175,7 +175,6 @@ function duplicateKey(tx: {
 	].join("|");
 }
 
-/** Existing transaction keys for the user, restricted to the incoming rows' date range. */
 async function getExistingKeys(userId: string, rows: NewTransactionInput[]) {
 	const dates = rows.map((row) => row.date);
 	const from = dates.reduce((a, b) => (b < a ? b : a));
@@ -204,11 +203,6 @@ async function getExistingKeys(userId: string, rows: NewTransactionInput[]) {
 	);
 }
 
-/**
- * Flags each row as a duplicate of an already-imported transaction (same
- * date, amount, merchant, type and counterparty) or of an earlier row in
- * the same batch. Returned in the same order as `rows`.
- */
 async function markDuplicates(userId: string, rows: NewTransactionInput[]) {
 	if (rows.length === 0) return [] as boolean[];
 
@@ -222,7 +216,6 @@ async function markDuplicates(userId: string, rows: NewTransactionInput[]) {
 	});
 }
 
-/** Preview which rows would be skipped as duplicates without inserting anything. */
 export async function findDuplicateTransactions(
 	userId: string,
 	rows: NewTransactionInput[],
@@ -230,27 +223,16 @@ export async function findDuplicateTransactions(
 	return markDuplicates(userId, rows);
 }
 
-/**
- * Inserts rows, silently skipping any that duplicate an already-imported
- * transaction (same date, amount, merchant, type and counterparty) or a
- * duplicate within the incoming batch itself.
- */
 export async function insertTransactions(
 	userId: string,
 	rows: NewTransactionInput[],
 ) {
 	if (rows.length === 0) return { inserted: [], skipped: 0 };
 
-	const isDuplicate = await markDuplicates(userId, rows);
-	const toInsert = rows.filter((_, i) => !isDuplicate[i]);
-
-	const skipped = rows.length - toInsert.length;
-	if (toInsert.length === 0) return { inserted: [], skipped };
-
 	const inserted = await db
 		.insert(transactions)
 		.values(
-			toInsert.map(({ valuta, ...rest }) => ({
+			rows.map(({ valuta, ...rest }) => ({
 				...rest,
 				userId,
 				amount: rest.amount.toString(),
@@ -258,9 +240,10 @@ export async function insertTransactions(
 				exchangeRate: valuta?.exchangeRate?.toString() ?? null,
 			})),
 		)
+		.onConflictDoNothing()
 		.returning();
 
-	return { inserted, skipped };
+	return { inserted, skipped: rows.length - inserted.length };
 }
 
 export async function deleteTransactions(userId: string, ids: number[]) {

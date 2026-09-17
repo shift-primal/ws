@@ -1,3 +1,4 @@
+import { sql } from "drizzle-orm";
 import {
 	date,
 	index,
@@ -6,6 +7,7 @@ import {
 	pgTable,
 	serial,
 	text,
+	uniqueIndex,
 } from "drizzle-orm/pg-core";
 import { CATEGORIES, TRANSACTION_TYPES } from "txcategorizer";
 import { user } from "#/db/schema/auth";
@@ -33,7 +35,17 @@ export const transactions = pgTable(
 		currency: text(),
 		exchangeRate: numeric("exchange_rate"),
 	},
-	(t) => [index("transaction_userId_idx").on(t.userId)],
+	(t) => [
+		index("transaction_userId_idx").on(t.userId),
+		uniqueIndex("transaction_dedup_idx").on(
+			t.userId,
+			t.date,
+			t.amount,
+			t.merchant,
+			t.type,
+			sql`COALESCE(${t.counterparty}, '')`,
+		),
+	],
 );
 
 export type DbTransaction = typeof transactions.$inferSelect;
