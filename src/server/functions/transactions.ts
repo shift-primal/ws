@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import { CATEGORIES } from "txcategorizer";
 import * as z from "zod";
 import {
 	deleteAllTransactions,
@@ -9,6 +10,7 @@ import {
 	getMonthlyStats,
 	getTransactions,
 	insertTransactions,
+	updateTransactionCategory,
 } from "#/db/queries";
 import {
 	importSchema,
@@ -71,3 +73,12 @@ export const removeTransactions = createServerFn({
 	.middleware([authMiddleware])
 	.validator(z.array(z.number()))
 	.handler(({ data, context }) => deleteTransactions(context.userId, data));
+
+export const setTransactionCategory = createServerFn({
+	method: "POST",
+})
+	.middleware([authMiddleware])
+	.validator(z.object({ id: z.number(), category: z.enum(CATEGORIES) }))
+	.handler(({ data, context }) =>
+		updateTransactionCategory(context.userId, data.id, data.category),
+	);

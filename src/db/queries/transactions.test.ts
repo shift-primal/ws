@@ -2,12 +2,14 @@ import { randomUUID } from "node:crypto";
 import { eq } from "drizzle-orm";
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { db } from "#/db";
+import { upsertCategoryRule } from "#/db/queries/category-rules";
 import {
 	deleteAllTransactions,
 	getTransactions,
 	insertTransactions,
+	updateTransactionCategory,
 } from "#/db/queries/transactions";
-import { user } from "#/db/schema";
+import { categoryRules, user } from "#/db/schema";
 import {
 	type NewTransactionInput,
 	transactionQuerySchema,
@@ -52,6 +54,7 @@ afterAll(async () => {
 
 beforeEach(async () => {
 	await deleteAllTransactions(testUserId);
+	await db.delete(categoryRules).where(eq(categoryRules.userId, testUserId));
 });
 
 describe("insertTransactions", () => {
@@ -96,6 +99,73 @@ describe("insertTransactions", () => {
 
 		expect(result.inserted).toHaveLength(1);
 		expect(result.skipped).toBe(1);
+	});
+
+	it("applies a saved category rule instead of the incoming category", async () => {
+		await upsertCategoryRule(testUserId, "KIWI", "Mat ute");
+
+		const { inserted } = await insertTransactions(testUserId, [
+			sampleTransactions[0],
+		] as NewTransactionInput[]);
+
+		expect(inserted[0]?.category).toBe("Mat ute");
+	});
+
+	it("leaves the incoming category alone when no rule matches", async () => {
+		await upsertCategoryRule(testUserId, "some other merchant", "Mat ute");
+
+		const { inserted } = await insertTransactions(testUserId, [
+			sampleTransactions[0],
+		] as NewTransactionInput[]);
+
+		expect(inserted[0]?.category).toBe("Dagligvare");
+	});
+});
+
+describe("updateTransactionCategory", () => {
+	it("updates the transaction's category", async () => {
+		const { inserted } = await insertTransactions(testUserId, [
+			sampleTransactions[0],
+		] as NewTransactionInput[]);
+		const id = inserted[0]?.id as number;
+
+		const updated = await updateTransactionCategory(testUserId, id, "Annet");
+
+		expect(updated?.category).toBe("Annet");
+	});
+
+	it("does not update another user's transaction", async () => {
+		const { inserted } = await insertTransactions(testUserId, [
+			sampleTransactions[0],
+		] as NewTransactionInput[]);
+		const id = inserted[0]?.id as number;
+
+		const result = await updateTransactionCategory(
+			`other-${randomUUID()}`,
+			id,
+			"Annet",
+		);
+
+		expect(result).toBeUndefined();
+
+		const [unchanged] = (await getTransactions(testUserId, defaultQuery()))
+			.data;
+		expect(unchanged?.category).toBe("Dagligvare");
+	});
+
+	it("saves a category rule for the transaction's merchant", async () => {
+		const { inserted } = await insertTransactions(testUserId, [
+			sampleTransactions[0],
+		] as NewTransactionInput[]);
+		const id = inserted[0]?.id as number;
+
+		await updateTransactionCategory(testUserId, id, "Annet");
+
+		const { inserted: reimported } = await insertTransactions(testUserId, [
+			{ ...sampleTransactions[0], date: "2026-07-01" },
+		] as NewTransactionInput[]);
+
+		expect(reimported[0]?.category).toBe("Annet");
 	});
 });
 

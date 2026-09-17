@@ -61,6 +61,7 @@
 	"transactions_delete_confirm_description": "This action can not be undone!",
 	"transactions_delete_confirm_button": "Delete",
 	"transactions_delete_success_title": "Success!",
+	"transactions_category_update_success_title": "Category updated",
 
 	"import_bank_dnb": "DNB",
 	"import_bank_valle": "Valle",

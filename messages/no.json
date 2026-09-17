@@ -61,6 +61,7 @@
 	"transactions_delete_confirm_description": "Denne handlingen kan ikke reverseres!",
 	"transactions_delete_confirm_button": "Slett",
 	"transactions_delete_success_title": "Fullført!",
+	"transactions_category_update_success_title": "Kategori oppdatert",
 
 	"import_bank_dnb": "DNB",
 	"import_bank_valle": "Valle",

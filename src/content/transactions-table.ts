@@ -47,3 +47,7 @@ export const getDeleteRowButtonContent = () => ({
 	confirmButton: m.transactions_delete_confirm_button(),
 	successToastTitle: m.transactions_delete_success_title(),
 });
+
+export const getCategoryCellContent = () => ({
+	successToastTitle: m.transactions_category_update_success_title(),
+});

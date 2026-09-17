@@ -16,7 +16,12 @@ import {
 	sql,
 	sum,
 } from "drizzle-orm";
+import type { Category } from "txcategorizer";
 import { db } from "#/db";
+import {
+	getCategoryRulesMap,
+	upsertCategoryRule,
+} from "#/db/queries/category-rules";
 import { transactions } from "#/db/schema";
 import type {
 	NewTransactionInput,
@@ -233,12 +238,15 @@ export async function insertTransactions(
 ) {
 	if (rows.length === 0) return { inserted: [], skipped: 0 };
 
+	const rules = await getCategoryRulesMap(userId);
+
 	const inserted = await db
 		.insert(transactions)
 		.values(
 			rows.map(({ valuta, ...rest }) => ({
 				...rest,
 				userId,
+				category: rules.get(rest.merchant) ?? rest.category,
 				amount: rest.amount.toString(),
 				currency: valuta?.currency ?? null,
 				exchangeRate: valuta?.exchangeRate?.toString() ?? null,
@@ -248,6 +256,24 @@ export async function insertTransactions(
 		.returning();
 
 	return { inserted, skipped: rows.length - inserted.length };
+}
+
+export async function updateTransactionCategory(
+	userId: string,
+	id: number,
+	category: Category,
+) {
+	const [updated] = await db
+		.update(transactions)
+		.set({ category })
+		.where(and(eq(transactions.userId, userId), eq(transactions.id, id)))
+		.returning();
+
+	if (!updated) return undefined;
+
+	await upsertCategoryRule(userId, updated.merchant, category);
+
+	return updated;
 }
 
 export async function deleteTransactions(userId: string, ids: number[]) {
