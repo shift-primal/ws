@@ -1,5 +1,7 @@
-export const NOT_FOUND_CONTENT = {
-	heading: "404",
-	message: "This page doesn't exist.",
-	homeLink: "Go home",
-};
+import { m } from "#/paraglide/messages";
+
+export const getNotFoundContent = () => ({
+	heading: m.not_found_heading(),
+	message: m.not_found_message(),
+	homeLink: m.not_found_home_link(),
+});

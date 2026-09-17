@@ -13,26 +13,28 @@ import {
 	ChartTooltip,
 	ChartTooltipContent,
 } from "#/components/shadcn/ui/chart";
-import { MONTHLY_CHART_CONTENT } from "#/content";
+import { getMonthlyChartContent } from "#/content";
 import { fmtCurrency, monthLabel } from "#/lib/fmt";
 import { cn, colorVars } from "#/lib/utils";
-
-const chartConfig = {
-	totalIn: {
-		label: MONTHLY_CHART_CONTENT.incomeLabel,
-		color: colorVars.success,
-	},
-	totalOut: {
-		label: MONTHLY_CHART_CONTENT.expensesLabel,
-		color: colorVars.destructive,
-	},
-} satisfies ChartConfig;
 
 export function MonthlyChart({
 	data,
 }: {
 	data: { month: string; totalIn: number; totalOut: number }[];
 }) {
+	const monthlyChartContent = getMonthlyChartContent();
+
+	const chartConfig = {
+		totalIn: {
+			label: monthlyChartContent.incomeLabel,
+			color: colorVars.success,
+		},
+		totalOut: {
+			label: monthlyChartContent.expensesLabel,
+			color: colorVars.destructive,
+		},
+	} satisfies ChartConfig;
+
 	const chartData = useMemo(() => {
 		const mapped = data.map((row) => ({
 			...row,
@@ -47,13 +49,13 @@ export function MonthlyChart({
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle>{MONTHLY_CHART_CONTENT.title}</CardTitle>
-				<CardDescription>{MONTHLY_CHART_CONTENT.description}</CardDescription>
+				<CardTitle>{monthlyChartContent.title}</CardTitle>
+				<CardDescription>{monthlyChartContent.description}</CardDescription>
 			</CardHeader>
 			<CardContent>
 				{chartData.length === 0 ? (
 					<p className="text-muted-foreground text-sm">
-						{MONTHLY_CHART_CONTENT.emptyText}
+						{monthlyChartContent.emptyText}
 					</p>
 				) : (
 					<ChartContainer
@@ -99,17 +101,15 @@ export function MonthlyChart({
 								dataKey="totalIn"
 								type="monotone"
 								fill="var(--color-totalIn)"
-								fillOpacity={0.25}
+								fillOpacity={0.1}
 								stroke="var(--color-totalIn)"
-								isAnimationActive={false}
 							/>
 							<Area
 								dataKey="totalOut"
 								type="monotone"
 								fill="var(--color-totalOut)"
-								fillOpacity={0.25}
+								fillOpacity={0.1}
 								stroke="var(--color-totalOut)"
-								isAnimationActive={false}
 							/>
 						</AreaChart>
 					</ChartContainer>

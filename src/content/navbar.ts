@@ -9,6 +9,7 @@ import {
 } from "@phosphor-icons/react";
 import type { LinkProps } from "@tanstack/react-router";
 import { linkOptions } from "@tanstack/react-router";
+import { m } from "#/paraglide/messages";
 
 export type NavLink = {
 	label: string;
@@ -22,30 +23,34 @@ export type ExternalLink = {
 	href: string;
 };
 
-export const NAV_LINKS: NavLink[] = [
+// Wrapped in functions (rather than module-level constants) so the
+// paraglide message calls re-resolve the active locale on every call,
+// instead of being frozen to whichever locale was active when this
+// module first loaded.
+export const getNavLinks = (): NavLink[] => [
 	{
-		label: "Home",
+		label: m.navbar_home_label(),
 		icon: HouseIcon,
 		options: linkOptions({
 			to: "/",
 		}),
 	},
 	{
-		label: "Dashboard",
+		label: m.navbar_dashboard_label(),
 		icon: ChartBarIcon,
 		options: linkOptions({
 			to: "/dashboard",
 		}),
 	},
 	{
-		label: "Import",
+		label: m.navbar_import_label(),
 		icon: UploadIcon,
 		options: linkOptions({
 			to: "/import",
 		}),
 	},
 	{
-		label: "Dev",
+		label: m.navbar_dev_label(),
 		icon: WrenchIcon,
 		options: linkOptions({
 			to: "/dev",
@@ -53,15 +58,17 @@ export const NAV_LINKS: NavLink[] = [
 	},
 ];
 
-export const CONTACT_LINKS: ExternalLink[] = [
+export const getContactLinks = (): ExternalLink[] => [
 	{
-		label: "GitHub",
+		label: m.navbar_github_label(),
 		icon: GithubLogoIcon,
 		href: "https://github.com/shift-primal",
 	},
 	{
-		label: "Email",
+		label: m.navbar_email_label(),
 		icon: EnvelopeIcon,
 		href: "mailto:kasper@haugestol.com",
 	},
 ];
+
+export const getNavbarContactTrigger = (): string => m.navbar_contact_trigger();

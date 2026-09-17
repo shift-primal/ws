@@ -1,3 +1,5 @@
+import { m } from "#/paraglide/messages";
+
 export type MonthlyChartContent = {
 	title: string;
 	description: string;
@@ -6,10 +8,10 @@ export type MonthlyChartContent = {
 	expensesLabel: string;
 };
 
-export const MONTHLY_CHART_CONTENT: MonthlyChartContent = {
-	title: "Monthly trend",
-	description: "Income vs. expenses over time",
-	emptyText: "No data for the current filters.",
-	incomeLabel: "Income",
-	expensesLabel: "Expenses",
-};
+export const getMonthlyChartContent = (): MonthlyChartContent => ({
+	title: m.monthly_chart_title(),
+	description: m.monthly_chart_description(),
+	emptyText: m.monthly_chart_empty(),
+	incomeLabel: m.monthly_chart_income(),
+	expensesLabel: m.monthly_chart_expenses(),
+});

@@ -5,7 +5,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "#/components/shadcn/ui/card";
-import { TRANSACTIONS_TABLE_CONTENT } from "#/content";
+import { getTransactionsTableContent } from "#/content";
 import type { DbTransaction } from "#/db/schema";
 import {
 	columns,
@@ -44,7 +44,7 @@ export function TransactionsTable({
 	return (
 		<Card className="min-h-104 flex-1">
 			<CardHeader className="shrink-0">
-				<CardTitle>{TRANSACTIONS_TABLE_CONTENT.title}</CardTitle>
+				<CardTitle>{getTransactionsTableContent().title}</CardTitle>
 			</CardHeader>
 			<CardContent className="min-h-0 grow overflow-y-auto">
 				<TransactionsTableContent table={table} />

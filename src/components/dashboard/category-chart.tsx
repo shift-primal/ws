@@ -13,7 +13,7 @@ import {
 	ChartTooltip,
 	ChartTooltipContent,
 } from "#/components/shadcn/ui/chart";
-import { CATEGORY_CHART_CONTENT } from "#/content";
+import { getCategoryChartContent } from "#/content";
 import { fmtCurrency } from "#/lib/fmt";
 import { chartOtherColor, chartPalette } from "#/lib/utils";
 
@@ -28,6 +28,8 @@ export function CategoryChart({
 		total: string | null;
 	}[];
 }) {
+	const categoryChartContent = getCategoryChartContent();
+
 	const { chartData, chartConfig } = useMemo(() => {
 		const ranked = data
 			.filter((row) => row.direction === "expense")
@@ -47,7 +49,7 @@ export function CategoryChart({
 				? [
 						...top,
 						{
-							category: CATEGORY_CHART_CONTENT.otherLabel,
+							category: categoryChartContent.otherLabel,
 							amount: otherAmount,
 						},
 					]
@@ -56,7 +58,7 @@ export function CategoryChart({
 		const config: ChartConfig = {};
 		const chartData = slices.map((slice, index) => {
 			const color =
-				slice.category === CATEGORY_CHART_CONTENT.otherLabel
+				slice.category === categoryChartContent.otherLabel
 					? chartOtherColor
 					: chartPalette[index % chartPalette.length];
 			config[slice.category] = { label: slice.category, color };
@@ -64,20 +66,20 @@ export function CategoryChart({
 		});
 
 		return { chartData, chartConfig: config };
-	}, [data]);
+	}, [data, categoryChartContent.otherLabel]);
 
 	const total = chartData.reduce((sum, row) => sum + row.amount, 0);
 
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle>{CATEGORY_CHART_CONTENT.title}</CardTitle>
-				<CardDescription>{CATEGORY_CHART_CONTENT.description}</CardDescription>
+				<CardTitle>{categoryChartContent.title}</CardTitle>
+				<CardDescription>{categoryChartContent.description}</CardDescription>
 			</CardHeader>
 			<CardContent>
 				{chartData.length === 0 ? (
 					<p className="text-muted-foreground text-sm">
-						{CATEGORY_CHART_CONTENT.emptyText}
+						{categoryChartContent.emptyText}
 					</p>
 				) : (
 					<>
@@ -109,7 +111,6 @@ export function CategoryChart({
 									innerRadius={72}
 									outerRadius={96}
 									paddingAngle={-0.5}
-									isAnimationActive={false}
 								>
 									<Label
 										content={({ viewBox }) => {
@@ -134,7 +135,7 @@ export function CategoryChart({
 														y={(viewBox.cy ?? 0) + 22}
 														className="fill-muted-foreground text-xs"
 													>
-														{CATEGORY_CHART_CONTENT.totalLabel}
+														{categoryChartContent.totalLabel}
 													</tspan>
 												</text>
 											);

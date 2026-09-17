@@ -11,10 +11,11 @@ import {
 	PopoverTrigger,
 } from "#/components/shadcn/ui/popover";
 import { toast } from "#/components/shadcn/ui/toast";
-import { DELETE_ROW_BUTTON_CONTENT } from "#/content";
+import { getDeleteRowButtonContent } from "#/content";
 import { removeTransactions } from "#/server/functions/transactions";
 
 export const DeleteRowButton = ({ id }: { id: number }) => {
+	const deleteRowButtonContent = getDeleteRowButtonContent();
 	const [open, setOpen] = useState(false);
 	const queryClient = useQueryClient();
 	const { mutate, isPending } = useMutation({
@@ -23,7 +24,7 @@ export const DeleteRowButton = ({ id }: { id: number }) => {
 			queryClient.invalidateQueries({ queryKey: ["transactions"] });
 			toast.add({
 				type: "success",
-				title: DELETE_ROW_BUTTON_CONTENT.successToastTitle,
+				title: deleteRowButtonContent.successToastTitle,
 			});
 			setOpen(false);
 		},
@@ -36,9 +37,9 @@ export const DeleteRowButton = ({ id }: { id: number }) => {
 			</PopoverTrigger>
 			<PopoverContent>
 				<PopoverHeader>
-					<PopoverTitle>{DELETE_ROW_BUTTON_CONTENT.confirmTitle}</PopoverTitle>
+					<PopoverTitle>{deleteRowButtonContent.confirmTitle}</PopoverTitle>
 					<PopoverDescription>
-						<span>{DELETE_ROW_BUTTON_CONTENT.confirmDescription}</span>
+						<span>{deleteRowButtonContent.confirmDescription}</span>
 					</PopoverDescription>
 				</PopoverHeader>
 				<Button
@@ -46,7 +47,7 @@ export const DeleteRowButton = ({ id }: { id: number }) => {
 					disabled={isPending}
 					onClick={() => mutate()}
 				>
-					{DELETE_ROW_BUTTON_CONTENT.confirmButton}
+					{deleteRowButtonContent.confirmButton}
 				</Button>
 			</PopoverContent>
 		</Popover>

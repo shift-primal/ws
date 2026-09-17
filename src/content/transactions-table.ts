@@ -1,12 +1,14 @@
+import { m } from "#/paraglide/messages";
+
 export type TransactionsTableContent = {
 	title: string;
 	emptyText: string;
 };
 
-export const TRANSACTIONS_TABLE_CONTENT: TransactionsTableContent = {
-	title: "Transactions",
-	emptyText: "No transactions.",
-};
+export const getTransactionsTableContent = (): TransactionsTableContent => ({
+	title: m.transactions_table_title(),
+	emptyText: m.transactions_table_empty(),
+});
 
 export type TransactionsColumnLabels = {
 	date: string;
@@ -16,31 +18,32 @@ export type TransactionsColumnLabels = {
 	amount: string;
 };
 
-export const TRANSACTIONS_COLUMN_LABELS: TransactionsColumnLabels = {
-	date: "Date",
-	merchant: "Merchant",
-	category: "Category",
-	type: "Type",
-	amount: "Amount",
-};
+export const getTransactionsColumnLabels = (): TransactionsColumnLabels => ({
+	date: m.transactions_column_date(),
+	merchant: m.transactions_column_merchant(),
+	category: m.transactions_column_category(),
+	type: m.transactions_column_type(),
+	amount: m.transactions_column_amount(),
+});
 
-export const DELETE_COLUMN_CONTENT = {
-	srHeader: "Delete row",
-};
+export const getDeleteColumnContent = () => ({
+	srHeader: m.transactions_delete_column_sr(),
+});
 
+// Not translatable — plain pagination config, not user-facing copy.
 export const PAGE_SIZE_OPTIONS = [10, 25, 50, 100];
 
-export const TRANSACTIONS_TABLE_FOOTER_CONTENT = {
-	rowsPerPage: "Rows per page",
-	previous: "Previous",
-	next: "Next",
+export const getTransactionsTableFooterContent = () => ({
+	rowsPerPage: m.transactions_footer_rows_per_page(),
+	previous: m.transactions_footer_previous(),
+	next: m.transactions_footer_next(),
 	pageSummary: (page: number, totalPages: number, totalResults: number) =>
-		`Page ${page} of ${totalPages} · ${totalResults} total`,
-};
+		m.transactions_footer_page_summary({ page, totalPages, totalResults }),
+});
 
-export const DELETE_ROW_BUTTON_CONTENT = {
-	confirmTitle: "Are you sure you wish to delete this row?",
-	confirmDescription: "This action can not be undone!",
-	confirmButton: "Delete",
-	successToastTitle: "Success!",
-};
+export const getDeleteRowButtonContent = () => ({
+	confirmTitle: m.transactions_delete_confirm_title(),
+	confirmDescription: m.transactions_delete_confirm_description(),
+	confirmButton: m.transactions_delete_confirm_button(),
+	successToastTitle: m.transactions_delete_success_title(),
+});

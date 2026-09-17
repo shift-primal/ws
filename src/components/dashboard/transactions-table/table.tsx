@@ -7,7 +7,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "#/components/shadcn/ui/table";
-import { TRANSACTIONS_TABLE_CONTENT } from "#/content";
+import { getTransactionsTableContent } from "#/content";
 import type { DbTransaction } from "#/db/schema";
 import type { tableFeatureSet } from "./columns";
 
@@ -16,6 +16,7 @@ export function TransactionsTableContent({
 }: {
 	table: ReactTable<typeof tableFeatureSet, DbTransaction>;
 }) {
+	const transactionsTableContent = getTransactionsTableContent();
 	const columnCount = table.getAllColumns().length;
 
 	return (
@@ -37,7 +38,7 @@ export function TransactionsTableContent({
 				{table.getRowModel().rows.length === 0 && (
 					<TableRow>
 						<TableCell colSpan={columnCount} className="text-center">
-							{TRANSACTIONS_TABLE_CONTENT.emptyText}
+							{transactionsTableContent.emptyText}
 						</TableCell>
 					</TableRow>
 				)}

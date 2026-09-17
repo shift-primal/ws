@@ -8,7 +8,7 @@ import {
 	DropdownMenuTrigger,
 } from "#/components/shadcn/ui/dropdown-menu";
 import { Field, FieldLabel } from "#/components/shadcn/ui/field";
-import { TYPE_FILTER_CONTENT } from "#/content";
+import { getTypeFilterContent } from "#/content";
 
 export function TypeFilter({
 	value,
@@ -17,6 +17,8 @@ export function TypeFilter({
 	value: TransactionType[] | undefined;
 	onChange: (types: TransactionType[] | undefined) => void;
 }) {
+	const typeFilterContent = getTypeFilterContent();
+
 	function handleToggle(type: TransactionType, checked: boolean) {
 		const next = checked
 			? [...(value ?? []), type]
@@ -26,14 +28,14 @@ export function TypeFilter({
 
 	const label =
 		!value || value.length === 0
-			? TYPE_FILTER_CONTENT.anyLabel
+			? typeFilterContent.anyLabel
 			: value.length === 1
 				? value[0]
-				: TYPE_FILTER_CONTENT.countLabel(value.length);
+				: typeFilterContent.countLabel(value.length);
 
 	return (
 		<Field className="w-56">
-			<FieldLabel htmlFor="type-filter">{TYPE_FILTER_CONTENT.label}</FieldLabel>
+			<FieldLabel htmlFor="type-filter">{typeFilterContent.label}</FieldLabel>
 			<DropdownMenu>
 				<DropdownMenuTrigger
 					render={

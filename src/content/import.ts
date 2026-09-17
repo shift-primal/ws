@@ -1,53 +1,67 @@
 import type { Bank } from "txcategorizer";
+import { m } from "#/paraglide/messages";
 
-export const BANK_LABELS: Record<Bank, string> = {
-	dnb: "DNB",
-	valle: "Valle",
-};
+export const getBankLabels = (): Record<Bank, string> => ({
+	dnb: m.import_bank_dnb(),
+	valle: m.import_bank_valle(),
+});
 
-export const DROPZONE_CONTENT = {
-	title: "Upload files",
-	description: "Drag and drop files or click to browse",
-	dropText: "Drop files here",
-	browseText: "or click to browse from your device",
-	emptyText: "No files uploaded yet",
-};
+export const getDropzoneContent = () => ({
+	title: m.import_dropzone_title(),
+	description: m.import_dropzone_description(),
+	dropText: m.import_dropzone_drop_text(),
+	browseText: m.import_dropzone_browse_text(),
+	emptyText: m.import_dropzone_empty(),
+});
 
-export const PREVIEW_TABLE_CONTENT = {
-	duplicateBadge: "Duplicate",
-	moreRows: (count: number) => `and ${count} more…`,
-};
+export const getPreviewTableContent = () => ({
+	duplicateBadge: m.import_preview_duplicate_badge(),
+	moreRows: (count: number) => m.import_preview_more_rows({ count }),
+});
 
-export const CONFIRM_IMPORT_CONTENT = {
-	title: "Confirm import",
-	cancelButton: "Cancel",
-	confirmButton: "Confirm import",
+export const getConfirmImportContent = () => ({
+	title: m.import_confirm_title(),
+	cancelButton: m.import_confirm_cancel(),
+	confirmButton: m.import_confirm_button(),
 	transactionCount: (count: number) =>
-		`${count} transaction${count === 1 ? "" : "s"}`,
+		count === 1
+			? m.import_confirm_transaction_count_singular({ count })
+			: m.import_confirm_transaction_count_plural({ count }),
 	duplicatesSkipped: (count: number) =>
-		`${count} duplicate${count === 1 ? "" : "s"} skipped`,
-};
+		count === 1
+			? m.import_confirm_duplicates_skipped_singular({ count })
+			: m.import_confirm_duplicates_skipped_plural({ count }),
+});
 
-export const UPLOAD_FORM_CONTENT = {
-	legend: "Import transactions",
-	description: "Import your transactions from a file",
-	fileAccept: "Accepts .csv and .txt files",
-	bankLabel: "Bank",
-	bankPlaceholder: "Select your bank",
-	fileRequiredError: "Select a file to import",
-	bankRequiredError: "Select a bank",
-	checking: "Checking…",
-	submit: "Preview import",
-	importCompleteTitle: "Import complete",
+export const getUploadFormContent = () => ({
+	legend: m.import_form_legend(),
+	description: m.import_form_description(),
+	fileAccept: m.import_form_file_accept(),
+	bankLabel: m.import_form_bank_label(),
+	bankPlaceholder: m.import_form_bank_placeholder(),
+	fileRequiredError: m.import_form_file_required_error(),
+	bankRequiredError: m.import_form_bank_required_error(),
+	checking: m.import_form_checking(),
+	submit: m.import_form_submit(),
+	importCompleteTitle: m.import_toast_import_complete_title(),
 	importedSummary: (insertedCount: number, skippedCount: number) =>
 		skippedCount > 0
-			? `Imported ${insertedCount}, skipped ${skippedCount} duplicate${skippedCount === 1 ? "" : "s"}.`
-			: `Imported ${insertedCount} transaction${insertedCount === 1 ? "" : "s"}.`,
-	importFailedTitle: "Import failed",
-	duplicateCheckFailedTitle: "Couldn't check for duplicates",
-	noTransactionsTitle: "No transactions found",
-	noTransactionsDescription:
-		"Couldn't find any transactions in this file. Check that it's a valid export from the selected bank.",
-	unsupportedFileTitle: "Unsupported file",
-	unsupportedFileDescription: "Only .csv and .txt files are accepted.",
-};
+			? skippedCount === 1
+				? m.import_toast_imported_skipped_singular({
+						inserted: insertedCount,
+						skipped: skippedCount,
+					})
+				: m.import_toast_imported_skipped_plural({
+						inserted: insertedCount,
+						skipped: skippedCount,
+					})
+			: insertedCount === 1
+				? m.import_toast_imported_singular({ count: insertedCount })
+				: m.import_toast_imported_plural({ count: insertedCount }),
+	importFailedTitle: m.import_toast_import_failed_title(),
+	duplicateCheckFailedTitle: m.import_toast_duplicate_check_failed_title(),
+	noTransactionsTitle: m.import_toast_no_transactions_title(),
+	noTransactionsDescription: m.import_toast_no_transactions_description(),
+	unsupportedFileTitle: m.import_toast_unsupported_file_title(),
+	unsupportedFileDescription: m.import_toast_unsupported_file_description(),
+});

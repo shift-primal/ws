@@ -33,13 +33,15 @@ import {
 	FieldSet,
 } from "#/components/shadcn/ui/field";
 import { toast } from "#/components/shadcn/ui/toast";
-import { BANK_LABELS, UPLOAD_FORM_CONTENT } from "#/content";
+import { getBankLabels, getUploadFormContent } from "#/content";
 import {
 	checkDuplicateTransactions,
 	importTransactions,
 } from "#/server/functions/transactions";
 
 export const UploadForm = () => {
+	const uploadFormContent = getUploadFormContent();
+	const bankLabels = getBankLabels();
 	const queryClient = useQueryClient();
 	const [preview, setPreview] = useState<Transaction[] | null>(null);
 	const [duplicateFlags, setDuplicateFlags] = useState<boolean[]>([]);
@@ -50,8 +52,8 @@ export const UploadForm = () => {
 			queryClient.invalidateQueries({ queryKey: ["transactions"] });
 			toast.add({
 				type: "success",
-				title: UPLOAD_FORM_CONTENT.importCompleteTitle,
-				description: UPLOAD_FORM_CONTENT.importedSummary(
+				title: uploadFormContent.importCompleteTitle,
+				description: uploadFormContent.importedSummary(
 					inserted.length,
 					skipped,
 				),
@@ -62,7 +64,7 @@ export const UploadForm = () => {
 		onError: () => {
 			toast.add({
 				type: "error",
-				title: UPLOAD_FORM_CONTENT.importFailedTitle,
+				title: uploadFormContent.importFailedTitle,
 			});
 		},
 	});
@@ -72,7 +74,7 @@ export const UploadForm = () => {
 		onError: () => {
 			toast.add({
 				type: "error",
-				title: UPLOAD_FORM_CONTENT.duplicateCheckFailedTitle,
+				title: uploadFormContent.duplicateCheckFailedTitle,
 			});
 		},
 	});
@@ -90,8 +92,8 @@ export const UploadForm = () => {
 			if (parsed.length === 0) {
 				toast.add({
 					type: "error",
-					title: UPLOAD_FORM_CONTENT.noTransactionsTitle,
-					description: UPLOAD_FORM_CONTENT.noTransactionsDescription,
+					title: uploadFormContent.noTransactionsTitle,
+					description: uploadFormContent.noTransactionsDescription,
 				});
 				return;
 			}
@@ -116,8 +118,8 @@ export const UploadForm = () => {
 		>
 			<Card>
 				<CardHeader>
-					<CardTitle>{UPLOAD_FORM_CONTENT.legend}</CardTitle>
-					<CardDescription>{UPLOAD_FORM_CONTENT.description}</CardDescription>
+					<CardTitle>{uploadFormContent.legend}</CardTitle>
+					<CardDescription>{uploadFormContent.description}</CardDescription>
 				</CardHeader>
 				<CardContent className="p-4">
 					<Field>
@@ -127,7 +129,7 @@ export const UploadForm = () => {
 									name="file"
 									validators={{
 										onSubmit: ({ value }) =>
-											value ? undefined : UPLOAD_FORM_CONTENT.fileRequiredError,
+											value ? undefined : uploadFormContent.fileRequiredError,
 									}}
 								>
 									{(field) => (
@@ -139,14 +141,14 @@ export const UploadForm = () => {
 												onFilesRejected={() =>
 													toast.add({
 														type: "error",
-														title: UPLOAD_FORM_CONTENT.unsupportedFileTitle,
+														title: uploadFormContent.unsupportedFileTitle,
 														description:
-															UPLOAD_FORM_CONTENT.unsupportedFileDescription,
+															uploadFormContent.unsupportedFileDescription,
 													})
 												}
 											/>
 											<FieldDescription>
-												{UPLOAD_FORM_CONTENT.fileAccept}
+												{uploadFormContent.fileAccept}
 											</FieldDescription>
 											<FieldError
 												errors={field.state.meta.errors.map((message) => ({
@@ -161,17 +163,17 @@ export const UploadForm = () => {
 									name="bank"
 									validators={{
 										onSubmit: ({ value }) =>
-											value ? undefined : UPLOAD_FORM_CONTENT.bankRequiredError,
+											value ? undefined : uploadFormContent.bankRequiredError,
 									}}
 								>
 									{(field) => (
 										<Field data-invalid={!field.state.meta.isValid}>
 											<FieldLabel htmlFor="bank">
-												{UPLOAD_FORM_CONTENT.bankLabel}
+												{uploadFormContent.bankLabel}
 											</FieldLabel>
 											<Combobox
 												items={BANKS}
-												itemToStringLabel={(bank) => BANK_LABELS[bank]}
+												itemToStringLabel={(bank) => bankLabels[bank]}
 												value={field.state.value ?? null}
 												onValueChange={(value) =>
 													field.handleChange(value ?? undefined)
@@ -179,13 +181,13 @@ export const UploadForm = () => {
 											>
 												<ComboboxInput
 													id="bank"
-													placeholder={UPLOAD_FORM_CONTENT.bankPlaceholder}
+													placeholder={uploadFormContent.bankPlaceholder}
 												/>
 												<ComboboxContent>
 													<ComboboxList>
 														{(item: Bank) => (
 															<ComboboxItem key={item} value={item}>
-																{BANK_LABELS[item]}
+																{bankLabels[item]}
 															</ComboboxItem>
 														)}
 													</ComboboxList>
@@ -208,8 +210,8 @@ export const UploadForm = () => {
 											disabled={isSubmitting || isPending}
 										>
 											{isSubmitting
-												? UPLOAD_FORM_CONTENT.checking
-												: UPLOAD_FORM_CONTENT.submit}
+												? uploadFormContent.checking
+												: uploadFormContent.submit}
 										</Button>
 									)}
 								</form.Subscribe>

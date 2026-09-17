@@ -10,7 +10,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "#/components/shadcn/ui/table";
-import { PREVIEW_TABLE_CONTENT, TRANSACTIONS_COLUMN_LABELS } from "#/content";
+import { getPreviewTableContent, getTransactionsColumnLabels } from "#/content";
 import { fmtCurrency } from "#/lib/fmt";
 
 const PREVIEW_ROW_LIMIT = 50;
@@ -24,17 +24,20 @@ export const PreviewTable = ({
 	preview,
 	duplicateFlags,
 }: PreviewTableProps) => {
+	const previewTableContent = getPreviewTableContent();
+	const columnLabels = getTransactionsColumnLabels();
+
 	return (
 		<>
 			<div className="max-h-[50vh] overflow-y-auto">
 				<Table>
 					<TableHeader className="sticky top-0 z-10 bg-popover">
 						<TableRow>
-							<TableHead>{TRANSACTIONS_COLUMN_LABELS.date}</TableHead>
-							<TableHead>{TRANSACTIONS_COLUMN_LABELS.merchant}</TableHead>
-							<TableHead>{TRANSACTIONS_COLUMN_LABELS.category}</TableHead>
+							<TableHead>{columnLabels.date}</TableHead>
+							<TableHead>{columnLabels.merchant}</TableHead>
+							<TableHead>{columnLabels.category}</TableHead>
 							<TableHead className="text-right">
-								{TRANSACTIONS_COLUMN_LABELS.amount}
+								{columnLabels.amount}
 							</TableHead>
 							<TableHead />
 						</TableRow>
@@ -59,7 +62,7 @@ export const PreviewTable = ({
 									<TableCell>
 										{isDuplicate && (
 											<Badge variant="outline">
-												{PREVIEW_TABLE_CONTENT.duplicateBadge}
+												{previewTableContent.duplicateBadge}
 											</Badge>
 										)}
 									</TableCell>
@@ -71,7 +74,7 @@ export const PreviewTable = ({
 			</div>
 			{preview.length > PREVIEW_ROW_LIMIT && (
 				<FieldDescription>
-					{PREVIEW_TABLE_CONTENT.moreRows(preview.length - PREVIEW_ROW_LIMIT)}
+					{previewTableContent.moreRows(preview.length - PREVIEW_ROW_LIMIT)}
 				</FieldDescription>
 			)}
 		</>

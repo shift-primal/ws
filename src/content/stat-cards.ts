@@ -1,5 +1,6 @@
 import { fmtCurrency } from "#/lib/fmt";
 import { signColor } from "#/lib/utils";
+import { m } from "#/paraglide/messages";
 
 export type StatCardProps = {
 	title: string;
@@ -21,26 +22,26 @@ export const getStatCardsContent = ({
 
 	return [
 		{
-			title: "Net",
-			description: "Total net (income - expenses)",
+			title: m.stat_cards_net_title(),
+			description: m.stat_cards_net_description(),
 			content: fmtCurrency(net),
 			color: signColor(net),
 		},
 		{
-			title: "Income",
-			description: "Total income",
+			title: m.stat_cards_income_title(),
+			description: m.stat_cards_income_description(),
 			content: fmtCurrency(totalIn),
 			color: "success",
 		},
 		{
-			title: "Expenses",
-			description: "Total expenses",
+			title: m.stat_cards_expenses_title(),
+			description: m.stat_cards_expenses_description(),
 			content: fmtCurrency(totalOut),
 			color: "destructive",
 		},
 		{
-			title: "Transactions",
-			description: "Total number of transactions",
+			title: m.stat_cards_transactions_title(),
+			description: m.stat_cards_transactions_description(),
 			content: totalResults.toString(),
 		},
 	];

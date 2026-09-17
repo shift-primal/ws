@@ -64,19 +64,23 @@ const Dashboard = () => {
 
 	return (
 		<div className="flex h-full min-h-0 flex-col gap-4">
-			<FiltersBar
-				search={search}
-				bounds={bounds}
-				onChange={handleFilterChange}
-			/>
+			<div className="shrink-0">
+				<FiltersBar
+					search={search}
+					bounds={bounds}
+					onChange={handleFilterChange}
+				/>
+			</div>
 
-			<StatCards
-				totalIn={data.totalIn}
-				totalOut={data.totalOut}
-				totalResults={data.totalResults}
-			/>
+			<div className="shrink-0">
+				<StatCards
+					totalIn={data.totalIn}
+					totalOut={data.totalOut}
+					totalResults={data.totalResults}
+				/>
+			</div>
 
-			<div className="grid gap-4 md:grid-cols-3">
+			<div className="grid shrink-0 gap-4 md:grid-cols-3">
 				<div className="md:col-span-2">
 					<MonthlyChart data={monthlyStats} />
 				</div>
@@ -112,6 +116,11 @@ const Dashboard = () => {
 						}),
 				}}
 			/>
+
+			{/* Chrome doesn't count a trailing margin of an overflowing flex
+			child toward the scrollable ancestor's scroll height, so this needs
+			to be a real sized element rather than padding/margin on the table. */}
+			<div className="h-6 shrink-0" />
 		</div>
 	);
 };

@@ -9,8 +9,8 @@ import {
 	SelectValue,
 } from "#/components/shadcn/ui/select";
 import {
+	getTransactionsTableFooterContent,
 	PAGE_SIZE_OPTIONS,
-	TRANSACTIONS_TABLE_FOOTER_CONTENT,
 } from "#/content";
 
 export function TransactionsTableFooter({
@@ -18,10 +18,12 @@ export function TransactionsTableFooter({
 }: {
 	pagination: TransactionsTablePagination;
 }) {
+	const footerContent = getTransactionsTableFooterContent();
+
 	return (
 		<CardFooter className="shrink-0 flex-col gap-3 sm:grid sm:grid-cols-3">
 			<div className="flex items-center justify-center gap-1.5 text-muted-foreground text-xs sm:justify-start">
-				<span>{TRANSACTIONS_TABLE_FOOTER_CONTENT.rowsPerPage}</span>
+				<span>{footerContent.rowsPerPage}</span>
 				<Select
 					value={String(pagination.pageSize)}
 					onValueChange={(value) => pagination.onPageSizeChange(Number(value))}
@@ -46,7 +48,7 @@ export function TransactionsTableFooter({
 					disabled={pagination.page <= 1}
 					onClick={pagination.onPrevious}
 				>
-					{TRANSACTIONS_TABLE_FOOTER_CONTENT.previous}
+					{footerContent.previous}
 				</Button>
 				<Button
 					variant="outline"
@@ -54,12 +56,12 @@ export function TransactionsTableFooter({
 					disabled={pagination.page >= pagination.totalPages}
 					onClick={pagination.onNext}
 				>
-					{TRANSACTIONS_TABLE_FOOTER_CONTENT.next}
+					{footerContent.next}
 				</Button>
 			</div>
 
 			<span className="text-center text-muted-foreground text-xs sm:text-right">
-				{TRANSACTIONS_TABLE_FOOTER_CONTENT.pageSummary(
+				{footerContent.pageSummary(
 					pagination.page,
 					pagination.totalPages,
 					pagination.totalResults,

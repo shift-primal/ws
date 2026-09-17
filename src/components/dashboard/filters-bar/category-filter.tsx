@@ -8,7 +8,7 @@ import {
 	DropdownMenuTrigger,
 } from "#/components/shadcn/ui/dropdown-menu";
 import { Field, FieldLabel } from "#/components/shadcn/ui/field";
-import { CATEGORY_FILTER_CONTENT } from "#/content";
+import { getCategoryFilterContent } from "#/content";
 
 export function CategoryFilter({
 	value,
@@ -17,6 +17,8 @@ export function CategoryFilter({
 	value: Category[] | undefined;
 	onChange: (categories: Category[] | undefined) => void;
 }) {
+	const categoryFilterContent = getCategoryFilterContent();
+
 	function handleToggle(category: Category, checked: boolean) {
 		const next = checked
 			? [...(value ?? []), category]
@@ -26,15 +28,15 @@ export function CategoryFilter({
 
 	const label =
 		!value || value.length === 0
-			? CATEGORY_FILTER_CONTENT.anyLabel
+			? categoryFilterContent.anyLabel
 			: value.length === 1
 				? value[0]
-				: CATEGORY_FILTER_CONTENT.countLabel(value.length);
+				: categoryFilterContent.countLabel(value.length);
 
 	return (
 		<Field className="w-56">
 			<FieldLabel htmlFor="category-filter">
-				{CATEGORY_FILTER_CONTENT.label}
+				{categoryFilterContent.label}
 			</FieldLabel>
 			<DropdownMenu>
 				<DropdownMenuTrigger

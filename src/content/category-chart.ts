@@ -1,3 +1,5 @@
+import { m } from "#/paraglide/messages";
+
 export type CategoryChartContent = {
 	title: string;
 	description: string;
@@ -6,10 +8,10 @@ export type CategoryChartContent = {
 	totalLabel: string;
 };
 
-export const CATEGORY_CHART_CONTENT: CategoryChartContent = {
-	title: "By category",
-	description: "Share of spending, will only show expenses",
-	emptyText: "No data for the current filters.",
-	otherLabel: "Other",
-	totalLabel: "Total",
-};
+export const getCategoryChartContent = (): CategoryChartContent => ({
+	title: m.category_chart_title(),
+	description: m.category_chart_description(),
+	emptyText: m.category_chart_empty(),
+	otherLabel: m.category_chart_other(),
+	totalLabel: m.category_chart_total(),
+});

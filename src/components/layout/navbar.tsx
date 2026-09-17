@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { LanguageSwitcher } from "#/components/layout/language-switcher";
 import { ThemeSwitcher } from "#/components/layout/theme-switcher";
 import { UserButton } from "#/components/shadcn/auth/user/user-button";
 import {
@@ -10,13 +11,17 @@ import {
 	NavigationMenuTrigger,
 	navigationMenuTriggerStyle,
 } from "#/components/shadcn/ui/navigation-menu";
-import { CONTACT_LINKS, NAV_LINKS } from "#/content";
+import {
+	getContactLinks,
+	getNavbarContactTrigger,
+	getNavLinks,
+} from "#/content";
 
 export const Navbar = () => {
 	return (
 		<NavigationMenu className="flex-none shrink-0 w-full max-w-full border-b-2 py-2 px-4">
 			<NavigationMenuList className="gap-2">
-				{NAV_LINKS.map(({ label, icon: LinkIcon, options }) => (
+				{getNavLinks().map(({ label, icon: LinkIcon, options }) => (
 					<NavigationMenuItem key={label}>
 						<NavigationMenuLink
 							className={navigationMenuTriggerStyle()}
@@ -31,9 +36,11 @@ export const Navbar = () => {
 				))}
 
 				<NavigationMenuItem className="ml-auto">
-					<NavigationMenuTrigger>Kontakt</NavigationMenuTrigger>
+					<NavigationMenuTrigger>
+						{getNavbarContactTrigger()}
+					</NavigationMenuTrigger>
 					<NavigationMenuContent className="flex gap-2">
-						{CONTACT_LINKS.map(({ label, icon: LinkIcon, href }) => (
+						{getContactLinks().map(({ label, icon: LinkIcon, href }) => (
 							<NavigationMenuLink
 								key={label}
 								aria-label={label}
@@ -45,6 +52,9 @@ export const Navbar = () => {
 							/>
 						))}
 					</NavigationMenuContent>
+				</NavigationMenuItem>
+				<NavigationMenuItem>
+					<LanguageSwitcher />
 				</NavigationMenuItem>
 				<NavigationMenuItem>
 					<ThemeSwitcher />

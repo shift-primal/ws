@@ -1,11 +1,11 @@
 import { columnHelper } from "#/components/dashboard/transactions-table/columns/helper";
 import { SortableHeader } from "#/components/dashboard/transactions-table/columns/sortable-header";
-import { TRANSACTIONS_COLUMN_LABELS } from "#/content";
+import { getTransactionsColumnLabels } from "#/content";
 
 export const dateColumn = columnHelper.accessor("date", {
 	header: ({ table }) => (
 		<SortableHeader
-			label={TRANSACTIONS_COLUMN_LABELS.date}
+			label={getTransactionsColumnLabels().date}
 			column="date"
 			meta={table.options.meta}
 		/>

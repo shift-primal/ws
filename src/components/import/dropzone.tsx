@@ -18,7 +18,7 @@ import {
 	ItemMedia,
 	ItemTitle,
 } from "#/components/shadcn/ui/item";
-import { DROPZONE_CONTENT } from "#/content";
+import { getDropzoneContent } from "#/content";
 import { fmtFileSize } from "#/lib/fmt";
 import { cn } from "#/lib/utils";
 
@@ -55,6 +55,7 @@ export const Dropzone = ({
 	multiple = false,
 	className,
 }: DropzoneProps) => {
+	const dropzoneContent = getDropzoneContent();
 	const inputId = useId();
 	const inputRef = useRef<HTMLInputElement>(null);
 	const [isDraggingOver, setIsDraggingOver] = useState(false);
@@ -84,8 +85,8 @@ export const Dropzone = ({
 	return (
 		<Card className={className}>
 			<CardHeader>
-				<CardTitle>{DROPZONE_CONTENT.title}</CardTitle>
-				<CardDescription>{DROPZONE_CONTENT.description}</CardDescription>
+				<CardTitle>{dropzoneContent.title}</CardTitle>
+				<CardDescription>{dropzoneContent.description}</CardDescription>
 			</CardHeader>
 
 			<CardContent>
@@ -106,10 +107,10 @@ export const Dropzone = ({
 				>
 					<CloudArrowUpIcon className="size-8 text-muted-foreground" />
 					<span className="text-sm font-medium">
-						{DROPZONE_CONTENT.dropText}
+						{dropzoneContent.dropText}
 					</span>
 					<span className="text-xs text-muted-foreground">
-						{DROPZONE_CONTENT.browseText}
+						{dropzoneContent.browseText}
 					</span>
 				</button>
 
@@ -129,7 +130,7 @@ export const Dropzone = ({
 			<CardFooter className="flex-col items-stretch gap-2">
 				{files.length === 0 ? (
 					<p className="py-1 text-center text-xs text-muted-foreground">
-						{DROPZONE_CONTENT.emptyText}
+						{dropzoneContent.emptyText}
 					</p>
 				) : (
 					<ItemGroup>

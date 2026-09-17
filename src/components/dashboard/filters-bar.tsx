@@ -41,7 +41,7 @@ export function FiltersBar({
 
 	return (
 		<Card size="sm">
-			<CardContent className="flex flex-wrap items-end gap-4 py-2">
+			<CardContent className="grid grid-cols-2 gap-4 py-2 sm:flex sm:flex-wrap sm:items-end">
 				<DateRangeFilter
 					from={search.from}
 					to={search.to}
@@ -63,7 +63,7 @@ export function FiltersBar({
 					onChange={(merchant) => onChange({ merchant })}
 				/>
 
-				<div className="flex grow items-end gap-4">
+				<div className="col-span-2 flex grow items-end gap-4">
 					<AmountRangeFilter
 						minAmt={search.minAmt}
 						maxAmt={search.maxAmt}

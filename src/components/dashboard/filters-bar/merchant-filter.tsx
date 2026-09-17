@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Field, FieldLabel } from "#/components/shadcn/ui/field";
 import { Input } from "#/components/shadcn/ui/input";
-import { MERCHANT_FILTER_CONTENT } from "#/content";
+import { getMerchantFilterContent } from "#/content";
 import { useResettableState } from "#/lib/hooks/use-resettable-state";
 
 export function MerchantFilter({
@@ -11,6 +11,7 @@ export function MerchantFilter({
 	value: string | undefined;
 	onChange: (merchant: string | undefined) => void;
 }) {
+	const merchantFilterContent = getMerchantFilterContent();
 	const [merchant, setMerchant] = useResettableState(value ?? "", value);
 
 	useEffect(() => {
@@ -26,11 +27,11 @@ export function MerchantFilter({
 	return (
 		<Field className="w-xs">
 			<FieldLabel htmlFor="merchant-filter">
-				{MERCHANT_FILTER_CONTENT.label}
+				{merchantFilterContent.label}
 			</FieldLabel>
 			<Input
 				id="merchant-filter"
-				placeholder={MERCHANT_FILTER_CONTENT.placeholder}
+				placeholder={merchantFilterContent.placeholder}
 				value={merchant}
 				onChange={(event) => setMerchant(event.target.value)}
 			/>

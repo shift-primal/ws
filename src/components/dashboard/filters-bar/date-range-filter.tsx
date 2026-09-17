@@ -9,7 +9,7 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "#/components/shadcn/ui/popover";
-import { DATE_RANGE_FILTER_CONTENT } from "#/content";
+import { getDateRangeFilterContent } from "#/content";
 
 export function DateRangeFilter({
 	from,
@@ -27,6 +27,8 @@ export function DateRangeFilter({
 		? { from: parseISO(from), to: to ? parseISO(to) : undefined }
 		: undefined;
 
+	const dateRangeFilterContent = getDateRangeFilterContent();
+
 	function handleDateRangeChange(range: DateRange | undefined) {
 		onChange({
 			from: range?.from ? format(range.from, "yyyy-MM-dd") : undefined,
@@ -37,7 +39,7 @@ export function DateRangeFilter({
 	return (
 		<Field className="w-auto">
 			<FieldLabel htmlFor="date-range-filter">
-				{DATE_RANGE_FILTER_CONTENT.label}
+				{dateRangeFilterContent.label}
 			</FieldLabel>
 			<div className="flex items-center gap-1">
 				<Popover>
@@ -61,7 +63,7 @@ export function DateRangeFilter({
 								format(dateRange.from, "LLL dd, y")
 							)
 						) : (
-							<span>{DATE_RANGE_FILTER_CONTENT.allTimeLabel}</span>
+							<span>{dateRangeFilterContent.allTimeLabel}</span>
 						)}
 					</PopoverTrigger>
 					<PopoverContent className="w-auto p-0" align="start">
@@ -78,7 +80,7 @@ export function DateRangeFilter({
 					<Button
 						variant="ghost"
 						size="icon-sm"
-						aria-label={DATE_RANGE_FILTER_CONTENT.clearAriaLabel}
+						aria-label={dateRangeFilterContent.clearAriaLabel}
 						onClick={() => handleDateRangeChange(undefined)}
 					>
 						<XIcon />

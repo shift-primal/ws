@@ -7,6 +7,7 @@ import {
 import { Navbar } from "#/components/layout/navbar";
 import { NotFound } from "#/components/layout/not-found";
 import { Providers } from "#/components/layout/providers";
+import { getLocale } from "#/paraglide/runtime";
 import appCss from "../styles.css?url";
 
 interface MyRouterContext {
@@ -40,7 +41,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 
 function RootDocument({ children }: { children: React.ReactNode }) {
 	return (
-		<html lang="en" suppressHydrationWarning>
+		<html lang={getLocale()} suppressHydrationWarning>
 			<head>
 				<HeadContent />
 			</head>

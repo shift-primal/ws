@@ -67,6 +67,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.13",
+    "@inlang/paraglide-js": "^2.25.2",
     "@rolldown/plugin-babel": "^0.2.4",
     "@tanstack/devtools-vite": "latest",
     "@tanstack/router-cli": "^1.167.36",

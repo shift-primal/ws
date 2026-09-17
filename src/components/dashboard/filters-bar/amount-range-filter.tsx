@@ -1,6 +1,6 @@
 import { Field, FieldLabel } from "#/components/shadcn/ui/field";
 import { Slider } from "#/components/shadcn/ui/slider";
-import { AMOUNT_RANGE_FILTER_CONTENT } from "#/content";
+import { getAmountRangeFilterContent } from "#/content";
 import {
 	type AmountBounds,
 	amountToPosition,
@@ -23,6 +23,7 @@ export function AmountRangeFilter({
 		maxAmt: number | undefined;
 	}) => void;
 }) {
+	const amountRangeFilterContent = getAmountRangeFilterContent();
 	const key = `${minAmt}:${maxAmt}:${bounds.minBound}:${bounds.maxBound}`;
 	const [amountRange, setAmountRange] = useResettableState<[number, number]>(
 		[minAmt ?? bounds.minBound, maxAmt ?? bounds.maxBound],
@@ -32,7 +33,7 @@ export function AmountRangeFilter({
 	return (
 		<Field className="w-xs grow">
 			<FieldLabel>
-				{AMOUNT_RANGE_FILTER_CONTENT.label}: {fmtCurrency(amountRange[0])} –{" "}
+				{amountRangeFilterContent.label}: {fmtCurrency(amountRange[0])} –{" "}
 				{fmtCurrency(amountRange[1])}
 			</FieldLabel>
 			<div className="flex h-8 items-center">

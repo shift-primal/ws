@@ -14,9 +14,9 @@ export const StatCard = ({
 	content,
 	color,
 }: StatCardProps) => (
-	<Card>
+	<Card className="justify-between">
 		<CardHeader>
-			<CardTitle className="text-lg font-bold">{title}</CardTitle>
+			<CardTitle className="text-sm md:text-lg font-bold">{title}</CardTitle>
 			{description && (
 				<CardDescription className="text-muted-foreground text-xs font-normal">
 					{description}
@@ -24,7 +24,10 @@ export const StatCard = ({
 			)}
 		</CardHeader>
 		<CardContent
-			className={cn("text-2xl font-semibold", color && colorClasses[color])}
+			className={cn(
+				"text-lg lg:text-xl font-semibold",
+				color && colorClasses[color],
+			)}
 		>
 			{content}
 		</CardContent>

@@ -1,11 +1,11 @@
 import { columnHelper } from "#/components/dashboard/transactions-table/columns/helper";
 import { SortableHeader } from "#/components/dashboard/transactions-table/columns/sortable-header";
-import { TRANSACTIONS_COLUMN_LABELS } from "#/content";
+import { getTransactionsColumnLabels } from "#/content";
 
 export const merchantColumn = columnHelper.accessor("merchant", {
 	header: ({ table }) => (
 		<SortableHeader
-			label={TRANSACTIONS_COLUMN_LABELS.merchant}
+			label={getTransactionsColumnLabels().merchant}
 			column="merchant"
 			meta={table.options.meta}
 		/>

@@ -11,7 +11,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "#/components/shadcn/ui/dialog";
-import { CONFIRM_IMPORT_CONTENT } from "#/content";
+import { getConfirmImportContent } from "#/content";
 import { fmtCurrency } from "#/lib/fmt";
 import { cn, colorClasses } from "#/lib/utils";
 import { PreviewTable } from "./preview-table";
@@ -31,6 +31,8 @@ export const ConfirmImport = ({
 	runImport,
 	isPending,
 }: ConfirmImportProps) => {
+	const confirmImportContent = getConfirmImportContent();
+
 	const summary = useMemo(() => {
 		if (!preview) return null;
 
@@ -64,10 +66,10 @@ export const ConfirmImport = ({
 		<Dialog open={!!preview} onOpenChange={(open) => !open && setPreview(null)}>
 			<DialogContent className="sm:max-w-2xl">
 				<DialogHeader>
-					<DialogTitle>{CONFIRM_IMPORT_CONTENT.title}</DialogTitle>
+					<DialogTitle>{confirmImportContent.title}</DialogTitle>
 					{summary && (
 						<DialogDescription>
-							{CONFIRM_IMPORT_CONTENT.transactionCount(summary.count)}
+							{confirmImportContent.transactionCount(summary.count)}
 							{dateRange && ` · ${dateRange}`}
 						</DialogDescription>
 					)}
@@ -83,7 +85,7 @@ export const ConfirmImport = ({
 						</span>
 						{summary.duplicates > 0 && (
 							<Badge variant="outline">
-								{CONFIRM_IMPORT_CONTENT.duplicatesSkipped(summary.duplicates)}
+								{confirmImportContent.duplicatesSkipped(summary.duplicates)}
 							</Badge>
 						)}
 					</div>
@@ -99,14 +101,14 @@ export const ConfirmImport = ({
 						variant="outline"
 						onClick={() => setPreview(null)}
 					>
-						{CONFIRM_IMPORT_CONTENT.cancelButton}
+						{confirmImportContent.cancelButton}
 					</Button>
 					<Button
 						type="button"
 						disabled={isPending}
 						onClick={() => preview && runImport({ data: preview })}
 					>
-						{CONFIRM_IMPORT_CONTENT.confirmButton}
+						{confirmImportContent.confirmButton}
 					</Button>
 				</DialogFooter>
 			</DialogContent>
