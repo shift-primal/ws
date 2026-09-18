@@ -9,7 +9,7 @@ services:
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
       BETTER_AUTH_URL: ${BETTER_AUTH_URL}
     depends_on:
-      migrate:
+      seed:
         condition: service_completed_successfully
       db:
         condition: service_healthy
@@ -27,6 +27,22 @@ services:
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
       BETTER_AUTH_URL: ${BETTER_AUTH_URL}
     depends_on:
+      db:
+        condition: service_healthy
+
+  seed:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: seeder
+    restart: "no"
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-wastescope}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-wastescope}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      BETTER_AUTH_URL: ${BETTER_AUTH_URL}
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
       db:
         condition: service_healthy
 
