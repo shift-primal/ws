@@ -34,7 +34,7 @@ export function TypeFilter({
 				: typeFilterContent.countLabel(value.length);
 
 	return (
-		<Field className="w-56">
+		<Field className="w-full sm:w-56">
 			<FieldLabel htmlFor="type-filter">{typeFilterContent.label}</FieldLabel>
 			<DropdownMenu>
 				<DropdownMenuTrigger

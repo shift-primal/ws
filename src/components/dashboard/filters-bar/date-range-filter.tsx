@@ -37,7 +37,7 @@ export function DateRangeFilter({
 	}
 
 	return (
-		<Field className="w-auto">
+		<Field className="w-full sm:w-auto">
 			<FieldLabel htmlFor="date-range-filter">
 				{dateRangeFilterContent.label}
 			</FieldLabel>
@@ -48,7 +48,7 @@ export function DateRangeFilter({
 							<Button
 								variant="outline"
 								id="date-range-filter"
-								className="justify-start px-2.5 font-normal"
+								className="w-full justify-start px-2.5 font-normal sm:w-auto"
 							/>
 						}
 					>

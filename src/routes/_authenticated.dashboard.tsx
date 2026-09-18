@@ -81,7 +81,7 @@ const Dashboard = () => {
 			</div>
 
 			<div className="grid shrink-0 gap-4 md:grid-cols-3">
-				<div className="md:col-span-2">
+				<div className="grid md:col-span-2">
 					<MonthlyChart data={monthlyStats} />
 				</div>
 				<CategoryChart data={categoryStats} />

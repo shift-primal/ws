@@ -25,7 +25,7 @@ export function MerchantFilter({
 	}, [merchant, value, onChange]);
 
 	return (
-		<Field className="w-xs">
+		<Field className="w-full sm:w-xs">
 			<FieldLabel htmlFor="merchant-filter">
 				{merchantFilterContent.label}
 			</FieldLabel>

@@ -31,7 +31,7 @@ export function AmountRangeFilter({
 	);
 
 	return (
-		<Field className="w-xs grow">
+		<Field className="w-full sm:w-xs sm:grow">
 			<FieldLabel>
 				{amountRangeFilterContent.label}: {fmtCurrency(amountRange[0])} –{" "}
 				{fmtCurrency(amountRange[1])}

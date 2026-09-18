@@ -1,6 +1,7 @@
 import { columnHelper } from "#/components/dashboard/transactions-table/columns/helper";
 import { SortableHeader } from "#/components/dashboard/transactions-table/columns/sortable-header";
 import { getTransactionsColumnLabels } from "#/content";
+import { fmtShortDate } from "#/lib/fmt";
 
 export const dateColumn = columnHelper.accessor("date", {
 	header: ({ table }) => (
@@ -10,4 +11,5 @@ export const dateColumn = columnHelper.accessor("date", {
 			meta={table.options.meta}
 		/>
 	),
+	cell: ({ row }) => fmtShortDate(row.original.date),
 });

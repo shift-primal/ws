@@ -7,12 +7,14 @@ import {
 } from "#/components/shadcn/ui/card";
 import { getTransactionsTableContent } from "#/content";
 import type { DbTransaction } from "#/db/schema";
+import { useMediaQuery } from "#/lib/hooks/use-media-query";
 import {
 	columns,
 	type DashboardTableMeta,
 	tableFeatureSet,
 } from "./transactions-table/columns";
 import { TransactionsTableFooter } from "./transactions-table/footer";
+import { TransactionsTableMobileList } from "./transactions-table/mobile-list";
 import { TransactionsTableContent } from "./transactions-table/table";
 
 export type TransactionsTablePagination = {
@@ -40,6 +42,7 @@ export function TransactionsTable({
 		data,
 		meta,
 	});
+	const isMobile = useMediaQuery("(max-width: 767px)");
 
 	return (
 		<Card>
@@ -47,7 +50,11 @@ export function TransactionsTable({
 				<CardTitle>{getTransactionsTableContent().title}</CardTitle>
 			</CardHeader>
 			<CardContent>
-				<TransactionsTableContent table={table} />
+				{isMobile ? (
+					<TransactionsTableMobileList data={data} />
+				) : (
+					<TransactionsTableContent table={table} />
+				)}
 			</CardContent>
 			<TransactionsTableFooter pagination={pagination} />
 		</Card>

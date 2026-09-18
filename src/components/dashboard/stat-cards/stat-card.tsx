@@ -12,6 +12,7 @@ export const StatCard = ({
 	title,
 	description,
 	content,
+	contentCompact,
 	color,
 }: StatCardProps) => (
 	<Card className="justify-between">
@@ -25,11 +26,18 @@ export const StatCard = ({
 		</CardHeader>
 		<CardContent
 			className={cn(
-				"text-lg lg:text-xl font-semibold",
+				"wrap-break-word text-lg lg:text-xl font-semibold",
 				color && colorClasses[color],
 			)}
 		>
-			{content}
+			{contentCompact ? (
+				<>
+					<span className="min-[516px]:hidden">{contentCompact}</span>
+					<span className="hidden min-[516px]:inline">{content}</span>
+				</>
+			) : (
+				content
+			)}
 		</CardContent>
 	</Card>
 );

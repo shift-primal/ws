@@ -24,6 +24,7 @@ export function StatCards({
 					title={c.title}
 					description={c.description}
 					content={c.content}
+					contentCompact={c.contentCompact}
 					color={c.color}
 				/>
 			))}
