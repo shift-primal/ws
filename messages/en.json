@@ -5,11 +5,17 @@
 	"navbar_dashboard_label": "Dashboard",
 	"navbar_import_label": "Import",
 	"navbar_danger_zone_label": "Danger zone",
-	"navbar_contact_trigger": "Contact",
 	"navbar_github_label": "GitHub",
 	"navbar_email_label": "Email",
 	"language_switch_to_norwegian_aria": "Switch language to Norwegian",
 	"language_switch_to_english_aria": "Switch language to English",
+
+	"footer_copyright": "© {year} wastescope",
+
+	"home_description": "Track and categorize your spending from imported bank transactions.",
+	"home_dashboard_button": "Dashboard",
+	"home_demo_button": "Try a demo account",
+	"home_demo_hint": "No sign-up required",
 
 	"stat_cards_net_title": "Net",
 	"stat_cards_net_description": "Total net",
@@ -120,5 +126,15 @@
 	"danger_zone_confirm_description": "This will permanently delete all of your transactions. This action can not be undone!",
 	"danger_zone_confirm_button": "Yes, delete everything",
 	"danger_zone_cancel_button": "Cancel",
-	"danger_zone_success_title": "All transactions cleared"
+	"danger_zone_success_title": "All transactions cleared",
+	"danger_zone_demo_blocked_title": "Not available on demo accounts",
+	"danger_zone_demo_blocked_description": "Demo accounts share seeded data with other visitors, so clearing transactions is disabled.",
+
+	"demo_accounts_heading": "Try a demo account",
+	"demo_accounts_description": "No sign-up required — jump straight into the dashboard with sample data.",
+	"demo_accounts_account_label": "Demo account {number}",
+	"demo_accounts_switcher_trigger": "Demo accounts",
+	"demo_accounts_sign_in_error_title": "Couldn't sign in to that demo account",
+	"demo_accounts_settings_locked_title": "Account changes are disabled",
+	"demo_accounts_settings_locked_description": "This is a shared demo account, so profile, email, password, and session settings can't be changed here."
 }

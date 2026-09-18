@@ -5,6 +5,11 @@ import { db } from "#/db";
 import { upsertCategoryRule } from "#/db/queries/category-rules";
 import {
 	deleteAllTransactions,
+	deleteTransactions,
+	findDuplicateTransactions,
+	getAmtBounds,
+	getCategoryStats,
+	getMonthlyStats,
 	getTransactions,
 	insertTransactions,
 	updateTransactionCategory,
@@ -311,5 +316,173 @@ describe("deleteAllTransactions", () => {
 
 		const result = await getTransactions(testUserId, defaultQuery());
 		expect(result.totalResults).toBe(0);
+	});
+});
+
+describe("deleteTransactions", () => {
+	it("removes only the given ids", async () => {
+		const { inserted } = await insertTransactions(testUserId, [
+			...sampleTransactions,
+			{
+				date: "2026-06-12",
+				amount: -20,
+				merchant: "REMA 1000",
+				type: "Varekjøp",
+				category: "Dagligvare",
+			},
+		]);
+		const [toDelete] = inserted;
+
+		const deleted = await deleteTransactions(testUserId, [
+			toDelete?.id as number,
+		]);
+
+		expect(deleted).toHaveLength(1);
+		const remaining = await getTransactions(testUserId, defaultQuery());
+		expect(remaining.totalResults).toBe(2);
+		expect(remaining.data.some((tx) => tx.id === toDelete?.id)).toBe(false);
+	});
+
+	it("does not delete another user's transaction even if the id matches", async () => {
+		const { inserted } = await insertTransactions(
+			testUserId,
+			sampleTransactions,
+		);
+		const id = inserted[0]?.id as number;
+
+		const deleted = await deleteTransactions(`other-${randomUUID()}`, [id]);
+
+		expect(deleted).toHaveLength(0);
+		const remaining = await getTransactions(testUserId, defaultQuery());
+		expect(remaining.totalResults).toBe(2);
+	});
+
+	it("returns an empty array for an empty id list without querying", async () => {
+		await insertTransactions(testUserId, sampleTransactions);
+
+		const deleted = await deleteTransactions(testUserId, []);
+
+		expect(deleted).toEqual([]);
+		const remaining = await getTransactions(testUserId, defaultQuery());
+		expect(remaining.totalResults).toBe(2);
+	});
+});
+
+describe("getAmtBounds", () => {
+	it("returns the min and max amount across a user's transactions", async () => {
+		await insertTransactions(testUserId, [
+			{ ...sampleTransactions[0], amount: -1200 } as NewTransactionInput,
+			{ ...sampleTransactions[1], date: "2026-06-12", amount: 5000 },
+		]);
+
+		const bounds = await getAmtBounds(testUserId);
+
+		expect(bounds).toEqual({ minBound: -1200, maxBound: 5000 });
+	});
+
+	it("returns zero bounds for a user with no transactions", async () => {
+		const bounds = await getAmtBounds(`other-${randomUUID()}`);
+
+		expect(bounds).toEqual({ minBound: 0, maxBound: 0 });
+	});
+});
+
+describe("getCategoryStats", () => {
+	it("sums amounts per category and direction", async () => {
+		await insertTransactions(testUserId, [
+			{ ...sampleTransactions[0], amount: -50 } as NewTransactionInput,
+			{
+				...sampleTransactions[0],
+				date: "2026-06-11",
+				amount: -25,
+			} as NewTransactionInput,
+			{
+				date: "2026-06-12",
+				amount: 3000,
+				merchant: "Employer",
+				type: "Lønn",
+				category: "Inntekt",
+			},
+		]);
+
+		const stats = await getCategoryStats(testUserId, defaultQuery());
+
+		const groceries = stats.find(
+			(s) => s.category === "Dagligvare" && s.direction === "expense",
+		);
+		const income = stats.find(
+			(s) => s.category === "Inntekt" && s.direction === "income",
+		);
+
+		expect(groceries?.total).toBe("-75");
+		expect(income?.total).toBe("3000");
+	});
+});
+
+describe("getMonthlyStats", () => {
+	it("buckets income and expense totals by month", async () => {
+		await insertTransactions(testUserId, [
+			{ ...sampleTransactions[0], date: "2026-05-01", amount: -100 },
+			{
+				date: "2026-06-01",
+				amount: 2000,
+				merchant: "Employer",
+				type: "Lønn",
+				category: "Inntekt",
+			},
+			{ ...sampleTransactions[0], date: "2026-06-15", amount: -40 },
+		] as NewTransactionInput[]);
+
+		const stats = await getMonthlyStats(testUserId, defaultQuery());
+
+		expect(stats).toEqual(
+			expect.arrayContaining([
+				expect.objectContaining({
+					month: "2026-05",
+					totalIn: 0,
+					totalOut: -100,
+				}),
+				expect.objectContaining({
+					month: "2026-06",
+					totalIn: 2000,
+					totalOut: -40,
+				}),
+			]),
+		);
+	});
+});
+
+describe("findDuplicateTransactions", () => {
+	it("marks nothing as a duplicate before anything is imported", async () => {
+		const flags = await findDuplicateTransactions(
+			testUserId,
+			sampleTransactions,
+		);
+
+		expect(flags).toEqual([false, false]);
+	});
+
+	it("marks rows that match an already-imported transaction", async () => {
+		await insertTransactions(testUserId, [sampleTransactions[0]]);
+
+		const flags = await findDuplicateTransactions(
+			testUserId,
+			sampleTransactions,
+		);
+
+		expect(flags).toEqual([true, false]);
+	});
+
+	it("marks the second of two identical rows within the same batch", async () => {
+		const flags = await findDuplicateTransactions(testUserId, [
+			sampleTransactions[0],
+			sampleTransactions[0],
+		] as NewTransactionInput[]);
+
+		expect(flags).toEqual([false, true]);
+	});
+
+	it("returns an empty array for an empty input", async () => {
+		expect(await findDuplicateTransactions(testUserId, [])).toEqual([]);
 	});
 });

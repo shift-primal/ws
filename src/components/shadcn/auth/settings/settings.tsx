@@ -1,16 +1,23 @@
 
 
 import type { SettingsView } from "@better-auth-ui/core";
-import { useAuth, useAuthenticate } from "@better-auth-ui/react";
-import { ShieldIcon, UserIcon } from "@phosphor-icons/react";
+import { useAuth, useAuthenticate, useSession } from "@better-auth-ui/react";
+import { InfoIcon, ShieldIcon, UserIcon } from "@phosphor-icons/react";
 import { useMemo } from "react";
 
+import {
+	Alert,
+	AlertDescription,
+	AlertTitle,
+} from "#/components/shadcn/ui/alert.tsx";
 import {
 	Tabs,
 	TabsContent,
 	TabsList,
 	TabsTrigger,
 } from "#/components/shadcn/ui/tabs.tsx";
+import { getDemoAccountsContent } from "#/content";
+import { isDemoAccountEmail } from "#/lib/demo-accounts";
 import { cn } from "#/lib/utils";
 import { AccountSettings } from "./account/account-settings";
 import { SecuritySettings } from "./security/security-settings";
@@ -36,6 +43,9 @@ export function Settings({ className, view, path, hideNav }: SettingsProps) {
 	const { authClient, basePaths, localization, viewPaths, plugins, navigate } =
 		useAuth();
 	useAuthenticate(authClient);
+	const { data: session } = useSession(authClient);
+	const demoAccountsContent = getDemoAccountsContent();
+	const isDemo = !!session && isDemoAccountEmail(session.user.email);
 
 	if (!view && !path) {
 		throw new Error(
@@ -74,6 +84,16 @@ export function Settings({ className, view, path, hideNav }: SettingsProps) {
 			value={currentView}
 			className={cn("w-full gap-4 md:gap-6", className)}
 		>
+			{isDemo && (
+				<Alert>
+					<InfoIcon />
+					<AlertTitle>{demoAccountsContent.settingsLockedTitle}</AlertTitle>
+					<AlertDescription>
+						{demoAccountsContent.settingsLockedDescription}
+					</AlertDescription>
+				</Alert>
+			)}
+
 			<div className={cn(hideNav && "hidden")}>
 				<TabsList aria-label={localization.settings.settings}>
 					<TabsTrigger

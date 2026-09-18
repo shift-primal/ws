@@ -44,16 +44,32 @@ export function CategoryChart({
 			.slice(MAX_SLICES)
 			.reduce((sum, row) => sum + row.amount, 0);
 
-		const slices =
-			otherAmount > 0
-				? [
-						...top,
-						{
-							category: categoryChartContent.otherLabel,
-							amount: otherAmount,
-						},
-					]
-				: top;
+		// "Annet" ("Other"/misc) is both a real transaction category and the
+		// label we give the synthetic overflow bucket below — if the real
+		// category made it into `top`, fold the overflow into it instead of
+		// pushing a second slice with the same category, which would collide
+		// as a React key and as a chartConfig entry.
+		let slices = top;
+		if (otherAmount > 0) {
+			const existingOtherIndex = top.findIndex(
+				(row) => row.category === categoryChartContent.otherLabel,
+			);
+			slices =
+				existingOtherIndex >= 0
+					? top.map((row, index) =>
+							index === existingOtherIndex
+								? { ...row, amount: row.amount + otherAmount }
+								: row,
+						)
+					: [
+							...top,
+							{
+								category: categoryChartContent.otherLabel,
+								amount: otherAmount,
+							},
+						];
+			slices = [...slices].sort((a, b) => b.amount - a.amount);
+		}
 
 		const config: ChartConfig = {};
 		const chartData = slices.map((slice, index) => {

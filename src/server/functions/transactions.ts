@@ -12,6 +12,7 @@ import {
 	insertTransactions,
 	updateTransactionCategory,
 } from "#/db/queries";
+import { isDemoAccountEmail } from "#/lib/demo-accounts";
 import {
 	importSchema,
 	transactionQuerySchema,
@@ -65,7 +66,12 @@ export const clearTransactions = createServerFn({
 	method: "POST",
 })
 	.middleware([authMiddleware])
-	.handler(({ context }) => deleteAllTransactions(context.userId));
+	.handler(({ context }) => {
+		if (isDemoAccountEmail(context.userEmail)) {
+			throw new Error("Demo accounts can't clear their transactions");
+		}
+		return deleteAllTransactions(context.userId);
+	});
 
 export const removeTransactions = createServerFn({
 	method: "POST",

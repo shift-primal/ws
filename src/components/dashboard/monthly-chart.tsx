@@ -80,7 +80,11 @@ export function MonthlyChart({
 								content={
 									<ChartTooltipContent
 										indicator="line"
-										labelFormatter={(value) => monthLabel(value, "MMMM yyyy")}
+										labelFormatter={(value) =>
+											typeof value === "string"
+												? monthLabel(value, "MMMM yyyy")
+												: value
+										}
 										formatter={(value, name) => (
 											<div className="flex w-full justify-between gap-4">
 												<span className="text-muted-foreground">

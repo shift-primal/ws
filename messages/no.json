@@ -5,11 +5,17 @@
 	"navbar_dashboard_label": "Dashboard",
 	"navbar_import_label": "Import",
 	"navbar_danger_zone_label": "Faresone",
-	"navbar_contact_trigger": "Kontakt",
 	"navbar_github_label": "GitHub",
 	"navbar_email_label": "E-post",
 	"language_switch_to_norwegian_aria": "Bytt språk til norsk",
 	"language_switch_to_english_aria": "Bytt språk til engelsk",
+
+	"footer_copyright": "© {year} wastescope",
+
+	"home_description": "Spor og kategoriser forbruket ditt fra importerte banktransaksjoner.",
+	"home_dashboard_button": "Dashboard",
+	"home_demo_button": "Prøv en demokonto",
+	"home_demo_hint": "Ingen registrering nødvendig",
 
 	"stat_cards_net_title": "Netto",
 	"stat_cards_net_description": "Totalt netto",
@@ -120,5 +126,15 @@
 	"danger_zone_confirm_description": "Dette vil permanent slette alle transaksjonene dine. Denne handlingen kan ikke angres!",
 	"danger_zone_confirm_button": "Ja, slett alt",
 	"danger_zone_cancel_button": "Avbryt",
-	"danger_zone_success_title": "Alle transaksjoner ble slettet"
+	"danger_zone_success_title": "Alle transaksjoner ble slettet",
+	"danger_zone_demo_blocked_title": "Ikke tilgjengelig for demokontoer",
+	"danger_zone_demo_blocked_description": "Demokontoer deler forhåndsutfylte data med andre besøkende, så sletting av transaksjoner er deaktivert.",
+
+	"demo_accounts_heading": "Prøv en demokonto",
+	"demo_accounts_description": "Ingen registrering nødvendig — hopp rett inn i dashbordet med eksempeldata.",
+	"demo_accounts_account_label": "Demokonto {number}",
+	"demo_accounts_switcher_trigger": "Demokontoer",
+	"demo_accounts_sign_in_error_title": "Kunne ikke logge inn på den demokontoen",
+	"demo_accounts_settings_locked_title": "Kontoendringer er deaktivert",
+	"demo_accounts_settings_locked_description": "Dette er en delt demokonto, så profil-, e-post-, passord- og øktinnstillinger kan ikke endres her."
 }

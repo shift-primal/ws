@@ -8,6 +8,7 @@ import { ErrorPage } from "#/components/layout/error-page";
 import { Navbar } from "#/components/layout/navbar";
 import { NotFound } from "#/components/layout/not-found";
 import { Providers } from "#/components/layout/providers";
+import { m } from "#/paraglide/messages";
 import { getLocale } from "#/paraglide/runtime";
 import appCss from "../styles.css?url";
 
@@ -30,8 +31,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 			},
 			{
 				name: "description",
-				content:
-					"Track and categorize your spending from imported bank transactions.",
+				content: m.home_description(),
 			},
 		],
 		links: [

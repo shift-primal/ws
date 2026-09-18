@@ -43,6 +43,7 @@ import {
 import { useSignInContinuation } from "#/lib/auth/use-sign-in-continuation";
 import { cn } from "#/lib/utils";
 import { isAuthFormFieldInvalid, useAuthForm } from "./auth-form";
+import { DemoLoginCard } from "./demo-login";
 import { LastUsedBadge } from "./last-login-method/last-used-badge";
 import { ProviderButtons, type SocialLayout } from "./provider-buttons";
 import { ReauthenticationNotice } from "./reauthentication";
@@ -130,16 +131,17 @@ export function SignIn({
 		emailAndPassword?.enabled && socialProviders && socialProviders.length > 0;
 
 	return (
-		<Card className={cn("w-full max-w-sm", className)}>
-			<AuthPrompts view="signIn" />
-			<ReauthenticationNotice />
-			<CardHeader>
-				<CardTitle className="text-xl font-semibold">
-					{localization.auth.signIn}
-				</CardTitle>
-			</CardHeader>
+		<div className="flex w-full max-w-sm flex-col gap-4">
+			<Card className={cn("w-full max-w-sm", className)}>
+				<AuthPrompts view="signIn" />
+				<ReauthenticationNotice />
+				<CardHeader>
+					<CardTitle className="text-xl font-semibold">
+						{localization.auth.signIn}
+					</CardTitle>
+				</CardHeader>
 
-			<CardContent>
+				<CardContent>
 				<div className="flex flex-col gap-6">
 					{socialPosition === "top" && (
 						<>
@@ -377,7 +379,10 @@ export function SignIn({
 						</FieldDescription>
 					)}
 				</div>
-			</CardContent>
-		</Card>
+				</CardContent>
+			</Card>
+
+			<DemoLoginCard />
+		</div>
 	);
 }

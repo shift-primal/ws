@@ -12,6 +12,7 @@ export const authMiddleware = createMiddleware({
 	return next({
 		context: {
 			userId: session.user.id,
+			userEmail: session.user.email,
 		},
 	});
 });

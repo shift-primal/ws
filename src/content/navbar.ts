@@ -1,7 +1,5 @@
 import {
 	ChartBarIcon,
-	EnvelopeIcon,
-	GithubLogoIcon,
 	HouseIcon,
 	type Icon,
 	UploadIcon,
@@ -17,16 +15,6 @@ export type NavLink = {
 	options: LinkProps;
 };
 
-export type ExternalLink = {
-	label: string;
-	icon: Icon;
-	href: string;
-};
-
-// Wrapped in functions (rather than module-level constants) so the
-// paraglide message calls re-resolve the active locale on every call,
-// instead of being frozen to whichever locale was active when this
-// module first loaded.
 export const getNavLinks = (): NavLink[] => [
 	{
 		label: m.navbar_home_label(),
@@ -57,18 +45,3 @@ export const getNavLinks = (): NavLink[] => [
 		}),
 	},
 ];
-
-export const getContactLinks = (): ExternalLink[] => [
-	{
-		label: m.navbar_github_label(),
-		icon: GithubLogoIcon,
-		href: "https://github.com/shift-primal",
-	},
-	{
-		label: m.navbar_email_label(),
-		icon: EnvelopeIcon,
-		href: "mailto:kasper@haugestol.com",
-	},
-];
-
-export const getNavbarContactTrigger = (): string => m.navbar_contact_trigger();

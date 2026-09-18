@@ -5,6 +5,8 @@ import { AuthProvider } from "#/components/shadcn/auth/auth-provider";
 import { Toaster } from "#/components/shadcn/ui/toast";
 import { TooltipProvider } from "#/components/shadcn/ui/tooltip";
 import { authClient } from "#/lib/auth/auth-client";
+import { authLocaleNo } from "#/lib/auth/auth-locale-no";
+import { getLocale } from "#/paraglide/runtime";
 
 export const Providers = ({ children }: { children: ReactNode }) => {
 	const navigate = useNavigate();
@@ -17,6 +19,7 @@ export const Providers = ({ children }: { children: ReactNode }) => {
 					redirectTo="/dashboard"
 					navigate={navigate}
 					Link={({ href, ...props }) => <Link to={href} {...props} />}
+					locale={getLocale() === "no" ? authLocaleNo : undefined}
 				>
 					{children}
 					<Toaster />

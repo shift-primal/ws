@@ -10,4 +10,6 @@ export const getDangerZoneContent = () => ({
 	confirmButton: m.danger_zone_confirm_button(),
 	cancelButton: m.danger_zone_cancel_button(),
 	successToastTitle: m.danger_zone_success_title(),
+	demoBlockedTitle: m.danger_zone_demo_blocked_title(),
+	demoBlockedDescription: m.danger_zone_demo_blocked_description(),
 });

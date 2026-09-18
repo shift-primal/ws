@@ -1,9 +1,9 @@
 import { ensureSession } from "@better-auth-ui/core";
 import { ensureSessionServer } from "@better-auth-ui/core/server";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { createIsomorphicFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -20,6 +20,7 @@ import { toast } from "#/components/shadcn/ui/toast";
 import { getDangerZoneContent } from "#/content";
 import { auth } from "#/lib/auth/auth";
 import { authClient } from "#/lib/auth/auth-client";
+import { isDemoAccountEmail } from "#/lib/demo-accounts";
 import { clearTransactions } from "#/server/functions/transactions";
 
 export const Route = createFileRoute("/settings/danger-zone")({
@@ -48,6 +49,8 @@ export const Route = createFileRoute("/settings/danger-zone")({
 });
 
 function DangerZonePage() {
+	const { session } = Route.useRouteContext();
+	const isDemo = isDemoAccountEmail(session.user.email);
 	const dangerZoneContent = getDangerZoneContent();
 	const queryClient = useQueryClient();
 	const { mutate, isPending } = useMutation({
@@ -57,6 +60,13 @@ function DangerZonePage() {
 			toast.add({
 				type: "success",
 				title: dangerZoneContent.successToastTitle,
+			});
+		},
+		onError: () => {
+			toast.add({
+				type: "error",
+				title: dangerZoneContent.demoBlockedTitle,
+				description: dangerZoneContent.demoBlockedDescription,
 			});
 		},
 	});
@@ -71,13 +81,17 @@ function DangerZonePage() {
 						{dangerZoneContent.clearTransactionsTitle}
 					</span>
 					<span className="text-sm text-muted-foreground">
-						{dangerZoneContent.clearTransactionsDescription}
+						{isDemo
+							? dangerZoneContent.demoBlockedDescription
+							: dangerZoneContent.clearTransactionsDescription}
 					</span>
 				</div>
 
 				<AlertDialog>
 					<AlertDialogTrigger
-						render={<Button variant="destructive" disabled={isPending} />}
+						render={
+							<Button variant="destructive" disabled={isPending || isDemo} />
+						}
 					>
 						{dangerZoneContent.clearTransactionsButton}
 					</AlertDialogTrigger>
