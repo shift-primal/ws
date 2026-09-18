@@ -2,12 +2,14 @@
   "name": "wastescope_app_new",
   "private": true,
   "type": "module",
+  "packageManager": "pnpm@12.4.1",
   "imports": {
     "#/*": "./src/*"
   },
   "scripts": {
     "dev": "vite dev --port 3000",
     "generate-routes": "tsr generate",
+    "typecheck": "tsc --noEmit",
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run",
@@ -83,12 +85,6 @@
     "typescript": "^7.0.2",
     "vite": "^8.3.0",
     "vitest": "^5.0.0"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild",
-      "lightningcss"
-    ]
   },
   "intent": {
     "skills": [

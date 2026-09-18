@@ -1,4 +1,4 @@
-"use client";
+
 
 import { getViewURL, validateEmailAddress } from "@better-auth-ui/core";
 import { useAuth, useChangeEmail, useSession } from "@better-auth-ui/react";

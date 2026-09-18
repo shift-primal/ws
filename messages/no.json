@@ -4,7 +4,7 @@
 	"navbar_home_label": "Hjem",
 	"navbar_dashboard_label": "Dashboard",
 	"navbar_import_label": "Import",
-	"navbar_dev_label": "Dev",
+	"navbar_danger_zone_label": "Faresone",
 	"navbar_contact_trigger": "Kontakt",
 	"navbar_github_label": "GitHub",
 	"navbar_email_label": "E-post",
@@ -12,7 +12,7 @@
 	"language_switch_to_english_aria": "Bytt språk til engelsk",
 
 	"stat_cards_net_title": "Netto",
-	"stat_cards_net_description": "Totalt netto (inntekt minus utgifter)",
+	"stat_cards_net_description": "Totalt netto",
 	"stat_cards_income_title": "Inntekt",
 	"stat_cards_income_description": "Total inntekt",
 	"stat_cards_expenses_title": "Utgifter",
@@ -58,7 +58,7 @@
 	"transactions_footer_next": "Neste",
 	"transactions_footer_page_summary": "Side {page} av {totalPages} · {totalResults} totalt",
 	"transactions_delete_confirm_title": "Er du sikker på at du vil slette denne raden?",
-	"transactions_delete_confirm_description": "Denne handlingen kan ikke reverseres!",
+	"transactions_delete_confirm_description": "Denne handlingen kan ikke angres!",
 	"transactions_delete_confirm_button": "Slett",
 	"transactions_delete_success_title": "Fullført!",
 	"transactions_category_update_success_title": "Kategori oppdatert",
@@ -102,5 +102,23 @@
 
 	"not_found_heading": "404",
 	"not_found_message": "Denne siden finnes ikke.",
-	"not_found_home_link": "Gå hjem"
+	"not_found_home_link": "Gå hjem",
+
+	"error_heading": "Noe gikk galt",
+	"error_message": "Det oppstod en uventet feil. Du kan prøve på nytt eller gå tilbake til hjemmesiden.",
+	"error_retry_button": "Prøv igjen",
+	"error_home_link": "Gå hjem",
+	"error_unauthorized_heading": "Økten er utløpt",
+	"error_unauthorized_message": "Logg inn på nytt for å fortsette.",
+	"error_unauthorized_sign_in_link": "Logg inn",
+
+	"danger_zone_heading": "Faresone",
+	"danger_zone_clear_transactions_title": "Slett alle transaksjoner",
+	"danger_zone_clear_transactions_description": "Sletter permanent alle transaksjoner på kontoen din. Dette kan ikke reverseres.",
+	"danger_zone_clear_transactions_button": "Slett alle transaksjoner",
+	"danger_zone_confirm_title": "Er du sikker på at du vil slette alle transaksjoner?",
+	"danger_zone_confirm_description": "Dette vil permanent slette alle transaksjonene dine. Denne handlingen kan ikke angres!",
+	"danger_zone_confirm_button": "Ja, slett alt",
+	"danger_zone_cancel_button": "Avbryt",
+	"danger_zone_success_title": "Alle transaksjoner ble slettet"
 }

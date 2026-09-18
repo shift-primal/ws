@@ -1,4 +1,4 @@
-"use client";
+
 
 import { useAuth } from "@better-auth-ui/react";
 import { cn } from "#/lib/utils";

@@ -41,7 +41,7 @@ export function FiltersBar({
 
 	return (
 		<Card size="sm">
-			<CardContent className="grid grid-cols-2 gap-4 py-2 sm:flex sm:flex-wrap sm:items-end">
+			<CardContent className="grid grid-cols-1 gap-4 py-2 min-[400px]:grid-cols-2 sm:flex sm:flex-wrap sm:items-end">
 				<DateRangeFilter
 					from={search.from}
 					to={search.to}

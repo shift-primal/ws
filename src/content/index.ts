@@ -1,4 +1,6 @@
 export * from "./category-chart";
+export * from "./danger-zone";
+export * from "./error";
 export * from "./filters-bar";
 export * from "./import";
 export * from "./monthly-chart";

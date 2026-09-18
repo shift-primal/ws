@@ -42,11 +42,11 @@ export function TransactionsTable({
 	});
 
 	return (
-		<Card className="min-h-104 flex-1">
+		<Card>
 			<CardHeader className="shrink-0">
 				<CardTitle>{getTransactionsTableContent().title}</CardTitle>
 			</CardHeader>
-			<CardContent className="min-h-0 grow overflow-y-auto">
+			<CardContent>
 				<TransactionsTableContent table={table} />
 			</CardContent>
 			<TransactionsTableFooter pagination={pagination} />

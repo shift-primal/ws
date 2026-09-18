@@ -1,4 +1,4 @@
-"use client";
+
 
 import type { AuthView } from "@better-auth-ui/core";
 import { useAuth } from "@better-auth-ui/react";

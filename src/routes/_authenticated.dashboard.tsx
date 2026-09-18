@@ -63,7 +63,7 @@ const Dashboard = () => {
 	}
 
 	return (
-		<div className="flex h-full min-h-0 flex-col gap-4">
+		<div className="flex flex-col gap-4">
 			<div className="shrink-0">
 				<FiltersBar
 					search={search}
@@ -116,11 +116,6 @@ const Dashboard = () => {
 						}),
 				}}
 			/>
-
-			{/* Chrome doesn't count a trailing margin of an overflowing flex
-			child toward the scrollable ancestor's scroll height, so this needs
-			to be a real sized element rather than padding/margin on the table. */}
-			<div className="h-6 shrink-0" />
 		</div>
 	);
 };

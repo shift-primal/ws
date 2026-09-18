@@ -4,6 +4,7 @@ import {
 	HeadContent,
 	Scripts,
 } from "@tanstack/react-router";
+import { ErrorPage } from "#/components/layout/error-page";
 import { Navbar } from "#/components/layout/navbar";
 import { NotFound } from "#/components/layout/not-found";
 import { Providers } from "#/components/layout/providers";
@@ -25,7 +26,12 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 				content: "width=device-width, initial-scale=1",
 			},
 			{
-				title: "TanStack Start Starter",
+				title: "wastescope",
+			},
+			{
+				name: "description",
+				content:
+					"Track and categorize your spending from imported bank transactions.",
 			},
 		],
 		links: [
@@ -33,9 +39,15 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 				rel: "stylesheet",
 				href: appCss,
 			},
+			{
+				rel: "icon",
+				type: "image/svg+xml",
+				href: "/favicon.svg",
+			},
 		],
 	}),
 	notFoundComponent: NotFound,
+	errorComponent: ErrorPage,
 	shellComponent: RootDocument,
 });
 

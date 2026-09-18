@@ -14,7 +14,8 @@
 			"**/vite.config.ts",
 			"!**/src/routeTree.gen.ts",
 			"!**/src/components/auth",
-			"!**/src/components/shadcn"
+			"!**/src/components/shadcn",
+			"!**/src/paraglide/**/*"
 		]
 	},
 	"formatter": {

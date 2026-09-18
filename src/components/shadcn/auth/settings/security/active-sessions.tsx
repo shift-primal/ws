@@ -1,4 +1,4 @@
-"use client";
+
 
 import { isReauthenticationRequiredError } from "@better-auth-ui/core";
 import { useAuth, useListSessions, useSession } from "@better-auth-ui/react";

@@ -1,4 +1,4 @@
-"use client";
+
 
 import { useAuth, useSignOut } from "@better-auth-ui/react";
 import { useEffect, useRef } from "react";
@@ -16,20 +16,25 @@ export type SignOutProps = {
  * @returns The spinner shown during sign-out
  */
 export function SignOut({ className }: SignOutProps) {
-	const { authClient, basePaths, navigate, viewPaths } = useAuth();
+	const { authClient, basePaths, viewPaths } = useAuth();
 
 	const { mutate: signOut } = useSignOut(authClient, {
+		// A hard navigation, not `navigate()`. Sign-out's mutation meta removes
+		// the cached session query outright (rather than invalidating it), which
+		// destroys the query object out from under any component with an active
+		// session observer — e.g. the navbar's UserButton. That observer only
+		// resyncs to the cache on its own next re-render, which nothing here
+		// triggers, so it keeps rendering the stale signed-in user indefinitely.
+		// A full reload is the reliable fix (and matches the user-facing "hard
+		// refresh clears it" workaround) since it can't be overridden through
+		// the public sign-out API (its mutation `meta` is intentionally omitted
+		// from the options type).
 		onError: () => {
-			navigate({
-				to: `${basePaths.auth}/${viewPaths.auth.signIn}`,
-				replace: true,
-			});
+			window.location.assign(`${basePaths.auth}/${viewPaths.auth.signIn}`);
 		},
-		onSuccess: () =>
-			navigate({
-				to: `${basePaths.auth}/${viewPaths.auth.signIn}`,
-				replace: true,
-			}),
+		onSuccess: () => {
+			window.location.assign(`${basePaths.auth}/${viewPaths.auth.signIn}`);
+		},
 	});
 
 	const hasSignedOut = useRef(false);

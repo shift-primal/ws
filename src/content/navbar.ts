@@ -5,7 +5,7 @@ import {
 	HouseIcon,
 	type Icon,
 	UploadIcon,
-	WrenchIcon,
+	WarningIcon,
 } from "@phosphor-icons/react";
 import type { LinkProps } from "@tanstack/react-router";
 import { linkOptions } from "@tanstack/react-router";
@@ -50,10 +50,10 @@ export const getNavLinks = (): NavLink[] => [
 		}),
 	},
 	{
-		label: m.navbar_dev_label(),
-		icon: WrenchIcon,
+		label: m.navbar_danger_zone_label(),
+		icon: WarningIcon,
 		options: linkOptions({
-			to: "/dev",
+			to: "/settings/danger-zone",
 		}),
 	},
 ];
