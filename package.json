@@ -28,6 +28,8 @@
     "docker:logs": "docker compose logs -f db",
     "seed:transactions": "tsx scripts/seed-transactions.ts",
     "seed:demo-accounts": "tsx scripts/seed-demo-accounts.ts",
+    "db:clear-demo": "tsx scripts/clear-demo-accounts.ts",
+    "seed:demo-reset": "pnpm db:clear-demo && pnpm seed:demo-accounts",
     "export:category-rules": "tsx scripts/export-category-rules.ts"
   },
   "dependencies": {

@@ -23,7 +23,7 @@ CMD ["pnpm", "db:migrate"]
 # Seeder (demo accounts) — needs the full source tree for demo_data/*.txt
 # and devDependencies for tsx, so it's based on `build` like the migrator.
 FROM build AS seeder
-CMD ["pnpm", "seed:demo-accounts"]
+CMD ["pnpm", "seed:demo-reset"]
 
 # Run app
 FROM node:22-alpine3.24 AS runner
