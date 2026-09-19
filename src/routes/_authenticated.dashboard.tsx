@@ -6,6 +6,7 @@ import { MonthlyChart } from "#/components/dashboard/monthly-chart";
 import { StatCards } from "#/components/dashboard/stat-cards";
 import { TransactionsTable } from "#/components/dashboard/transactions-table";
 import type { SortableColumn } from "#/components/dashboard/transactions-table/columns";
+import { toggleExcluded } from "#/lib/exclude-value";
 import {
 	amtBoundsQuery,
 	categoryStatsQuery,
@@ -44,13 +45,27 @@ const Dashboard = () => {
 
 	function handleSort(column: SortableColumn) {
 		navigate({
-			search: (prev) => ({
-				...prev,
-				sortBy: column,
-				sortDir:
-					prev.sortBy === column && prev.sortDir === "asc" ? "desc" : "asc",
-				page: 1,
-			}),
+			search: (prev) => {
+				if (prev.sortBy === column && prev.sortDir === "desc") {
+					return { ...prev, sortBy: undefined, sortDir: undefined, page: 1 };
+				}
+				return {
+					...prev,
+					sortBy: column,
+					sortDir:
+						prev.sortBy === column && prev.sortDir === "asc" ? "desc" : "asc",
+					page: 1,
+				};
+			},
+			replace: true,
+		});
+	}
+
+	function updateSearch(
+		patch: (prev: DashboardSearch) => Partial<DashboardSearch>,
+	) {
+		navigate({
+			search: (prev) => ({ ...prev, ...patch(prev), page: 1 }),
 			replace: true,
 		});
 	}
@@ -93,6 +108,16 @@ const Dashboard = () => {
 					sortBy: search.sortBy,
 					sortDir: search.sortDir,
 					onSort: handleSort,
+					onExcludeCategory: (c) =>
+						updateSearch((prev) => {
+							const r = toggleExcluded(prev.category, prev.excludeCategory, c);
+							return { category: r.included, excludeCategory: r.excluded };
+						}),
+					onExcludeType: (t) =>
+						updateSearch((prev) => {
+							const r = toggleExcluded(prev.type, prev.excludeType, t);
+							return { type: r.included, excludeType: r.excluded };
+						}),
 				}}
 				pagination={{
 					page: search.page,

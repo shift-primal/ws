@@ -58,6 +58,7 @@
 	"transactions_column_category": "Kategori",
 	"transactions_column_type": "Type",
 	"transactions_column_amount": "Beløp",
+	"transactions_exclude_hint": "Høyreklikk for å ekskludere",
 	"transactions_delete_column_sr": "Slett rad",
 	"transactions_footer_rows_per_page": "Rader per side",
 	"transactions_footer_previous": "Forrige",

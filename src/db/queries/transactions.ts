@@ -12,6 +12,7 @@ import {
 	lte,
 	max,
 	min,
+	notInArray,
 	or,
 	type SQL,
 	sql,
@@ -44,6 +45,12 @@ function buildConditions(userId: string, query?: TransactionQuery) {
 
 	if (query?.type?.length)
 		conditions.push(inArray(transactions.type, query?.type));
+
+	if (query?.excludeCategory?.length)
+		conditions.push(notInArray(transactions.category, query.excludeCategory));
+
+	if (query?.excludeType?.length)
+		conditions.push(notInArray(transactions.type, query.excludeType));
 
 	if (query?.minAmt !== undefined)
 		conditions.push(gte(transactions.amount, query?.minAmt.toString()));

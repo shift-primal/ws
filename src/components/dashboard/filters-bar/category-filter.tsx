@@ -1,4 +1,4 @@
-import { CaretDownIcon } from "@phosphor-icons/react";
+import { CaretDownIcon, MinusIcon } from "@phosphor-icons/react";
 import { CATEGORIES, type Category } from "txcategorizer";
 import { Button } from "#/components/shadcn/ui/button";
 import {
@@ -9,29 +9,48 @@ import {
 } from "#/components/shadcn/ui/dropdown-menu";
 import { Field, FieldLabel } from "#/components/shadcn/ui/field";
 import { getCategoryFilterContent } from "#/content";
+import { toggleExcluded } from "#/lib/exclude-value";
+import type { DashboardSearch } from "#/lib/schemas/transactions";
 
 export function CategoryFilter({
 	value,
+	excluded,
 	onChange,
 }: {
 	value: Category[] | undefined;
-	onChange: (categories: Category[] | undefined) => void;
+	excluded: Category[] | undefined;
+	onChange: (patch: Partial<DashboardSearch>) => void;
 }) {
 	const categoryFilterContent = getCategoryFilterContent();
 
 	function handleToggle(category: Category, checked: boolean) {
 		const next = checked
 			? [...(value ?? []), category]
-			: (value ?? []).filter((c) => c !== category);
-		onChange(next.length ? next : undefined);
+			: (value ?? []).filter((x) => x !== category);
+		const nextExcluded = (excluded ?? []).filter((x) => x !== category);
+		onChange({
+			category: next.length ? next : undefined,
+			excludeCategory: nextExcluded.length ? nextExcluded : undefined,
+		});
 	}
 
-	const label =
-		!value || value.length === 0
-			? categoryFilterContent.anyLabel
-			: value.length === 1
+	function handleExclude(category: Category) {
+		const r = toggleExcluded(value, excluded, category);
+		onChange({ category: r.included, excludeCategory: r.excluded });
+	}
+
+	const parts: string[] = [];
+	if (value?.length)
+		parts.push(
+			value.length === 1
 				? value[0]
-				: categoryFilterContent.countLabel(value.length);
+				: categoryFilterContent.countLabel(value.length),
+		);
+	if (excluded?.length)
+		parts.push(`−${excluded.length === 1 ? excluded[0] : excluded.length}`);
+	const label = parts.length
+		? parts.join(", ")
+		: categoryFilterContent.anyLabel;
 
 	return (
 		<Field className="w-full sm:w-56">
@@ -58,8 +77,15 @@ export function CategoryFilter({
 							checked={value?.includes(category) ?? false}
 							onCheckedChange={(checked) => handleToggle(category, checked)}
 							closeOnClick={false}
+							onContextMenu={(e) => {
+								e.preventDefault();
+								handleExclude(category);
+							}}
 						>
 							{category}
+							{excluded?.includes(category) && (
+								<MinusIcon className="pointer-events-none absolute right-2" />
+							)}
 						</DropdownMenuCheckboxItem>
 					))}
 				</DropdownMenuContent>

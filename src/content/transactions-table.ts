@@ -51,3 +51,7 @@ export const getDeleteRowButtonContent = () => ({
 export const getCategoryCellContent = () => ({
 	successToastTitle: m.transactions_category_update_success_title(),
 });
+
+export const getExcludeHintContent = () => ({
+	text: m.transactions_exclude_hint(),
+});

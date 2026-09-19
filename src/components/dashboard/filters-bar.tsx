@@ -23,6 +23,8 @@ export function FiltersBar({
 		search.to !== undefined ||
 		search.category !== undefined ||
 		search.type !== undefined ||
+		search.excludeCategory !== undefined ||
+		search.excludeType !== undefined ||
 		search.merchant !== undefined ||
 		search.minAmt !== undefined ||
 		search.maxAmt !== undefined;
@@ -33,6 +35,8 @@ export function FiltersBar({
 			to: undefined,
 			category: undefined,
 			type: undefined,
+			excludeCategory: undefined,
+			excludeType: undefined,
 			merchant: undefined,
 			minAmt: undefined,
 			maxAmt: undefined,
@@ -50,12 +54,14 @@ export function FiltersBar({
 
 				<CategoryFilter
 					value={search.category}
-					onChange={(category) => onChange({ category })}
+					excluded={search.excludeCategory}
+					onChange={onChange}
 				/>
 
 				<TypeFilter
 					value={search.type}
-					onChange={(type) => onChange({ type })}
+					excluded={search.excludeType}
+					onChange={onChange}
 				/>
 
 				<MerchantFilter

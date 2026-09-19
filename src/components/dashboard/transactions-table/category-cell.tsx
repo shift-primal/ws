@@ -8,16 +8,23 @@ import {
 	SelectValue,
 } from "#/components/shadcn/ui/select";
 import { toast } from "#/components/shadcn/ui/toast";
-import { getCategoryCellContent } from "#/content";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from "#/components/shadcn/ui/tooltip";
+import { getCategoryCellContent, getExcludeHintContent } from "#/content";
 import { CATEGORY_ICONS } from "#/lib/icons";
 import { setTransactionCategory } from "#/server/functions/transactions";
 
 export const CategoryCell = ({
 	id,
 	category,
+	onContextMenu,
 }: {
 	id: number;
 	category: Category;
+	onContextMenu?: (e: React.MouseEvent) => void;
 }) => {
 	const categoryCellContent = getCategoryCellContent();
 	const queryClient = useQueryClient();
@@ -41,19 +48,30 @@ export const CategoryCell = ({
 				if (value !== category) mutate(value as Category);
 			}}
 		>
-			<SelectTrigger size="sm" className="rounded-full">
-				<SelectValue>
-					{(value: Category) => {
-						const CategoryIcon = CATEGORY_ICONS[value];
-						return (
-							<>
-								<CategoryIcon />
-								{value}
-							</>
-						);
-					}}
-				</SelectValue>
-			</SelectTrigger>
+			<Tooltip>
+				<TooltipTrigger
+					render={
+						<SelectTrigger
+							size="sm"
+							className="rounded-full"
+							onContextMenu={onContextMenu}
+						/>
+					}
+				>
+					<SelectValue>
+						{(value: Category) => {
+							const CategoryIcon = CATEGORY_ICONS[value];
+							return (
+								<>
+									<CategoryIcon />
+									{value}
+								</>
+							);
+						}}
+					</SelectValue>
+				</TooltipTrigger>
+				<TooltipContent>{getExcludeHintContent().text}</TooltipContent>
+			</Tooltip>
 			<SelectContent>
 				{CATEGORIES.map((c) => {
 					const Icon = CATEGORY_ICONS[c];

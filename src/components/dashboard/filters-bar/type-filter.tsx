@@ -1,4 +1,4 @@
-import { CaretDownIcon } from "@phosphor-icons/react";
+import { CaretDownIcon, MinusIcon } from "@phosphor-icons/react";
 import { TRANSACTION_TYPES, type TransactionType } from "txcategorizer";
 import { Button } from "#/components/shadcn/ui/button";
 import {
@@ -9,29 +9,46 @@ import {
 } from "#/components/shadcn/ui/dropdown-menu";
 import { Field, FieldLabel } from "#/components/shadcn/ui/field";
 import { getTypeFilterContent } from "#/content";
+import { toggleExcluded } from "#/lib/exclude-value";
+import type { DashboardSearch } from "#/lib/schemas/transactions";
 
 export function TypeFilter({
 	value,
+	excluded,
 	onChange,
 }: {
 	value: TransactionType[] | undefined;
-	onChange: (types: TransactionType[] | undefined) => void;
+	excluded: TransactionType[] | undefined;
+	onChange: (patch: Partial<DashboardSearch>) => void;
 }) {
 	const typeFilterContent = getTypeFilterContent();
 
 	function handleToggle(type: TransactionType, checked: boolean) {
 		const next = checked
 			? [...(value ?? []), type]
-			: (value ?? []).filter((t) => t !== type);
-		onChange(next.length ? next : undefined);
+			: (value ?? []).filter((x) => x !== type);
+		const nextExcluded = (excluded ?? []).filter((x) => x !== type);
+		onChange({
+			type: next.length ? next : undefined,
+			excludeType: nextExcluded.length ? nextExcluded : undefined,
+		});
 	}
 
-	const label =
-		!value || value.length === 0
-			? typeFilterContent.anyLabel
-			: value.length === 1
+	function handleExclude(type: TransactionType) {
+		const r = toggleExcluded(value, excluded, type);
+		onChange({ type: r.included, excludeType: r.excluded });
+	}
+
+	const parts: string[] = [];
+	if (value?.length)
+		parts.push(
+			value.length === 1
 				? value[0]
-				: typeFilterContent.countLabel(value.length);
+				: typeFilterContent.countLabel(value.length),
+		);
+	if (excluded?.length)
+		parts.push(`−${excluded.length === 1 ? excluded[0] : excluded.length}`);
+	const label = parts.length ? parts.join(", ") : typeFilterContent.anyLabel;
 
 	return (
 		<Field className="w-full sm:w-56">
@@ -56,8 +73,15 @@ export function TypeFilter({
 							checked={value?.includes(type) ?? false}
 							onCheckedChange={(checked) => handleToggle(type, checked)}
 							closeOnClick={false}
+							onContextMenu={(e) => {
+								e.preventDefault();
+								handleExclude(type);
+							}}
 						>
 							{type}
+							{excluded?.includes(type) && (
+								<MinusIcon className="pointer-events-none absolute right-2" />
+							)}
 						</DropdownMenuCheckboxItem>
 					))}
 				</DropdownMenuContent>

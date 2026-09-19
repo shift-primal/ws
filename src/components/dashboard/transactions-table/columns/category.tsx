@@ -11,7 +11,14 @@ export const categoryColumn = columnHelper.accessor("category", {
 			meta={table.options.meta}
 		/>
 	),
-	cell: ({ row }) => (
-		<CategoryCell id={row.original.id} category={row.original.category} />
+	cell: ({ row, table }) => (
+		<CategoryCell
+			id={row.original.id}
+			category={row.original.category}
+			onContextMenu={(e) => {
+				e.preventDefault();
+				table.options.meta?.onExcludeCategory(row.original.category);
+			}}
+		/>
 	),
 });

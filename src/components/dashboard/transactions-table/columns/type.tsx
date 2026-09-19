@@ -1,7 +1,12 @@
 import { columnHelper } from "#/components/dashboard/transactions-table/columns/helper";
 import { SortableHeader } from "#/components/dashboard/transactions-table/columns/sortable-header";
-import { Badge } from "#/components/shadcn/ui/badge";
-import { getTransactionsColumnLabels } from "#/content";
+import { Button } from "#/components/shadcn/ui/button";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from "#/components/shadcn/ui/tooltip";
+import { getExcludeHintContent, getTransactionsColumnLabels } from "#/content";
 import { TYPE_ICONS } from "#/lib/icons";
 
 export const typeColumn = columnHelper.accessor("type", {
@@ -12,12 +17,26 @@ export const typeColumn = columnHelper.accessor("type", {
 			meta={table.options.meta}
 		/>
 	),
-	cell: ({ row }) => {
+	cell: ({ row, table }) => {
 		const TypeIcon = TYPE_ICONS[row.original.type];
 		return (
-			<Badge variant="secondary">
-				<TypeIcon /> {row.original.type}
-			</Badge>
+			<Tooltip>
+				<TooltipTrigger
+					render={
+						<Button
+							size="sm"
+							variant="outline"
+							onContextMenu={(e) => {
+								e.preventDefault();
+								table.options.meta?.onExcludeType(row.original.type);
+							}}
+						/>
+					}
+				>
+					<TypeIcon /> {row.original.type}
+				</TooltipTrigger>
+				<TooltipContent>{getExcludeHintContent().text}</TooltipContent>
+			</Tooltip>
 		);
 	},
 });

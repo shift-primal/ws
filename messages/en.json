@@ -58,6 +58,7 @@
 	"transactions_column_category": "Category",
 	"transactions_column_type": "Type",
 	"transactions_column_amount": "Amount",
+	"transactions_exclude_hint": "Right click to exclude",
 	"transactions_delete_column_sr": "Delete row",
 	"transactions_footer_rows_per_page": "Rows per page",
 	"transactions_footer_previous": "Previous",
