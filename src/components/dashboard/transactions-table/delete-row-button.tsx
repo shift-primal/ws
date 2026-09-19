@@ -11,13 +11,15 @@ import {
 	PopoverTrigger,
 } from "#/components/shadcn/ui/popover";
 import { toast } from "#/components/shadcn/ui/toast";
-import { getDeleteRowButtonContent } from "#/content";
+import { getDeleteRowButtonContent, getDemoLockedHintContent } from "#/content";
+import { useIsDemoAccount } from "#/lib/hooks/use-is-demo-account";
 import { removeTransactions } from "#/server/functions/transactions";
 
 export const DeleteRowButton = ({ id }: { id: number }) => {
 	const deleteRowButtonContent = getDeleteRowButtonContent();
 	const [open, setOpen] = useState(false);
 	const queryClient = useQueryClient();
+	const isDemo = useIsDemoAccount();
 	const { mutate, isPending } = useMutation({
 		mutationFn: () => removeTransactions({ data: [id] }),
 		onSuccess: () => {
@@ -29,6 +31,33 @@ export const DeleteRowButton = ({ id }: { id: number }) => {
 			setOpen(false);
 		},
 	});
+
+	if (isDemo) {
+		// A disabled button swallows pointer events, so the popover trigger is a
+		// wrapper span around it.
+		return (
+			<Popover>
+				<PopoverTrigger render={<span className="inline-flex" />}>
+					<Button
+						variant="ghost"
+						size="icon-xs"
+						disabled
+						tabIndex={-1}
+						className="pointer-events-none"
+					>
+						<TrashIcon />
+					</Button>
+				</PopoverTrigger>
+				<PopoverContent>
+					<PopoverHeader>
+						<PopoverDescription>
+							{getDemoLockedHintContent().text}
+						</PopoverDescription>
+					</PopoverHeader>
+				</PopoverContent>
+			</Popover>
+		);
+	}
 
 	return (
 		<Popover open={open} onOpenChange={setOpen}>

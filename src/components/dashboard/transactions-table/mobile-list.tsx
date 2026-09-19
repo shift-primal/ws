@@ -1,19 +1,45 @@
 import { CaretRightIcon } from "@phosphor-icons/react";
 import { useState } from "react";
+import type { Category, TransactionType } from "txcategorizer";
 import { CategoryCell } from "#/components/dashboard/transactions-table/category-cell";
 import { DeleteRowButton } from "#/components/dashboard/transactions-table/delete-row-button";
 import { Badge } from "#/components/shadcn/ui/badge";
-import { getTransactionsTableContent } from "#/content";
+import { getExcludeHintContent, getTransactionsTableContent } from "#/content";
 import type { DbTransaction } from "#/db/schema";
 import { fmtCurrency, fmtExchangeRate, fmtShortDate } from "#/lib/fmt";
+import { useLongPress } from "#/lib/hooks/use-long-press";
 import { TYPE_ICONS } from "#/lib/icons";
 import { CURRENCY_SYMBOLS } from "#/lib/symbols";
 import { cn, colorClasses, signColor } from "#/lib/utils";
 
+function TypeBadge({
+	type,
+	onExclude,
+}: {
+	type: TransactionType;
+	onExclude: (type: TransactionType) => void;
+}) {
+	const TypeIcon = TYPE_ICONS[type];
+	const longPress = useLongPress(() => onExclude(type));
+	return (
+		<Badge
+			variant="secondary"
+			className="select-none [-webkit-touch-callout:none]"
+			{...longPress}
+		>
+			<TypeIcon /> {type}
+		</Badge>
+	);
+}
+
 export function TransactionsTableMobileList({
 	data,
+	onExcludeCategory,
+	onExcludeType,
 }: {
 	data: DbTransaction[];
+	onExcludeCategory: (category: Category) => void;
+	onExcludeType: (type: TransactionType) => void;
 }) {
 	const transactionsTableContent = getTransactionsTableContent();
 	const [expandedIds, setExpandedIds] = useState<Set<number>>(new Set());
@@ -40,9 +66,11 @@ export function TransactionsTableMobileList({
 
 	return (
 		<div className="flex flex-col divide-y divide-border">
+			<p className="pb-3 text-muted-foreground text-xs">
+				{getExcludeHintContent().touchText}
+			</p>
 			{data.map((transaction) => {
 				const expanded = expandedIds.has(transaction.id);
-				const TypeIcon = TYPE_ICONS[transaction.type];
 				const amount = Number(transaction.amount);
 
 				return (
@@ -85,10 +113,12 @@ export function TransactionsTableMobileList({
 									<CategoryCell
 										id={transaction.id}
 										category={transaction.category}
+										onLongPress={() => onExcludeCategory(transaction.category)}
 									/>
-									<Badge variant="secondary">
-										<TypeIcon /> {transaction.type}
-									</Badge>
+									<TypeBadge
+										type={transaction.type}
+										onExclude={onExcludeType}
+									/>
 									{transaction.currency && transaction.exchangeRate && (
 										<Badge variant="secondary">
 											{CURRENCY_SYMBOLS[transaction.currency] ?? ""}{" "}

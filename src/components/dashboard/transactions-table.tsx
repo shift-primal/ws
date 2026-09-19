@@ -51,7 +51,11 @@ export function TransactionsTable({
 			</CardHeader>
 			<CardContent>
 				{isMobile ? (
-					<TransactionsTableMobileList data={data} />
+					<TransactionsTableMobileList
+						data={data}
+						onExcludeCategory={meta.onExcludeCategory}
+						onExcludeType={meta.onExcludeType}
+					/>
 				) : (
 					<TransactionsTableContent table={table} />
 				)}

@@ -54,4 +54,9 @@ export const getCategoryCellContent = () => ({
 
 export const getExcludeHintContent = () => ({
 	text: m.transactions_exclude_hint(),
+	touchText: m.transactions_exclude_hint_touch(),
+});
+
+export const getDemoLockedHintContent = () => ({
+	text: m.transactions_demo_locked_hint(),
 });

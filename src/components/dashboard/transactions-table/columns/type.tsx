@@ -35,7 +35,9 @@ export const typeColumn = columnHelper.accessor("type", {
 				>
 					<TypeIcon /> {row.original.type}
 				</TooltipTrigger>
-				<TooltipContent>{getExcludeHintContent().text}</TooltipContent>
+				<TooltipContent variant="popover">
+					{getExcludeHintContent().text}
+				</TooltipContent>
 			</Tooltip>
 		);
 	},

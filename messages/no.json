@@ -59,6 +59,8 @@
 	"transactions_column_type": "Type",
 	"transactions_column_amount": "Beløp",
 	"transactions_exclude_hint": "Høyreklikk for å ekskludere",
+	"transactions_exclude_hint_touch": "Trykk og hold for å ekskludere",
+	"transactions_demo_locked_hint": "Ikke tilgjengelig for demokontoer",
 	"transactions_delete_column_sr": "Slett rad",
 	"transactions_footer_rows_per_page": "Rader per side",
 	"transactions_footer_previous": "Forrige",

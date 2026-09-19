@@ -78,13 +78,21 @@ export const removeTransactions = createServerFn({
 })
 	.middleware([authMiddleware])
 	.validator(z.array(z.number()))
-	.handler(({ data, context }) => deleteTransactions(context.userId, data));
+	.handler(({ data, context }) => {
+		if (isDemoAccountEmail(context.userEmail)) {
+			throw new Error("Demo accounts can't delete transactions");
+		}
+		return deleteTransactions(context.userId, data);
+	});
 
 export const setTransactionCategory = createServerFn({
 	method: "POST",
 })
 	.middleware([authMiddleware])
 	.validator(z.object({ id: z.number(), category: z.enum(CATEGORIES) }))
-	.handler(({ data, context }) =>
-		updateTransactionCategory(context.userId, data.id, data.category),
-	);
+	.handler(({ data, context }) => {
+		if (isDemoAccountEmail(context.userEmail)) {
+			throw new Error("Demo accounts can't change transaction categories");
+		}
+		return updateTransactionCategory(context.userId, data.id, data.category);
+	});
