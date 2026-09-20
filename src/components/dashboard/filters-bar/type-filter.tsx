@@ -9,8 +9,9 @@ import {
 } from "#/components/shadcn/ui/dropdown-menu";
 import { Field, FieldLabel } from "#/components/shadcn/ui/field";
 import { getTypeFilterContent } from "#/content";
-import { toggleExcluded } from "#/lib/exclude-value";
+import { cycleFilterValue } from "#/lib/exclude-value";
 import type { DashboardSearch } from "#/lib/schemas/transactions";
+import { FilterTriggerLabel } from "./filter-trigger-label";
 
 export function TypeFilter({
 	value,
@@ -23,32 +24,10 @@ export function TypeFilter({
 }) {
 	const typeFilterContent = getTypeFilterContent();
 
-	function handleToggle(type: TransactionType, checked: boolean) {
-		const next = checked
-			? [...(value ?? []), type]
-			: (value ?? []).filter((x) => x !== type);
-		const nextExcluded = (excluded ?? []).filter((x) => x !== type);
-		onChange({
-			type: next.length ? next : undefined,
-			excludeType: nextExcluded.length ? nextExcluded : undefined,
-		});
-	}
-
-	function handleExclude(type: TransactionType) {
-		const r = toggleExcluded(value, excluded, type);
+	function handleCycle(type: TransactionType) {
+		const r = cycleFilterValue(value, excluded, type);
 		onChange({ type: r.included, excludeType: r.excluded });
 	}
-
-	const parts: string[] = [];
-	if (value?.length)
-		parts.push(
-			value.length === 1
-				? value[0]
-				: typeFilterContent.countLabel(value.length),
-		);
-	if (excluded?.length)
-		parts.push(`−${excluded.length === 1 ? excluded[0] : excluded.length}`);
-	const label = parts.length ? parts.join(", ") : typeFilterContent.anyLabel;
 
 	return (
 		<Field className="w-full sm:w-56">
@@ -63,7 +42,11 @@ export function TypeFilter({
 						/>
 					}
 				>
-					<span className="truncate">{label}</span>
+					<FilterTriggerLabel
+						included={value}
+						excluded={excluded}
+						anyLabel={typeFilterContent.anyLabel}
+					/>
 					<CaretDownIcon data-icon="inline-end" />
 				</DropdownMenuTrigger>
 				<DropdownMenuContent className="min-w-56">
@@ -71,12 +54,8 @@ export function TypeFilter({
 						<DropdownMenuCheckboxItem
 							key={type}
 							checked={value?.includes(type) ?? false}
-							onCheckedChange={(checked) => handleToggle(type, checked)}
+							onCheckedChange={() => handleCycle(type)}
 							closeOnClick={false}
-							onContextMenu={(e) => {
-								e.preventDefault();
-								handleExclude(type);
-							}}
 						>
 							{type}
 							{excluded?.includes(type) && (

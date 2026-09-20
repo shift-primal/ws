@@ -9,9 +9,11 @@ import {
 } from "txcategorizer";
 import { ConfirmImport } from "#/components/import/confirm-import";
 import { Dropzone } from "#/components/import/dropzone";
+import { ImportTutorial } from "#/components/import/import-tutorial";
 import { Button } from "#/components/shadcn/ui/button";
 import {
 	Card,
+	CardAction,
 	CardContent,
 	CardDescription,
 	CardHeader,
@@ -120,6 +122,9 @@ export const UploadForm = () => {
 				<CardHeader>
 					<CardTitle>{uploadFormContent.legend}</CardTitle>
 					<CardDescription>{uploadFormContent.description}</CardDescription>
+					<CardAction>
+						<ImportTutorial />
+					</CardAction>
 				</CardHeader>
 				<CardContent className="p-4">
 					<Field>

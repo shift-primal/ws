@@ -65,3 +65,64 @@ export const getUploadFormContent = () => ({
 	unsupportedFileTitle: m.import_toast_unsupported_file_title(),
 	unsupportedFileDescription: m.import_toast_unsupported_file_description(),
 });
+
+export const getImportTutorialContent = () => ({
+	trigger: m.import_tutorial_trigger(),
+	title: m.import_tutorial_title(),
+	description: m.import_tutorial_description(),
+	stepCounter: (current: number, total: number) =>
+		m.import_tutorial_step_counter({ current, total }),
+	previous: m.import_tutorial_previous(),
+	next: m.import_tutorial_next(),
+	done: m.import_tutorial_done(),
+	steps: [
+		{
+			title: m.import_tutorial_step_1_title(),
+			description: m.import_tutorial_step_1_description(),
+			link: {
+				label: m.import_tutorial_step_1_link(),
+				href: "https://www.dnb.no/dagligbank/nettbank/fullversjon",
+			},
+		},
+		{
+			title: m.import_tutorial_step_2_title(),
+			description: m.import_tutorial_step_2_description(),
+		},
+		{
+			title: m.import_tutorial_step_3_title(),
+			description: m.import_tutorial_step_3_description(),
+		},
+		{
+			title: m.import_tutorial_step_4_title(),
+			description: m.import_tutorial_step_4_description(),
+		},
+		{
+			title: m.import_tutorial_step_5_title(),
+			description: m.import_tutorial_step_5_description(),
+		},
+		{
+			title: m.import_tutorial_step_6_title(),
+			description: m.import_tutorial_step_6_description(),
+		},
+		{
+			title: m.import_tutorial_step_7_title(),
+			description: m.import_tutorial_step_7_description(),
+		},
+		{
+			title: m.import_tutorial_step_8_title(),
+			description: m.import_tutorial_step_8_description(),
+		},
+		{
+			title: m.import_tutorial_step_9_title(),
+			description: m.import_tutorial_step_9_description(),
+		},
+		{
+			title: m.import_tutorial_step_10_title(),
+			description: m.import_tutorial_step_10_description(),
+		},
+		{
+			title: m.import_tutorial_step_11_title(),
+			description: m.import_tutorial_step_11_description(),
+		},
+	],
+});

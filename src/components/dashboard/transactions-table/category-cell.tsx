@@ -15,10 +15,8 @@ import {
 } from "#/components/shadcn/ui/tooltip";
 import {
 	getCategoryCellContent,
-	getDemoLockedHintContent,
 	getExcludeHintContent,
 } from "#/content";
-import { useIsDemoAccount } from "#/lib/hooks/use-is-demo-account";
 import { useLongPress } from "#/lib/hooks/use-long-press";
 import { CATEGORY_ICONS } from "#/lib/icons";
 import { setTransactionCategory } from "#/server/functions/transactions";
@@ -34,7 +32,6 @@ export const CategoryCell = ({
 	onContextMenu?: (e: React.MouseEvent) => void;
 	onLongPress?: () => void;
 }) => {
-	const isDemo = useIsDemoAccount();
 	const longPress = useLongPress(() => onLongPress?.());
 	const categoryCellContent = getCategoryCellContent();
 	const queryClient = useQueryClient();
@@ -49,24 +46,14 @@ export const CategoryCell = ({
 				title: categoryCellContent.successToastTitle,
 			});
 		},
+		onError: (error) => {
+			toast.add({ type: "error", title: error.message });
+		},
 	});
 
 	return (
 		<Select
 			value={category}
-			// Demo accounts share seeded data, so the dropdown is locked; a
-			// controlled-closed Select (rather than `disabled`) keeps
-			// right-click / long-press exclusion working.
-			{...(isDemo && {
-				open: false,
-				onOpenChange: (open: boolean) => {
-					if (open)
-						toast.add({
-							type: "info",
-							title: getDemoLockedHintContent().text,
-						});
-				},
-			})}
 			onValueChange={(value) => {
 				if (value !== category) mutate(value as Category);
 			}}

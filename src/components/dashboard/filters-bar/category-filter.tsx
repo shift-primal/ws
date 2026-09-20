@@ -9,8 +9,9 @@ import {
 } from "#/components/shadcn/ui/dropdown-menu";
 import { Field, FieldLabel } from "#/components/shadcn/ui/field";
 import { getCategoryFilterContent } from "#/content";
-import { toggleExcluded } from "#/lib/exclude-value";
+import { cycleFilterValue } from "#/lib/exclude-value";
 import type { DashboardSearch } from "#/lib/schemas/transactions";
+import { FilterTriggerLabel } from "./filter-trigger-label";
 
 export function CategoryFilter({
 	value,
@@ -23,34 +24,10 @@ export function CategoryFilter({
 }) {
 	const categoryFilterContent = getCategoryFilterContent();
 
-	function handleToggle(category: Category, checked: boolean) {
-		const next = checked
-			? [...(value ?? []), category]
-			: (value ?? []).filter((x) => x !== category);
-		const nextExcluded = (excluded ?? []).filter((x) => x !== category);
-		onChange({
-			category: next.length ? next : undefined,
-			excludeCategory: nextExcluded.length ? nextExcluded : undefined,
-		});
-	}
-
-	function handleExclude(category: Category) {
-		const r = toggleExcluded(value, excluded, category);
+	function handleCycle(category: Category) {
+		const r = cycleFilterValue(value, excluded, category);
 		onChange({ category: r.included, excludeCategory: r.excluded });
 	}
-
-	const parts: string[] = [];
-	if (value?.length)
-		parts.push(
-			value.length === 1
-				? value[0]
-				: categoryFilterContent.countLabel(value.length),
-		);
-	if (excluded?.length)
-		parts.push(`−${excluded.length === 1 ? excluded[0] : excluded.length}`);
-	const label = parts.length
-		? parts.join(", ")
-		: categoryFilterContent.anyLabel;
 
 	return (
 		<Field className="w-full sm:w-56">
@@ -67,7 +44,11 @@ export function CategoryFilter({
 						/>
 					}
 				>
-					<span className="truncate">{label}</span>
+					<FilterTriggerLabel
+						included={value}
+						excluded={excluded}
+						anyLabel={categoryFilterContent.anyLabel}
+					/>
 					<CaretDownIcon data-icon="inline-end" />
 				</DropdownMenuTrigger>
 				<DropdownMenuContent className="min-w-56">
@@ -75,12 +56,8 @@ export function CategoryFilter({
 						<DropdownMenuCheckboxItem
 							key={category}
 							checked={value?.includes(category) ?? false}
-							onCheckedChange={(checked) => handleToggle(category, checked)}
+							onCheckedChange={() => handleCycle(category)}
 							closeOnClick={false}
-							onContextMenu={(e) => {
-								e.preventDefault();
-								handleExclude(category);
-							}}
 						>
 							{category}
 							{excluded?.includes(category) && (

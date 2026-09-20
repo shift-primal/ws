@@ -51,7 +51,12 @@ export const importTransactions = createServerFn({
 })
 	.middleware([authMiddleware])
 	.validator(importSchema)
-	.handler(({ data, context }) => insertTransactions(context.userId, data));
+	.handler(({ data, context }) => {
+		if (isDemoAccountEmail(context.userEmail)) {
+			throw new Error("Demo accounts can't import transactions");
+		}
+		return insertTransactions(context.userId, data);
+	});
 
 export const checkDuplicateTransactions = createServerFn({
 	method: "POST",

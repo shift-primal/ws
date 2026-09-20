@@ -4,6 +4,7 @@ import type { Category, TransactionType } from "txcategorizer";
 import { CategoryCell } from "#/components/dashboard/transactions-table/category-cell";
 import { DeleteRowButton } from "#/components/dashboard/transactions-table/delete-row-button";
 import { Badge } from "#/components/shadcn/ui/badge";
+import { Button } from "#/components/shadcn/ui/button";
 import { getExcludeHintContent, getTransactionsTableContent } from "#/content";
 import type { DbTransaction } from "#/db/schema";
 import { fmtCurrency, fmtExchangeRate, fmtShortDate } from "#/lib/fmt";
@@ -22,13 +23,14 @@ function TypeBadge({
 	const TypeIcon = TYPE_ICONS[type];
 	const longPress = useLongPress(() => onExclude(type));
 	return (
-		<Badge
-			variant="secondary"
+		<Button
+			size="sm"
+			variant="outline"
 			className="select-none [-webkit-touch-callout:none]"
 			{...longPress}
 		>
 			<TypeIcon /> {type}
-		</Badge>
+		</Button>
 	);
 }
 

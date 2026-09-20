@@ -40,7 +40,7 @@
 
 	"filter_amount_label": "Amount",
 	"filter_category_label": "Category",
-	"filter_category_any": "Any category",
+	"filter_category_any": "All categories",
 	"filter_category_count": "{count} categories",
 	"filter_date_range_label": "Date range",
 	"filter_date_range_all_time": "All time",
@@ -48,7 +48,7 @@
 	"filter_merchant_label": "Merchant",
 	"filter_merchant_placeholder": "Search merchant...",
 	"filter_type_label": "Type",
-	"filter_type_any": "Any type",
+	"filter_type_any": "All types",
 	"filter_type_count": "{count} types",
 
 	"transactions_table_title": "Transactions",
@@ -139,5 +139,47 @@
 	"demo_accounts_switcher_trigger": "Demo accounts",
 	"demo_accounts_sign_in_error_title": "Couldn't sign in to that demo account",
 	"demo_accounts_settings_locked_title": "Account changes are disabled",
-	"demo_accounts_settings_locked_description": "This is a shared demo account, so profile, email, password, and session settings can't be changed here."
+	"demo_accounts_settings_locked_description": "This is a shared demo account, so profile, email, password, and session settings can't be changed here.",
+
+	"import_tutorial_trigger": "How?",
+	"import_tutorial_title": "Export from DNB (Mobile)",
+	"import_tutorial_description": "Follow these steps to download your transactions from DNB.",
+	"import_tutorial_step_counter": "Step {current} of {total}",
+	"import_tutorial_previous": "Back",
+	"import_tutorial_next": "Next",
+	"import_tutorial_done": "Done",
+
+	"import_tutorial_step_1_title": "Open the full online bank",
+	"import_tutorial_step_1_description": "Open “Nettbank fullversjon” with the button below, or on dnb.no, and tap “Logg inn til fullversjon”.",
+
+	"import_tutorial_step_2_title": "Log in",
+	"import_tutorial_step_2_description": "Follow the steps and log in as usual.",
+
+	"import_tutorial_step_3_title": "Open your account",
+	"import_tutorial_step_3_description": "Under “Mine kontoer”, tap the account you want to export transactions from.",
+
+	"import_tutorial_step_4_title": "Save the file",
+	"import_tutorial_step_4_description": "On the transactions page, tap “Lagre fil”.",
+
+	"import_tutorial_step_5_title": "Confirm the download",
+	"import_tutorial_step_5_description": "When asked whether to download “Siste transaksjoner.txt”, tap “Download”.",
+
+	"import_tutorial_step_6_title": "Open your downloads",
+	"import_tutorial_step_6_description": "Tap the download icon in the browser’s address bar.",
+
+	"import_tutorial_step_7_title": "Go to downloads",
+	"import_tutorial_step_7_description": "From the browser menu, choose “Downloads”.",
+
+	"import_tutorial_step_8_title": "Find the file",
+	"import_tutorial_step_8_description": "Tap the downloaded file, “Siste transaksjoner.txt”.",
+
+	"import_tutorial_step_9_title": "Share the file",
+	"import_tutorial_step_9_description": "Tap the share button in the bottom right corner.",
+
+	"import_tutorial_step_10_title": "Save to Files",
+	"import_tutorial_step_10_description": "Choose “Archive In Files” in the share sheet.",
+
+	"import_tutorial_step_11_title": "Archive it",
+	"import_tutorial_step_11_description": "Navigate to where you want to save the file (remember where!), and tap “Archive” in the top right corner. The file is now ready to upload here.",
+	"import_tutorial_step_1_link": "Open DNB full version"
 }

@@ -139,5 +139,47 @@
 	"demo_accounts_switcher_trigger": "Demokontoer",
 	"demo_accounts_sign_in_error_title": "Kunne ikke logge inn på den demokontoen",
 	"demo_accounts_settings_locked_title": "Kontoendringer er deaktivert",
-	"demo_accounts_settings_locked_description": "Dette er en delt demokonto, så profil-, e-post-, passord- og øktinnstillinger kan ikke endres her."
+	"demo_accounts_settings_locked_description": "Dette er en delt demokonto, så profil-, e-post-, passord- og øktinnstillinger kan ikke endres her.",
+
+	"import_tutorial_trigger": "Hvordan?",
+	"import_tutorial_title": "Eksporter fra DNB (Mobil)",
+	"import_tutorial_description": "Følg disse stegene for å laste ned transaksjonene dine fra DNB.",
+	"import_tutorial_step_counter": "Steg {current} av {total}",
+	"import_tutorial_previous": "Tilbake",
+	"import_tutorial_next": "Neste",
+	"import_tutorial_done": "Ferdig",
+
+	"import_tutorial_step_1_title": "Åpne full nettbank",
+	"import_tutorial_step_1_description": "Åpne «Nettbank fullversjon» med knappen nedenfor, eller på dnb.no og trykk «Logg inn til fullversjon».",
+
+	"import_tutorial_step_2_title": "Logg inn",
+	"import_tutorial_step_2_description": "Følg trinnene og logg deg inn som vanlig.",
+
+	"import_tutorial_step_3_title": "Åpne kontoen",
+	"import_tutorial_step_3_description": "Trykk på kontoen du vil hente transaksjoner fra under «Mine kontoer».",
+
+	"import_tutorial_step_4_title": "Lagre filen",
+	"import_tutorial_step_4_description": "På transaksjonssiden trykker du «Lagre fil».",
+
+	"import_tutorial_step_5_title": "Bekreft nedlastingen",
+	"import_tutorial_step_5_description": "Når du blir spurt om du vil laste ned «Siste transaksjoner.txt», trykker du «Last ned».",
+
+	"import_tutorial_step_6_title": "Åpne nedlastinger",
+	"import_tutorial_step_6_description": "Trykk på nedlastingsikonet i adressefeltet i nettleseren.",
+
+	"import_tutorial_step_7_title": "Gå til nedlastinger",
+	"import_tutorial_step_7_description": "Fra nettlesermenyen, velg «Nedlastinger».",
+
+	"import_tutorial_step_8_title": "Finn filen",
+	"import_tutorial_step_8_description": "Trykk på den nedlastede filen «Siste transaksjoner.txt».",
+
+	"import_tutorial_step_9_title": "Del filen",
+	"import_tutorial_step_9_description": "Trykk på delingsknappen nede i høyre hjørne.",
+
+	"import_tutorial_step_10_title": "Arkiver i Filer",
+	"import_tutorial_step_10_description": "Velg «Arkiver i Filer» i delingsmenyen.",
+
+	"import_tutorial_step_11_title": "Arkiver",
+	"import_tutorial_step_11_description": "Naviger til et sted du ønsker å lagre filen (husk hvor!), og trykk «Arkiver» øverst til høyre. Filen er nå klar til å lastes opp her.",
+	"import_tutorial_step_1_link": "Åpne DNB fullversjon"
 }
